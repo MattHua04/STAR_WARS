@@ -1,6 +1,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 #include "mbed.h"
+#include "gameMusic.h"
 #include "wave_player.h"
 #include "uLCD_4DGL.h"
 #include <math.h>
@@ -8,13 +9,22 @@
 #include "SDBlockDevice.h"
 #include "FATFileSystem.h"
 
+#define NAME_LENGTH 20
+#define PASSWORD_LENGTH 4 + 1
 
-// === [global object] ===
-extern uLCD_4DGL uLCD;
-extern wave_player waver;
-extern PwmOut speaker;
-extern SDBlockDevice sd_block;
-extern FATFileSystem fs;
+#define YELLOW 0xFFFF00
+#define GREEN 0x00FF00
+#define DGREEN 0x008f26
+#define WHITE 0xFFFFFF
+#define BLACK 0x000000
+#define BROWN  0xD2691E
+#define VIOLET 0xa600ff
+#define PINK 0xff00fb
+#define DIRT   BROWN
+#define RED    0xFF0000
+#define BLUE   0x0000FF
+#define ORANGE 0xFFA500
+#define MGREY 0x8f8f8f
 
 typedef enum {
     DEFAULT=0,
@@ -45,6 +55,7 @@ typedef struct {
     int x;
     int y;
 } point;
+
 typedef struct {
     point topLeft;
     point bottomRight;
@@ -59,6 +70,61 @@ typedef struct {
     BUTTON_STATUS buttonStatus;
     BOUNDINGBOX* boundingBox;
 } BUTTON;
+
+typedef enum {
+    FIRE_RED = 'R',
+    BOLD_ORANGE = 'O',
+    STAR_GOLD = 'Y',
+    EMERALD_GREEN = 'G',
+    ICE_BLUE = 'B',
+    PLASMA_VIOLET = 'V',
+    HOT_PINK = 'P',
+    NONE = NULL,
+} PLAYER_SKIN;
+
+typedef struct {
+    char username[NAME_LENGTH];
+    int userNum;
+    char password[PASSWORD_LENGTH + 1];
+    PLAYER_SKIN defaultSkin;
+    int totalPlayTime;
+    int totalEnemiesKilled;
+    int totalPlayerDeaths;
+    int totalPoints;
+    int highScore;
+} USER;
+
+typedef enum {
+    LEVELS = 0,
+    SCORECAP = 1,
+    INFINITE = 2,
+} GAME_MODE;
+
+typedef struct {
+    int value;
+    int maxVal;
+    BOUNDINGBOX* boundingBox;
+    BUTTON_STATUS sliderStatus;
+} SLIDING_SCALE;
+
+typedef struct {
+    PLAYER_SKIN playerSkin;
+    GAME_MODE gameMode;
+    int difficulty;
+    int scoreCap;
+} MENU_SETTINGS;
+
+typedef enum {
+    MENU_HOME,
+    USER_STATS,
+} MENU_PAGE;
+
+// === [global object] ===
+extern uLCD_4DGL uLCD;
+extern wave_player waver;
+extern PwmOut speaker;
+extern SDBlockDevice sd_block;
+extern FATFileSystem fs;
 
 // === [global settings] ===
 #define BACKGROUND_COLOR 0x000000 //black

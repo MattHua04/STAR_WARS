@@ -8,7 +8,15 @@
 /**
  * Plays background music
  */
-void music(void);
+void printBuffer(void);
+
+void prepareMusicLoader(void);
+
+void musicInit(void);
+
+void playMusic(void);
+
+void loadMusic(void);
 
 void projectileSound(void);
 
@@ -21,5 +29,9 @@ void playLaserSound(void);
 void explosionSound(void);
 
 void playExplosionSound(void);
+
+void hitSound(void);
+
+void playHitSound(void);
 
 #endif

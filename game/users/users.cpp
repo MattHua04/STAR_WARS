@@ -1,6 +1,5 @@
 #include "login.h"
 #include "users.h"
-#include <cstdio>
 
 char userNames[15][20] = {
     "STARFIRE",

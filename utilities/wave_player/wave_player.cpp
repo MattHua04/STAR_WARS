@@ -204,7 +204,7 @@ void wave_player::dac_out()
 #ifdef VERBOSE
   printf("ISR rdptr %d got %u\n",DAC_rptr,DAC_fifo[DAC_rptr]);
 #endif
-    wave_DAC->write_u16(DAC_fifo[DAC_rptr]);
+    wave_DAC->write_u16(DAC_fifo[DAC_rptr]>>3);
     DAC_rptr=(DAC_rptr+1) & 0xff;
   }
 }

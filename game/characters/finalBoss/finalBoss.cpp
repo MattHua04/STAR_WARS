@@ -186,7 +186,7 @@ void bossUpdate(void) {
         }
     } else if (((BOSS*)getData(bossNode))->tick % ((BOSS*)getData(bossNode))->fireInterval == 0) {
         if (randomNum() & 1) {
-            projectileSound();
+            //projectileSound();
             bossFireProjectile(bossNode);
         }
     }

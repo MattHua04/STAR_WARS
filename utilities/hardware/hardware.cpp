@@ -20,7 +20,7 @@ GAME_INPUTS* gameInputs;
 
 int hardware_init(void)
 {
-    uLCD.baudrate(3000000);
+    uLCD.baudrate(1500000);
     normalAttack.mode(PullUp); 
     superAttack.mode(PullUp);
     pauseResume.mode(PullUp);

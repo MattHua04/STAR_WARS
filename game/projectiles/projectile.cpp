@@ -1,3 +1,4 @@
+#include "gameMusic.h"
 #include "globals.h"
 #include "graphics.h"
 #include "player.h"
@@ -215,6 +216,7 @@ void updateEnemyProjectiles(void) {
                 getPlayer()->playerStatus = CHARACTER_STATUS::DEAD;
                 getPlayer()->playerDisplay = CHARACTER_DISPLAY::DESTROYED;
             } else {
+                hitSound();
                 // If enemy damaged, set display to whatever animation state it was before plus Damaged
                 switch(getPlayer()->playerDisplay + 4) { // adding 4 essentially switchs state to damaged form
                 case DEFAULTDAMAGED:
@@ -323,6 +325,7 @@ void updatePlayerProjectiles(void) {
                             }
                         }
                     } else {
+                        hitSound();
                         // If enemy damaged, set display to whatever animation state it was before plus Damaged
                         switch(((ENEMY*)getData(currentEnemy))->enemyDisplay + 4) { // adding 4 essentially switchs state to damaged form
                         case DEFAULTDAMAGED:
@@ -367,6 +370,7 @@ void updatePlayerProjectiles(void) {
                 ((BAR*)getData(getBoss()->healthBar))->numHearts -= ((PROJECTILE*)getData(currentNode))->projectileType;
                 //printf("%d\n", ((BAR*)getData(getBoss()->healthBar))->numHearts);
                 if (((BAR*)getData(getBoss()->healthBar))->numHearts <= 0) {
+                    explosionSound();
                     // If enemy destroyed, set display to Destroyed and add health amount to player score
                     ((BAR*)getData(getBoss()->healthBar))->numHearts = 0;
                     getBoss()->status = CHARACTER_STATUS::DEAD;
@@ -380,6 +384,7 @@ void updatePlayerProjectiles(void) {
                         }
                     }
                 } else {
+                    hitSound();
                     // If enemy damaged, set display to whatever animation state it was before plus Damaged
                     switch(getBoss()->bossDisplay + 4) { // adding 4 essentially switchs state to damaged form
                     case DEFAULTDAMAGED:
@@ -485,6 +490,7 @@ void updateBossProjectiles(void) {
                 getPlayer()->playerStatus = CHARACTER_STATUS::DEAD;
                 getPlayer()->playerDisplay = CHARACTER_DISPLAY::DESTROYED;
             } else {
+                hitSound();
                 // If enemy damaged, set display to whatever animation state it was before plus Damaged
                 switch(getPlayer()->playerDisplay + 4) { // adding 4 essentially switchs state to damaged form
                 case DEFAULTDAMAGED:
