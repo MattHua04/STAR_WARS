@@ -15,6 +15,20 @@
 #include <stdio.h>
 #include <wave_player.h>
 
+Ticker backSound;
+FILE *file;
+unsigned chunk_id,chunk_size,channel;
+unsigned data,samp_int,i;
+short unsigned dac_data;
+long long slice_value;
+char *slice_buf;
+short *data_sptr;
+unsigned char *data_bptr;
+int *data_wptr;
+FMT_STRUCT wav_format;
+long slice,num_slices;
+int startPlayback = 0;
+
 
 //-----------------------------------------------------------------------------
 // constructor -- accepts an mbed pin to use for AnalogOut.  Only p18 will work
@@ -46,16 +60,6 @@ void wave_player::set_verbosity(int v)
 //-----------------------------------------------------------------------------
 void wave_player::play(FILE *wavefile)
 {
-        unsigned chunk_id,chunk_size,channel;
-        unsigned data,samp_int,i;
-        short unsigned dac_data;
-        long long slice_value;
-        char *slice_buf;
-        short *data_sptr;
-        unsigned char *data_bptr;
-        int *data_wptr;
-        FMT_STRUCT wav_format;
-        long slice,num_slices;
   DAC_wptr=0;
   DAC_rptr=0;
   for (i=0;i<256;i+=2) {
@@ -64,15 +68,26 @@ void wave_player::play(FILE *wavefile)
   }
   DAC_wptr=4;
   DAC_on=0;
+  file = wavefile;
 
   fread(&chunk_id,4,1,wavefile);
   fread(&chunk_size,4,1,wavefile);
-  while (!feof(wavefile)) {
+  while (1) {
+      this->playSound();
+  }
+  return;
+  backSound.attach_us(callback(this,&wave_player::playSound), 91);
+  //while (!samp_int) printf("waiting\n");
+  tick.attach_us(callback(this,&wave_player::dac_out), 1000000/11025.0);
+}
+
+void wave_player::playSound(void) {
+  if (!feof(file)) {
     if (verbosity)
       printf("Read chunk ID 0x%x, size 0x%x\n",chunk_id,chunk_size);
     switch (chunk_id) {
       case 0x46464952:
-        fread(&data,4,1,wavefile);
+        fread(&data,4,1,file);
         if (verbosity) {
           printf("RIFF chunk\n");
           printf("  chunk size %d (0x%x)\n",chunk_size,chunk_size);
@@ -80,7 +95,7 @@ void wave_player::play(FILE *wavefile)
         }
         break;
       case 0x20746d66:
-        fread(&wav_format,sizeof(wav_format),1,wavefile);
+        fread(&wav_format,sizeof(wav_format),1,file);
         if (verbosity) {
           printf("FORMAT chunk\n");
           printf("  chunk size %d (0x%x)\n",chunk_size,chunk_size);
@@ -92,7 +107,7 @@ void wave_player::play(FILE *wavefile)
           printf("  %d bits per sample\n",wav_format.sig_bps);
         }
         if (chunk_size > sizeof(wav_format))
-          fseek(wavefile,chunk_size-sizeof(wav_format),SEEK_CUR);
+          fseek(file,chunk_size-sizeof(wav_format),SEEK_CUR);
         break;
       case 0x61746164:
 // allocate a buffer big enough to hold a slice
@@ -115,7 +130,8 @@ void wave_player::play(FILE *wavefile)
         if (verbosity)
           tick.attach_us(callback(this,&wave_player::dac_out), 500000); 
         else
-          tick.attach_us(callback(this,&wave_player::dac_out), samp_int); 
+          //startPlayback = 1;
+          tick.attach_us(callback(this,&wave_player::dac_out), samp_int);
         DAC_on=1; 
 
 // start reading slices, which contain one sample each for however many channels
@@ -129,8 +145,8 @@ void wave_player::play(FILE *wavefile)
 // while 16 and 32 bit wave files use signed data
 //
         for (slice=0;slice<num_slices;slice+=1) {
-          fread(slice_buf,wav_format.block_align,1,wavefile);
-          if (feof(wavefile)) {
+          fread(slice_buf,wav_format.block_align,1,file);
+          if (feof(file)) {
             printf("Oops -- not enough slices in the wave file\n");
             exit(1);
           }
@@ -175,8 +191,7 @@ void wave_player::play(FILE *wavefile)
             printf("sample %d wptr %d slice_value %d dac_data %u\n",slice,DAC_wptr,(int)slice_value,dac_data);
           DAC_fifo[DAC_wptr]=dac_data;
           DAC_wptr=(DAC_wptr+1) & 0xff;
-          while (DAC_wptr==DAC_rptr) {
-          }
+          while (DAC_wptr==DAC_rptr);
         }
         DAC_on=0;
         tick.detach();
@@ -185,18 +200,21 @@ void wave_player::play(FILE *wavefile)
       case 0x5453494c:
         if (verbosity)
           printf("INFO chunk, size %d\n",chunk_size);
-        fseek(wavefile,chunk_size,SEEK_CUR);
+        fseek(file,chunk_size,SEEK_CUR);
         break;
       default:
+        return;
         printf("unknown chunk type 0x%x, size %d\n",chunk_id,chunk_size);
-        data=fseek(wavefile,chunk_size,SEEK_CUR);
+        data=fseek(file,chunk_size,SEEK_CUR);
         break;
     }
-    fread(&chunk_id,4,1,wavefile);
-    fread(&chunk_size,4,1,wavefile);
+    fread(&chunk_id,4,1,file);
+    fread(&chunk_size,4,1,file);
+    return;
   }
+  fseek(file, 0, SEEK_SET);
+  play(file);
 }
-
 
 void wave_player::dac_out()
 {
@@ -204,7 +222,7 @@ void wave_player::dac_out()
 #ifdef VERBOSE
   printf("ISR rdptr %d got %u\n",DAC_rptr,DAC_fifo[DAC_rptr]);
 #endif
-    wave_DAC->write_u16(DAC_fifo[DAC_rptr]>>3);
+    wave_DAC->write_u16(DAC_fifo[DAC_rptr]>>4);
     DAC_rptr=(DAC_rptr+1) & 0xff;
   }
 }

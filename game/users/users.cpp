@@ -38,7 +38,7 @@ PLAYER_SKIN getSavedSkin(USER* user) {
     PLAYER_SKIN defaultSkin;
     int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime;
     if (userFile == NULL) {
-        printf("Error opening the file.\n");
+        printf("Error opening the user file.\n");
         return PLAYER_SKIN::ICE_BLUE;
     }
 
@@ -64,7 +64,7 @@ int getSavedHighScore(USER* user) {
     PLAYER_SKIN defaultSkin;
     int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime;
     if (userFile == NULL) {
-        printf("Error opening the file.\n");
+        printf("Error opening the user file.\n");
         return 0;
     }
 
@@ -90,7 +90,7 @@ int getSavedEnemiesKilled(USER* user) {
     PLAYER_SKIN defaultSkin;
     int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime;
     if (userFile == NULL) {
-        printf("Error opening the file.\n");
+        printf("Error opening the user file.\n");
         return 0;
     }
 
@@ -116,7 +116,7 @@ int getSavedPlayerDeaths(USER* user) {
     PLAYER_SKIN defaultSkin;
     int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime;
     if (userFile == NULL) {
-        printf("Error opening the file.\n");
+        printf("Error opening the user file.\n");
         return 0;
     }
 
@@ -142,7 +142,7 @@ int getSavedTotalPoints(USER* user) {
     PLAYER_SKIN defaultSkin;
     int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime;
     if (userFile == NULL) {
-        printf("Error opening the file.\n");
+        printf("Error opening the user file.\n");
         return 0;
     }
 
@@ -168,7 +168,7 @@ int getSavedPlayTime(USER* user) {
     PLAYER_SKIN defaultSkin;
     int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime;
     if (userFile == NULL) {
-        printf("Error opening the file.\n");
+        printf("Error opening the user file.\n");
         return 0;
     }
 
@@ -185,7 +185,7 @@ int userExists(char username[NAME_LENGTH], int userNum) {
     struct dirent *entry;
     allUsersData = opendir("/sd/Users");
     if (allUsersData == NULL) {
-        printf("Unable to open directory\n");
+        printf("Unable to open Users directory\n");
         return -1;
     }
 
@@ -235,7 +235,7 @@ int checkPassword(USER* user) {
     struct dirent *entry;
     allUsersData = opendir("/sd/Users");
     if (allUsersData == NULL) {
-        printf("Unable to open directory\n");
+        printf("Unable to open Users directory\n");
         return 0;
     }
     // File name to look for
@@ -280,7 +280,7 @@ void updateUser(USER* user) {
     strcat(newUserFileName, ".txt");
     FILE* userFile = fopen(newUserFileName, "w");
     if (userFile == NULL) {
-        printf("Error, could not open file.\n");
+        printf("Error, could not open user file.\n");
         return;
     }
     // Overwrite old data

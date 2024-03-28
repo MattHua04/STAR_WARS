@@ -174,8 +174,10 @@ void loginInit(void) {
 /** Update the login screen
  */
 int loginUpdate(void) {
+    loadMusic();
     GAME_INPUTS* inputs = readInputs();
     if (!inputs->quitGame) {
+        buttonSound();
         Timer exit;
         bool exiting = true;
         exit.start();
@@ -294,6 +296,7 @@ int loginUpdate(void) {
                 while (readInputs()->right || readInputs()->down);
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 if (userExists(userInfo.username, userInfo.userNum)) {
                     printf("User doesn't exists. Please register new user.\n");
                     drawInvalidLoginButton(&loginUser);
@@ -333,6 +336,7 @@ int loginUpdate(void) {
                 while (readInputs()->left || readInputs()->up);
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 // Go to registration page
                 while (!readInputs()->normalAttack);
                 return 111;
@@ -362,6 +366,7 @@ int loginUpdate(void) {
                 while (readInputs()->right);
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 page = REGISTRATION_PAGE::USERNAME;
                 backStep.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 usernameBaseSelector.buttonStatus = BUTTON_STATUS::SELECTED;
@@ -400,6 +405,7 @@ int loginUpdate(void) {
             } else if (inputs->right) {
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 // Need to check whether password is 4 numbers long and correct
                 if (!userInfo.password[3] || !checkPassword(&userInfo)) {
                     drawInvalidNextButton(&nextStep);
@@ -441,6 +447,7 @@ int loginUpdate(void) {
             } else if (inputs->right) {
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 4 - 1; i >= 0; i--) {
                     if (userInfo.password[i] != NULL) {
                         userInfo.password[i] = NULL;
@@ -483,6 +490,7 @@ int loginUpdate(void) {
                 while (readInputs()->right);
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (userInfo.password[i] == NULL) {
                         userInfo.password[i] = '0';
@@ -523,6 +531,7 @@ int loginUpdate(void) {
                 while (readInputs()->right);
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (userInfo.password[i] == NULL) {
                         userInfo.password[i] = '1';
@@ -569,6 +578,7 @@ int loginUpdate(void) {
                 while (readInputs()->right);
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (userInfo.password[i] == NULL) {
                         userInfo.password[i] = '2';
@@ -609,6 +619,7 @@ int loginUpdate(void) {
             } else if (inputs->right) {
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (userInfo.password[i] == NULL) {
                         userInfo.password[i] = '3';
@@ -649,6 +660,7 @@ int loginUpdate(void) {
                 while (readInputs()->right);
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (userInfo.password[i] == NULL) {
                         userInfo.password[i] = '4';
@@ -695,6 +707,7 @@ int loginUpdate(void) {
                 while (readInputs()->right);
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (userInfo.password[i] == NULL) {
                         userInfo.password[i] = '5';
@@ -735,6 +748,7 @@ int loginUpdate(void) {
             } else if (inputs->right) {
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (userInfo.password[i] == NULL) {
                         userInfo.password[i] = '6';
@@ -781,6 +795,7 @@ int loginUpdate(void) {
                 while (readInputs()->right);
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (userInfo.password[i] == NULL) {
                         userInfo.password[i] = '7';
@@ -821,6 +836,7 @@ int loginUpdate(void) {
                 while (readInputs()->right);
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (userInfo.password[i] == NULL) {
                         userInfo.password[i] = '8';
@@ -867,6 +883,7 @@ int loginUpdate(void) {
                 while (readInputs()->right);
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (userInfo.password[i] == NULL) {
                         userInfo.password[i] = '9';

@@ -26,6 +26,10 @@ void laserSound(void);
 
 void playLaserSound(void);
 
+void missileSound(void);
+
+void playMissileSound(void);
+
 void explosionSound(void);
 
 void playExplosionSound(void);
@@ -33,5 +37,17 @@ void playExplosionSound(void);
 void hitSound(void);
 
 void playHitSound(void);
+
+void buttonSound(void);
+
+void playButtonSound(void);
+
+void winSound(void);
+
+void playWinSound(void);
+
+void loseSound(void);
+
+void playLoseSound(void);
 
 #endif

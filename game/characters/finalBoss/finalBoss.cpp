@@ -182,11 +182,12 @@ void bossUpdate(void) {
     if (((BOSS*)getData(bossNode))->tick % ((BOSS*)getData(bossNode))->specialAttackInterval == 0) {
         if (randomNum() & 1) {
             ((BOSS*)getData(bossNode))->specialAttacking = true;
+            missileSound();
             bossSpecialAttack(bossNode);
         }
     } else if (((BOSS*)getData(bossNode))->tick % ((BOSS*)getData(bossNode))->fireInterval == 0) {
         if (randomNum() & 1) {
-            //projectileSound();
+            projectileSound();
             bossFireProjectile(bossNode);
         }
     }

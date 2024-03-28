@@ -28,11 +28,7 @@ int main()
 {
     ASSERT_P(hardware_init() == ERROR_NONE, "Hardware init failed!");
     printf("Program Starting\n");
-    //prepareMusicLoader();
-    //return 1;
-    //musicInit();
-    //while (1) loadMusic();
-    //while (1) printBuffer();
+    musicInit();
     while (1) {
         loginInit();
         int loginOutput;

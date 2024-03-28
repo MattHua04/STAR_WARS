@@ -65,9 +65,11 @@ void levelOne(void) {
     start(false, false);
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
+        winSound();
         wait_us(3000000);
     } else if (gameLoop->gameStatus == GAMESTATUS::LOST) {
         drawGameLost();
+        loseSound();
         wait_us(3000000);
     }
     uLCD.cls();
@@ -90,9 +92,11 @@ void levelTwo(void) {
     start(false, false);
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
+        winSound();
         wait_us(3000000);
     } else if (gameLoop->gameStatus == GAMESTATUS::LOST) {
         drawGameLost();
+        loseSound();
         wait_us(3000000);
     }
     uLCD.cls();
@@ -115,9 +119,11 @@ void levelThree(void) {
     start(false, false);
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
+        winSound();
         wait_us(3000000);
     } else if (gameLoop->gameStatus == GAMESTATUS::LOST) {
         drawGameLost();
+        loseSound();
         wait_us(3000000);
     }
     uLCD.cls();
@@ -164,9 +170,11 @@ void infiniteDuration(void) {
     }
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
+        winSound();
         wait_us(3000000);
     } else if (gameLoop->gameStatus == GAMESTATUS::LOST) {
         drawGameLost();
+        loseSound();
         wait_us(3000000);
     }
     uLCD.cls();
@@ -213,9 +221,11 @@ void scoreCap(void) {
     }
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
+        winSound();
         wait_us(3000000);
     } else if (gameLoop->gameStatus == GAMESTATUS::LOST) {
         drawGameLost();
+        loseSound();
         wait_us(3000000);
     }
     uLCD.cls();
@@ -234,9 +244,11 @@ void testLevel(void) {
     start(false, false);
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
+        winSound();
         wait_us(3000000);
     } else if (gameLoop->gameStatus == GAMESTATUS::LOST) {
         drawGameLost();
+        loseSound();
         wait_us(3000000);
     }
     uLCD.cls();
@@ -249,6 +261,7 @@ void start(bool infinite, bool scoreCap) {
     Timer t;
     // Stop loop when all enemies are destroyed or player is destroyed
     while (1) {
+        loadMusic();
         t.start();
         // Update projectiles, player, enemies, boss, and healthBars
         //printf("Started updating stuff\n");
@@ -296,6 +309,7 @@ void start(bool infinite, bool scoreCap) {
             bool quitting = true;
             quit.start();
             while (quitting && quit.elapsed_time().count() < 3000000) {
+                loadMusic();
                 if (readInputs()->quitGame) {
                     quitting = false;
                 }
@@ -309,20 +323,16 @@ void start(bool infinite, bool scoreCap) {
             printf("Game Paused\n");
             drawPaused();
             getGameLoop()->gameStatus = GAMESTATUS::PAUSED;
-            while ((gameInputs = readInputs()) && gameInputs->normalAttack && gameInputs->superAttack && !gameInputs->pauseResume) {
-                wait_us(250);
-            }
+            while ((gameInputs = readInputs()) && gameInputs->normalAttack && gameInputs->superAttack && !gameInputs->pauseResume) loadMusic();
             // Pause
             while ((gameInputs = readInputs())) {
-                wait_us(250);
+                loadMusic();
                 if (gameInputs->normalAttack && gameInputs->superAttack && !gameInputs->pauseResume) {
                     printf("Game Resumed\n");
                     erasePaused();
                     drawResumed();
                     getGameLoop()->gameStatus = GAMESTATUS::RUNNING;
-                    while ((gameInputs = readInputs()) && gameInputs->normalAttack && gameInputs->superAttack && !gameInputs->pauseResume) {
-                        wait_us(250);
-                    }
+                    while ((gameInputs = readInputs()) && gameInputs->normalAttack && gameInputs->superAttack && !gameInputs->pauseResume) loadMusic();
                     eraseResumed();
                     break;
                 }

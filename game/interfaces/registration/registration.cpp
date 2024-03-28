@@ -168,12 +168,15 @@ void registrationInit(void) {
 /** Update the login screen. Returns -1 to go back to login page 
  */
 int registrationUpdate(void) {
+    loadMusic();
     GAME_INPUTS* inputs = readInputs();
     if (!inputs->quitGame) {
+        buttonSound();
         Timer exit;
         bool exiting = true;
         exit.start();
         while (exiting && exit.elapsed_time().count() < 3000000) {
+            loadMusic();
             if (readInputs()->quitGame) {
                 exiting = false;
             }
@@ -187,6 +190,7 @@ int registrationUpdate(void) {
     case REGISTRATION_PAGE::USERNAME:
         if (backStepR.buttonStatus == BUTTON_STATUS::SELECTED) {
             if (!inputs->normalAttack) {
+                buttonSound();
                 usernameBaseSelectorR.buttonStatus = BUTTON_STATUS::SELECTED;
                 backStepR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 // Reset new user data
@@ -196,7 +200,7 @@ int registrationUpdate(void) {
                     newUser.password[i] = {NULL,};
                 }
                 newUser.defaultSkin = PLAYER_SKIN::ICE_BLUE;
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 uLCD.cls();
                 return -1;
             } else if (inputs->right) {
@@ -204,7 +208,7 @@ int registrationUpdate(void) {
                 backStepR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawUserBaseButton(&newUser, &usernameBaseSelectorR);
                 drawBackButton(&backStepR);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             }
         } else if (usernameBaseSelectorR.buttonStatus == BUTTON_STATUS::SELECTED) {
@@ -223,12 +227,12 @@ int registrationUpdate(void) {
                         if (i > 0) {
                             strcpy(newUser.username, getUsernameList()[i - 1]);
                             drawUserBaseButton(&newUser, &usernameBaseSelectorR);
-                            while (readInputs()->up);
+                            while (readInputs()->up) loadMusic();
                             return 0;
                         } else {
                             strcpy(newUser.username, getUsernameList()[15 - 1]);
                             drawUserBaseButton(&newUser, &usernameBaseSelectorR);
-                            while (readInputs()->up);
+                            while (readInputs()->up) loadMusic();
                             return 0;
                         }
                     }
@@ -248,12 +252,12 @@ int registrationUpdate(void) {
                         if (i < 15 - 1) {
                             strcpy(newUser.username, getUsernameList()[i + 1]);
                             drawUserBaseButton(&newUser, &usernameBaseSelectorR);
-                            while (readInputs()->down);
+                            while (readInputs()->down) loadMusic();
                             return 0;
                         } else {
                             strcpy(newUser.username, getUsernameList()[0]);
                             drawUserBaseButton(&newUser, &usernameBaseSelectorR);
-                            while (readInputs()->down);
+                            while (readInputs()->down) loadMusic();
                             return 0;
                         }
                     }
@@ -263,14 +267,14 @@ int registrationUpdate(void) {
                 backStepR.buttonStatus = BUTTON_STATUS::SELECTED;
                 drawUserBaseButton(&newUser, &usernameBaseSelectorR);
                 drawBackButton(&backStepR);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
                 usernameBaseSelectorR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 usernameNumSelectorR.buttonStatus = BUTTON_STATUS::SELECTED;
                 drawUserBaseButton(&newUser, &usernameBaseSelectorR);
                 drawUserNumButton(&newUser, &usernameNumSelectorR);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             }
         } else if (usernameNumSelectorR.buttonStatus == BUTTON_STATUS::SELECTED) {
@@ -278,27 +282,27 @@ int registrationUpdate(void) {
                 if (newUser.userNum < 99) newUser.userNum++;
                 else newUser.userNum = 0;
                 drawUserNumButton(&newUser, &usernameNumSelectorR);
-                while (readInputs()->up);
+                while (readInputs()->up) loadMusic();
                 return 0;
             } else if (inputs->down) {
                 if (newUser.userNum > 0) newUser.userNum--;
                 else newUser.userNum = 99;
                 drawUserNumButton(&newUser, &usernameNumSelectorR);
-                while (readInputs()->down);
+                while (readInputs()->down) loadMusic();
                 return 0;
             } else if (inputs->left) {
                 usernameBaseSelectorR.buttonStatus = BUTTON_STATUS::SELECTED;
                 usernameNumSelectorR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawUserBaseButton(&newUser, &usernameBaseSelectorR);
                 drawUserNumButton(&newUser, &usernameNumSelectorR);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
                 nextStepR.buttonStatus = BUTTON_STATUS::SELECTED;
                 usernameNumSelectorR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawNextButton(&nextStepR);
                 drawUserNumButton(&newUser, &usernameNumSelectorR);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             }
         } else if (nextStepR.buttonStatus == BUTTON_STATUS::SELECTED) {
@@ -307,13 +311,14 @@ int registrationUpdate(void) {
                 usernameNumSelectorR.buttonStatus = BUTTON_STATUS::SELECTED;
                 drawNextButton(&nextStepR);
                 drawUserNumButton(&newUser, &usernameNumSelectorR);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 // Only procede to password setup if username is not already taken
                 if (!userExists(newUser.username, newUser.userNum)) {
                     drawInvalidNextButton(&nextStepR);
-                    while (!readInputs()->normalAttack);
+                    while (!readInputs()->normalAttack) loadMusic();
                     return 0;
                 }
                 nextStepR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
@@ -337,7 +342,7 @@ int registrationUpdate(void) {
                 drawSevenButton(&sevenR);
                 drawEightButton(&eightR);
                 drawNineButton(&nineR);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 return 0;
             }
         }
@@ -353,7 +358,7 @@ int registrationUpdate(void) {
                 backStepR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawBackButton(&backStepR);
                 drawSevenButton(&sevenR);
-                while (readInputs()->down);
+                while (readInputs()->down) loadMusic();
                 return 0;
             } else if (inputs->left) {
                 return 0;
@@ -362,9 +367,10 @@ int registrationUpdate(void) {
                 backStepR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawBackButton(&backStepR);
                 drawNextButton(&nextStepR);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 pageR = REGISTRATION_PAGE::USERNAME;
                 backStepR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 usernameBaseSelectorR.buttonStatus = BUTTON_STATUS::SELECTED;
@@ -375,7 +381,7 @@ int registrationUpdate(void) {
                 drawUserNumButton(&newUser, &usernameNumSelectorR);
                 drawBackButton(&backStepR);
                 drawNextButton(&nextStepR);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 return 0;
             }
         } else if (nextStepR.buttonStatus == BUTTON_STATUS::SELECTED) {
@@ -387,23 +393,24 @@ int registrationUpdate(void) {
                 nextStepR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawNextButton(&nextStepR);
                 drawNineButton(&nineR);
-                while (readInputs()->down);
+                while (readInputs()->down) loadMusic();
                 return 0;
             } else if (inputs->left) {
                 backStepR.buttonStatus = BUTTON_STATUS::SELECTED;
                 nextStepR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawNextButton(&nextStepR);
                 drawBackButton(&backStepR);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 // Need to check whether password is 4 numbers long before going to next page
                 if (!newUser.password[3]) {
                     drawInvalidNextButton(&nextStepR);
                     drawInvalidPassword(newUser.password);
-                    while (!readInputs()->normalAttack);
+                    while (!readInputs()->normalAttack) loadMusic();
                     return 0;
                 }
                 pageR = REGISTRATION_PAGE::DEFAULT_SKIN;
@@ -414,7 +421,7 @@ int registrationUpdate(void) {
                 drawDefaultSkinButton(&newUser, &defaultSkinSelectorR);
                 drawBackButton(&backStepR);
                 drawNextButton(&nextStepR);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 return 0;
             }
         } else if (deleteNumR.buttonStatus == BUTTON_STATUS::SELECTED) {
@@ -424,7 +431,7 @@ int registrationUpdate(void) {
                 deleteNumR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawDeleteButton(&deleteNumR);
                 drawThreeButton(&threeR);
-                while (readInputs()->up);
+                while (readInputs()->up) loadMusic();
                 return 0;
             } else if (inputs->down) {
                 return 0;
@@ -434,11 +441,12 @@ int registrationUpdate(void) {
                 deleteNumR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawDeleteButton(&deleteNumR);
                 drawZeroButton(&zeroR);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 4 - 1; i >= 0; i--) {
                     if (newUser.password[i] != NULL) {
                         newUser.password[i] = NULL;
@@ -446,7 +454,7 @@ int registrationUpdate(void) {
                     }
                 }
                 drawPassword(newUser.password);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 wait_us(250000);
                 return 0;
             }
@@ -460,7 +468,7 @@ int registrationUpdate(void) {
                 zeroR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawZeroButton(&zeroR);
                 drawTwoButton(&twoR);
-                while (readInputs()->up);
+                while (readInputs()->up) loadMusic();
                 return 0;
             } else if (inputs->down) {
                 return 0;
@@ -470,7 +478,7 @@ int registrationUpdate(void) {
                 zeroR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawZeroButton(&zeroR);
                 drawOneButton(&oneR);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
                 currentNumButtonR = -1;
@@ -478,9 +486,10 @@ int registrationUpdate(void) {
                 zeroR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawZeroButton(&zeroR);
                 drawDeleteButton(&deleteNumR);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (newUser.password[i] == NULL) {
                         newUser.password[i] = '0';
@@ -488,7 +497,7 @@ int registrationUpdate(void) {
                     }
                 }
                 drawPassword(newUser.password);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 wait_us(250000);
                 return 0;
             }
@@ -518,9 +527,10 @@ int registrationUpdate(void) {
                 oneR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawOneButton(&oneR);
                 drawTwoButton(&twoR);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (newUser.password[i] == NULL) {
                         newUser.password[i] = '1';
@@ -528,7 +538,7 @@ int registrationUpdate(void) {
                     }
                 }
                 drawPassword(newUser.password);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 wait_us(250000);
                 return 0;
             }
@@ -540,7 +550,7 @@ int registrationUpdate(void) {
                 twoR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawTwoButton(&twoR);
                 drawFiveButton(&fiveR);
-                while (readInputs()->up);
+                while (readInputs()->up) loadMusic();
                 return 0;
             } else if (inputs->down) {
                 currentNumButtonR = 0;
@@ -548,7 +558,7 @@ int registrationUpdate(void) {
                 twoR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawTwoButton(&twoR);
                 drawZeroButton(&zeroR);
-                while (readInputs()->down);
+                while (readInputs()->down) loadMusic();
                 return 0;
             } else if (inputs->left) {
                 currentNumButtonR = 1;
@@ -556,7 +566,7 @@ int registrationUpdate(void) {
                 twoR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawTwoButton(&twoR);
                 drawOneButton(&oneR);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
                 currentNumButtonR = 3;
@@ -564,9 +574,10 @@ int registrationUpdate(void) {
                 twoR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawTwoButton(&twoR);
                 drawThreeButton(&threeR);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (newUser.password[i] == NULL) {
                         newUser.password[i] = '2';
@@ -574,7 +585,7 @@ int registrationUpdate(void) {
                     }
                 }
                 drawPassword(newUser.password);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 wait_us(250000);
                 return 0;
             }
@@ -586,7 +597,7 @@ int registrationUpdate(void) {
                 threeR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawThreeButton(&threeR);
                 drawSixButton(&sixR);
-                while (readInputs()->up);
+                while (readInputs()->up) loadMusic();
                 return 0;
             } else if (inputs->down) {
                 currentNumButtonR = -1;
@@ -594,7 +605,7 @@ int registrationUpdate(void) {
                 threeR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawThreeButton(&threeR);
                 drawDeleteButton(&deleteNumR);
-                while (readInputs()->down);
+                while (readInputs()->down) loadMusic();
                 return 0;
             } else if (inputs->left) {
                 currentNumButtonR = 2;
@@ -602,11 +613,12 @@ int registrationUpdate(void) {
                 threeR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawThreeButton(&threeR);
                 drawTwoButton(&twoR);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (newUser.password[i] == NULL) {
                         newUser.password[i] = '3';
@@ -614,7 +626,7 @@ int registrationUpdate(void) {
                     }
                 }
                 drawPassword(newUser.password);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 wait_us(250000);
                 return 0;
             }
@@ -626,7 +638,7 @@ int registrationUpdate(void) {
                 fourR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawFourButton(&fourR);
                 drawSevenButton(&sevenR);
-                while (readInputs()->up);
+                while (readInputs()->up) loadMusic();
                 return 0;
             } else if (inputs->down) {
                 currentNumButtonR = 1;
@@ -634,7 +646,7 @@ int registrationUpdate(void) {
                 fourR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawFourButton(&fourR);
                 drawOneButton(&oneR);
-                while (readInputs()->down);
+                while (readInputs()->down) loadMusic();
                 return 0;
             } else if (inputs->left) {
                 return 0;
@@ -644,9 +656,10 @@ int registrationUpdate(void) {
                 fourR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawFourButton(&fourR);
                 drawFiveButton(&fiveR);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (newUser.password[i] == NULL) {
                         newUser.password[i] = '4';
@@ -654,7 +667,7 @@ int registrationUpdate(void) {
                     }
                 }
                 drawPassword(newUser.password);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 wait_us(250000);
                 return 0;
             }
@@ -666,7 +679,7 @@ int registrationUpdate(void) {
                 fiveR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawFiveButton(&fiveR);
                 drawEightButton(&eightR);
-                while (readInputs()->up);
+                while (readInputs()->up) loadMusic();
                 return 0;
             } else if (inputs->down) {
                 currentNumButtonR = 2;
@@ -674,7 +687,7 @@ int registrationUpdate(void) {
                 fiveR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawFiveButton(&fiveR);
                 drawTwoButton(&twoR);
-                while (readInputs()->down);
+                while (readInputs()->down) loadMusic();
                 return 0;
             } else if (inputs->left) {
                 currentNumButtonR = 4;
@@ -682,7 +695,7 @@ int registrationUpdate(void) {
                 fiveR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawFiveButton(&fiveR);
                 drawFourButton(&fourR);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
                 currentNumButtonR = 6;
@@ -690,9 +703,10 @@ int registrationUpdate(void) {
                 fiveR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawFiveButton(&fiveR);
                 drawSixButton(&sixR);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (newUser.password[i] == NULL) {
                         newUser.password[i] = '5';
@@ -700,7 +714,7 @@ int registrationUpdate(void) {
                     }
                 }
                 drawPassword(newUser.password);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 wait_us(250000);
                 return 0;
             }
@@ -712,7 +726,7 @@ int registrationUpdate(void) {
                 sixR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawSixButton(&sixR);
                 drawNineButton(&nineR);
-                while (readInputs()->up);
+                while (readInputs()->up) loadMusic();
                 return 0;
             } else if (inputs->down) {
                 currentNumButtonR = 3;
@@ -720,7 +734,7 @@ int registrationUpdate(void) {
                 sixR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawSixButton(&sixR);
                 drawThreeButton(&threeR);
-                while (readInputs()->down);
+                while (readInputs()->down) loadMusic();
                 return 0;
             } else if (inputs->left) {
                 currentNumButtonR = 5;
@@ -728,11 +742,12 @@ int registrationUpdate(void) {
                 sixR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawSixButton(&sixR);
                 drawFiveButton(&fiveR);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (newUser.password[i] == NULL) {
                         newUser.password[i] = '6';
@@ -740,7 +755,7 @@ int registrationUpdate(void) {
                     }
                 }
                 drawPassword(newUser.password);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 wait_us(250000);
                 return 0;
             }
@@ -752,7 +767,7 @@ int registrationUpdate(void) {
                 sevenR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawSevenButton(&sevenR);
                 drawBackButton(&backStepR);
-                while (readInputs()->up);
+                while (readInputs()->up) loadMusic();
                 return 0;
             } else if (inputs->down) {
                 currentNumButtonR = 4;
@@ -760,7 +775,7 @@ int registrationUpdate(void) {
                 sevenR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawSevenButton(&sevenR);
                 drawFourButton(&fourR);
-                while (readInputs()->down);
+                while (readInputs()->down) loadMusic();
                 return 0;
             } else if (inputs->left) {
                 currentNumButtonR = -1;
@@ -768,7 +783,7 @@ int registrationUpdate(void) {
                 sevenR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawSevenButton(&sevenR);
                 drawBackButton(&backStepR);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
                 currentNumButtonR = 8;
@@ -776,9 +791,10 @@ int registrationUpdate(void) {
                 sevenR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawSevenButton(&sevenR);
                 drawEightButton(&eightR);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (newUser.password[i] == NULL) {
                         newUser.password[i] = '7';
@@ -786,7 +802,7 @@ int registrationUpdate(void) {
                     }
                 }
                 drawPassword(newUser.password);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 wait_us(250000);
                 return 0;
             }
@@ -800,7 +816,7 @@ int registrationUpdate(void) {
                 eightR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawEightButton(&eightR);
                 drawFiveButton(&fiveR);
-                while (readInputs()->down);
+                while (readInputs()->down) loadMusic();
                 return 0;
             } else if (inputs->left) {
                 currentNumButtonR = 7;
@@ -808,7 +824,7 @@ int registrationUpdate(void) {
                 eightR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawEightButton(&eightR);
                 drawSevenButton(&sevenR);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
                 currentNumButtonR = 9;
@@ -816,9 +832,10 @@ int registrationUpdate(void) {
                 eightR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawEightButton(&eightR);
                 drawNineButton(&nineR);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (newUser.password[i] == NULL) {
                         newUser.password[i] = '8';
@@ -826,7 +843,7 @@ int registrationUpdate(void) {
                     }
                 }
                 drawPassword(newUser.password);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 wait_us(250000);
                 return 0;
             }
@@ -838,7 +855,7 @@ int registrationUpdate(void) {
                 nineR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawNineButton(&nineR);
                 drawNextButton(&nextStepR);
-                while (readInputs()->up);
+                while (readInputs()->up) loadMusic();
                 return 0;
             } else if (inputs->down) {
                 currentNumButtonR = 6;
@@ -846,7 +863,7 @@ int registrationUpdate(void) {
                 nineR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawNineButton(&nineR);
                 drawSixButton(&sixR);
-                while (readInputs()->down);
+                while (readInputs()->down) loadMusic();
                 return 0;
             } else if (inputs->left) {
                 currentNumButtonR = 8;
@@ -854,7 +871,7 @@ int registrationUpdate(void) {
                 nineR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawNineButton(&nineR);
                 drawEightButton(&eightR);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
                 currentNumButtonR = -1;
@@ -862,9 +879,10 @@ int registrationUpdate(void) {
                 nineR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawNineButton(&nineR);
                 drawNextButton(&nextStepR);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 for (int i = 0; i < 4; i++) {
                     if (newUser.password[i] == NULL) {
                         newUser.password[i] = '9';
@@ -872,7 +890,7 @@ int registrationUpdate(void) {
                     }
                 }
                 drawPassword(newUser.password);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 wait_us(250000);
                 return 0;
             }
@@ -888,12 +906,12 @@ int registrationUpdate(void) {
                         if (i > 0) {
                             newUser.defaultSkin = defaultSkins[--i];
                             drawDefaultSkinButton(&newUser, &defaultSkinSelectorR);
-                            while (readInputs()->up);
+                            while (readInputs()->up) loadMusic();
                             return 0;
                         } else {
                             newUser.defaultSkin = defaultSkins[sizeof(defaultSkins) - 1];
                             drawDefaultSkinButton(&newUser, &defaultSkinSelectorR);
-                            while (readInputs()->up);
+                            while (readInputs()->up) loadMusic();
                             return 0;
                         }
                     }
@@ -904,12 +922,12 @@ int registrationUpdate(void) {
                         if (i < sizeof(defaultSkins) - 1) {
                             newUser.defaultSkin = defaultSkins[++i];
                             drawDefaultSkinButton(&newUser, &defaultSkinSelectorR);
-                            while (readInputs()->down);
+                            while (readInputs()->down) loadMusic();
                             return 0;
                         } else {
                             newUser.defaultSkin = defaultSkins[0];
                             drawDefaultSkinButton(&newUser, &defaultSkinSelectorR);
-                            while (readInputs()->down);
+                            while (readInputs()->down) loadMusic();
                             return 0;
                         }
                     }
@@ -919,14 +937,14 @@ int registrationUpdate(void) {
                 backStepR.buttonStatus = BUTTON_STATUS::SELECTED;
                 drawDefaultSkinButton(&newUser, &defaultSkinSelectorR);
                 drawBackButton(&backStepR);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
                 defaultSkinSelectorR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 nextStepR.buttonStatus = BUTTON_STATUS::SELECTED;
                 drawDefaultSkinButton(&newUser, &defaultSkinSelectorR);
                 drawNextButton(&nextStepR);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             }
         } else if (backStepR.buttonStatus == BUTTON_STATUS::SELECTED) {
@@ -935,9 +953,10 @@ int registrationUpdate(void) {
                 backStepR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawBackButton(&backStepR);
                 drawDefaultSkinButton(&newUser, &defaultSkinSelectorR);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 pageR = REGISTRATION_PAGE::PASSWORD;
                 backStepR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 zeroR.buttonStatus = BUTTON_STATUS::SELECTED;
@@ -959,7 +978,7 @@ int registrationUpdate(void) {
                 drawSevenButton(&sevenR);
                 drawEightButton(&eightR);
                 drawNineButton(&nineR);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 return 0;
             }
         } else if (nextStepR.buttonStatus == BUTTON_STATUS::SELECTED) {
@@ -968,15 +987,16 @@ int registrationUpdate(void) {
                 nextStepR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawNextButton(&nextStepR);
                 drawDefaultSkinButton(&newUser, &defaultSkinSelectorR);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 registerNewUser(&newUser);
                 pageR = REGISTRATION_PAGE::USERNAME;
                 nextStepR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 usernameBaseSelectorR.buttonStatus = BUTTON_STATUS::SELECTED;
                 // Go back to the login page
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 uLCD.cls();
                 return -1;
             }

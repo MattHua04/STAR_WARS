@@ -45,6 +45,8 @@ wave_player(AnalogOut *_dac);
  */
 void play(FILE *wavefile);
 
+void playSound(void);
+
 /** Set the printf verbosity of the wave player.  A nonzero verbosity level
  * will put wave_player in a mode where the complete contents of the wave
  * file are echoed to the screen, including header values, and including

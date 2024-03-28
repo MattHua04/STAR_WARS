@@ -84,12 +84,15 @@ void menuInit(void) {
 }
 
 int menuUpdate(void) {
+    loadMusic();
     GAME_INPUTS* inputs = readInputs();
     if (!inputs->quitGame) {
+        buttonSound();
         Timer exit;
         bool exiting = true;
         exit.start();
         while (exiting && exit.elapsed_time().count() < 3000000) {
+            loadMusic();
             if (readInputs()->quitGame) {
                 exiting = false;
             }
@@ -101,28 +104,29 @@ int menuUpdate(void) {
     if (menuPage == MENU_PAGE::MENU_HOME) {
         if (play.buttonStatus == BUTTON_STATUS::SELECTED) {
             if (!inputs->normalAttack) {
-                while (!readInputs()->normalAttack);
+                buttonSound();
+                while (!readInputs()->normalAttack) loadMusic();
                 return 1;
             } else if (inputs->right) {
                 play.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 modeSelector.buttonStatus = BUTTON_STATUS::SELECTED;
                 drawPlayButton(&menuSettings, &play);
                 drawMSButton(&menuSettings, &modeSelector);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             } else if (inputs->left) {
                 play.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 skinSelector.buttonStatus = BUTTON_STATUS::SELECTED;
                 drawPlayButton(&menuSettings, &play);
                 drawSSButton(&menuSettings, &skinSelector);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->up) {
                 play.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 difficulty.sliderStatus = BUTTON_STATUS::SELECTED;
                 drawPlayButton(&menuSettings, &play);
                 drawDiffScale(&menuSettings, &difficulty);
-                while (readInputs()->up);
+                while (readInputs()->up) loadMusic();
                 return 0;
             }
         } else if (skinSelector.buttonStatus == BUTTON_STATUS::SELECTED) {
@@ -134,14 +138,14 @@ int menuUpdate(void) {
                             getUserInfo()->defaultSkin = skins[i - 1];
                             updateUser(getUserInfo());
                             drawSSButton(&menuSettings, &skinSelector);
-                            while (readInputs()->up);
+                            while (readInputs()->up) loadMusic();
                             return 0;
                         } else {
                             menuSettings.playerSkin = skins[sizeof(skins) - 1];
                             getUserInfo()->defaultSkin = skins[sizeof(skins) - 1];
                             updateUser(getUserInfo());
                             drawSSButton(&menuSettings, &skinSelector);
-                            while (readInputs()->up);
+                            while (readInputs()->up) loadMusic();
                             return 0;
                         }
                     }
@@ -154,14 +158,14 @@ int menuUpdate(void) {
                             getUserInfo()->defaultSkin = skins[i + 1];
                             updateUser(getUserInfo());
                             drawSSButton(&menuSettings, &skinSelector);
-                            while (readInputs()->down);
+                            while (readInputs()->down) loadMusic();
                             return 0;
                         } else {
                             menuSettings.playerSkin = skins[0];
                             getUserInfo()->defaultSkin = skins[0];
                             updateUser(getUserInfo());
                             drawSSButton(&menuSettings, &skinSelector);
-                            while (readInputs()->down);
+                            while (readInputs()->down) loadMusic();
                             return 0;
                         }
                     }
@@ -171,7 +175,7 @@ int menuUpdate(void) {
                 play.buttonStatus = BUTTON_STATUS::SELECTED;
                 drawSSButton(&menuSettings, &skinSelector);
                 drawPlayButton(&menuSettings, &play);
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             }
         } else if (modeSelector.buttonStatus == BUTTON_STATUS::SELECTED) {
@@ -187,7 +191,7 @@ int menuUpdate(void) {
                     }
                 }
                 drawMSButton(&menuSettings, &modeSelector);
-                while (readInputs()->up);
+                while (readInputs()->up) loadMusic();
                 return 0;
             } else if (inputs->down) {
                 for (int i = 2; i >= 0; i--) {
@@ -200,23 +204,24 @@ int menuUpdate(void) {
                     }
                 }
                 drawMSButton(&menuSettings, &modeSelector);
-                while (readInputs()->down);
+                while (readInputs()->down) loadMusic();
                 return 0;
             } else if (inputs->left) {
                 modeSelector.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 play.buttonStatus = BUTTON_STATUS::SELECTED;
                 drawMSButton(&menuSettings, &modeSelector);
                 drawPlayButton(&menuSettings, &play);
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (menuSettings.gameMode == GAME_MODE::SCORECAP && !inputs->normalAttack) {
+                buttonSound();
                 if (menuSettings.scoreCap < 100) {
                     menuSettings.scoreCap += 10;
                 } else {
                     menuSettings.scoreCap = 10;
                 }
                 drawMSButton(&menuSettings, &modeSelector);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 wait_us(250000);
                 return 0;
             }
@@ -226,7 +231,7 @@ int menuUpdate(void) {
                 difficulty.sliderStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawDiffScale(&menuSettings, &difficulty);
                 drawPlayButton(&menuSettings, &play);
-                while (readInputs()->down);
+                while (readInputs()->down) loadMusic();
                 return 0;
             } else if (inputs->left) {
                 if (difficulty.value > 1) {
@@ -235,7 +240,7 @@ int menuUpdate(void) {
                     difficulty.boundingBox->bottomRight.x = (int)round(127 * (double)difficulty.value / difficulty.maxVal);
                     drawDiffScale(&menuSettings, &difficulty);
                 }
-                while (readInputs()->left);
+                while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
                 if (difficulty.value < difficulty.maxVal) {
@@ -244,14 +249,14 @@ int menuUpdate(void) {
                     difficulty.boundingBox->bottomRight.x = (int)round(127 * (double)difficulty.value / difficulty.maxVal);
                     drawDiffScale(&menuSettings, &difficulty);
                 }
-                while (readInputs()->right);
+                while (readInputs()->right) loadMusic();
                 return 0;
             } else if (inputs->up) {
                 userStats.buttonStatus = BUTTON_STATUS::SELECTED;
                 difficulty.sliderStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawDiffScale(&menuSettings, &difficulty);
                 drawUserStatsButton(getUserInfo(), &userStats);
-                while (readInputs()->up);
+                while (readInputs()->up) loadMusic();
                 return 0;
             }
         } else if (userStats.buttonStatus == BUTTON_STATUS::SELECTED) {
@@ -260,15 +265,16 @@ int menuUpdate(void) {
                 difficulty.sliderStatus = BUTTON_STATUS::SELECTED;
                 drawUserStatsButton(getUserInfo(), &userStats);
                 drawDiffScale(&menuSettings, &difficulty);
-                while (readInputs()->down);
+                while (readInputs()->down) loadMusic();
                 return 0;
             } else if (!inputs->normalAttack) {
+                buttonSound();
                 menuPage = MENU_PAGE::USER_STATS;
                 uLCD.cls();
                 drawUserStatsBackground(getUserInfo());
                 drawUserStatsButton(getUserInfo(), &userStats);
                 drawDeleteUserButton(&deleteProfile);
-                while (!readInputs()->normalAttack);
+                while (!readInputs()->normalAttack) loadMusic();
                 return 0;
             }
         }
@@ -276,6 +282,7 @@ int menuUpdate(void) {
     } else if (menuPage == MENU_PAGE::USER_STATS) {
         if (userStats.buttonStatus == BUTTON_STATUS::SELECTED) {
             if (!inputs->normalAttack) {
+                buttonSound();
                 menuPage = MENU_PAGE::MENU_HOME;
                 uLCD.cls();
                 drawMenuBackground();
@@ -284,22 +291,24 @@ int menuUpdate(void) {
                 drawSSButton(&menuSettings, &skinSelector);
                 drawMSButton(&menuSettings, &modeSelector);
                 drawPlayButton(&menuSettings, &play);
-                while(!readInputs()->normalAttack);
+                while(!readInputs()->normalAttack) loadMusic();
                 return 0;
             } else if (inputs->down) {
                 deleteProfile.buttonStatus = BUTTON_STATUS::SELECTED;
                 userStats.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 drawUserStatsButton(getUserInfo(), &userStats);
                 drawDeleteUserButton(&deleteProfile);
-                while (readInputs()->down);
+                while (readInputs()->down) loadMusic();
                 return 0;
             }
         } else if (deleteProfile.buttonStatus == BUTTON_STATUS::SELECTED) {
             if (!inputs->normalAttack) {
+                buttonSound();
                 Timer exit;
                 exit.start();
                 bool deletingUser = true;
                 while (deletingUser && exit.elapsed_time().count() < 5000000) {
+                    loadMusic();
                     if (readInputs()->normalAttack) {
                         deletingUser = false;
                     }
@@ -315,7 +324,7 @@ int menuUpdate(void) {
                 userStats.buttonStatus = BUTTON_STATUS::SELECTED;
                 drawUserStatsButton(getUserInfo(), &userStats);
                 drawDeleteUserButton(&deleteProfile);
-                while (readInputs()->up);
+                while (readInputs()->up) loadMusic();
                 return 0;
             }
         }

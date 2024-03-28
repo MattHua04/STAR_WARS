@@ -359,7 +359,11 @@ void enemiesUpdate(void) {
         enemyUpdatePos(currentNode);
         if (!((ENEMY*)getData(currentNode))->entering && ((ENEMY*)getData(currentNode))->tick % ((ENEMY*)getData(currentNode))->fireInterval == 0) {
             if (randomNum() & 1) {
-                projectileSound();
+                if (((ENEMY*)getData(currentNode))->enemyType == CHARACTER_TYPE::MISSILE_ENEMY) {
+                    missileSound();
+                } else {
+                    projectileSound();
+                }
                 enemyFireProjectile(currentNode);
             }
         }

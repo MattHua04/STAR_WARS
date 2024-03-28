@@ -2,7 +2,7 @@
     {
         "module": "[lib]/c_w.l",
         "size": {
-            ".text": 13983,
+            ".text": 14263,
             ".data": 16,
             ".bss": 552,
             ".text-delta": 0,
@@ -57,7 +57,7 @@
     {
         "module": "game/characters",
         "size": {
-            ".text": 5922,
+            ".text": 5946,
             ".data": 0,
             ".bss": 20,
             ".text-delta": 0,
@@ -68,10 +68,10 @@
     {
         "module": "game/gameLoops",
         "size": {
-            ".text": 2080,
+            ".text": 2136,
             ".data": 0,
             ".bss": 32,
-            ".text-delta": 0,
+            ".text-delta": 4,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -90,10 +90,10 @@
     {
         "module": "game/interfaces",
         "size": {
-            ".text": 12687,
+            ".text": 13189,
             ".data": 14,
             ".bss": 456,
-            ".text-delta": 0,
+            ".text-delta": 348,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -112,10 +112,10 @@
     {
         "module": "game/users",
         "size": {
-            ".text": 1872,
+            ".text": 1903,
             ".data": 300,
             ".bss": 0,
-            ".text-delta": -8,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -123,7 +123,7 @@
     {
         "module": "main.o",
         "size": {
-            ".text": 409,
+            ".text": 413,
             ".data": 0,
             ".bss": 0,
             ".text-delta": 0,
@@ -222,10 +222,10 @@
     {
         "module": "utilities/audio",
         "size": {
-            ".text": 87578,
-            ".data": 0,
-            ".bss": 1016,
-            ".text-delta": -106,
+            ".text": 179134,
+            ".data": 12,
+            ".bss": 1288,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -244,10 +244,10 @@
     {
         "module": "utilities/graphics",
         "size": {
-            ".text": 18827,
+            ".text": 18823,
             ".data": 0,
             ".bss": 0,
-            ".text-delta": 0,
+            ".text-delta": -4,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -266,9 +266,9 @@
     {
         "module": "utilities/wave_player",
         "size": {
-            ".text": 32,
+            ".text": 48,
             ".data": 0,
-            ".bss": 0,
+            ".bss": 64,
             ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
@@ -276,10 +276,10 @@
     },
     {
         "summary": {
-            "static_ram": 9147,
+            "static_ram": 9495,
             "static_ram_delta": 0,
-            "total_flash": 193809,
-            "total_flash_delta": -114
+            "total_flash": 286286,
+            "total_flash_delta": 348
         }
     }
 ]
