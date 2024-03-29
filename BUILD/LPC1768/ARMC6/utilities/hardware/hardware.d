@@ -147,8 +147,7 @@ BUILD/LPC1768/ARMC6/utilities/hardware/hardware.o: \
   mbed-os/platform/include/platform/Stream.h \
   mbed-os/platform/include/platform/FileLike.h \
   utilities/audio/gameMusic.h utilities/hardware/hardware.h \
-  utilities/wave_player/wave_player.h utilities/4DGL-uLCD-SE/uLCD_4DGL.h \
-  utilities/Nav_Switch/Nav_Switch.h \
+  utilities/4DGL-uLCD-SE/uLCD_4DGL.h utilities/Nav_Switch/Nav_Switch.h \
   mbed-os/storage/blockdevice/COMPONENT_SD/include/SD/SDBlockDevice.h \
   mbed-os/hal/include/hal/static_pinmap.h \
   mbed-os/hal/include/hal/qspi_api.h mbed-os/hal/include/hal/ospi_api.h \
@@ -159,4 +158,7 @@ BUILD/LPC1768/ARMC6/utilities/hardware/hardware.o: \
   game/characters/player/player.h game/healthBars/healthBar.h \
   utilities/graphics/graphics.h game/gameLoops/game.h \
   game/interfaces/menu/menu.h game/users/users.h \
-  game/interfaces/login/login.h
+  game/interfaces/login/login.h \
+  utilities/asyncLibraries/MbedLibraryCollection/libraries/ulcd/uLCD.hpp \
+  utilities/asyncLibraries/MbedLibraryCollection/libraries/asyncIO/serialAsync.hpp \
+  utilities/asyncLibraries/MbedLibraryCollection/libraries/asyncIO/dma.h

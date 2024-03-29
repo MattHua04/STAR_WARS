@@ -12,6 +12,8 @@
 #include "uLCD.hpp"
 #include "users.h"
 
+class uLCD lcd(P0_13, P0_14, p15, uLCD::B_1500000);
+
 int getHexColor(char color) {
     if (color == 'X' && getMenuSettings()->playerSkin) color = getMenuSettings()->playerSkin;
     else if (color == 'X' && getNewUser()->defaultSkin) color = getNewUser()->defaultSkin;
@@ -33,8 +35,6 @@ int getHexColor(char color) {
     default: return BLACK;
     }
 }
-
-class uLCD lcd(P0_15, P0_16, p25, uLCD::B_1500000);
 
 void drawProfileImg(void) {
     /**for (int i = 0; i < 128*128; i++) {
@@ -63,8 +63,8 @@ void drawImg(int x, int y, int width, int height, const char* object) {
 }
 
 void drawBox(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY, char color) {
-    //lcd.drawRectangleFilled(topLeftX, topLeftY, bottomRightX, bottomRightY, uLCD::get4DGLColor(getHexColor(color)));
-    uLCD.filled_rectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, getHexColor(color));
+    lcd.drawRectangleFilled(topLeftX, topLeftY, bottomRightX, bottomRightY, uLCD::get4DGLColor(getHexColor(color)));
+    //uLCD.filled_rectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, getHexColor(color));
 }
 
 void drawPlayer(LLNode* player) {
@@ -231,7 +231,7 @@ void drawSuperAttackBar(LLNode* player) {
         drawBox(0, 127 - 5, 127, 127 - 3, '4');
     } else {
         drawBox(0, 127 - 5, 127, 127 - 3, '4');
-        drawBox(0, 127 - 5, (int)round(127 * (double)((PLAYER*)getData(player))->superChargeStatus / 5), 127 - 3, 'Y');
+        drawBox(0, 127 - 5, (int)round(127 * (double)((PLAYER*)getData(player))->superChargeStatus / MAX_SUPER_CHARGE), 127 - 3, 'Y');
     }
 }
 
@@ -1315,12 +1315,30 @@ void drawGameLost(void) {
     uLCD.cls();
     // Sun
     uLCD.filled_circle(127, 0, 30, RED);
+    uLCD.circle(127, 0, 30, WHITE);
+    uLCD.circle(127, 0, 29, MRED);
+    uLCD.circle(127, 0, 28, DRED);
     // Moon
     uLCD.filled_circle(0, 7, 15, RED);
+    uLCD.filled_circle(8, 19, 2, BLACK);
+    uLCD.filled_circle(0, 16, 3, MRED);
+    uLCD.filled_circle(-1, 12, 2, DRED);
+    uLCD.filled_circle(5, 6, 3, MRED);
+    uLCD.filled_circle(9, 9, 2, DRED);
     // Earth
     uLCD.filled_circle(127, 110, 25, RED);
+    uLCD.filled_circle(120, 100, 9, MRED);
+    uLCD.filled_circle(110, 110, 4, MRED);
+    uLCD.filled_circle(112, 105, 3, MRED);
+    uLCD.filled_circle(108, 105, 2, DRED);
+    uLCD.filled_circle(120, 97, 3, DRED);
+    uLCD.filled_circle(126, 103, 5, DRED);
     // Mars
     uLCD.filled_circle(0, 105, 15, RED);
+    uLCD.filled_circle(0, 95, 3, DRED);
+    uLCD.filled_circle(-1, 99, 2, MRED);
+    uLCD.filled_circle(7, 106, 4, DRED);
+    uLCD.filled_circle(11, 112, 2, MRED);
 
     drawImg(64 - 9, 127 - 105, 19, 19, BOSS_IMGS[3]);
     drawImg(39 - 5, 127 - 85, 11, 11, ENEMY_IMGS[3]);

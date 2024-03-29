@@ -3,6 +3,7 @@
 #include "player.h"
 #include "hardware.h"
 #include "game.h"
+#include "uLCD.hpp"
 
 uLCD_4DGL uLCD(p13,p14,p15);
 Nav_Switch myNav(p26, p29, p28, p30, p27);
@@ -12,9 +13,7 @@ DigitalIn pauseResume(p24);
 DigitalIn quitGame(p25);
 SDBlockDevice sd_block(p5,p6,p7,p8);
 FATFileSystem fs("sd", &sd_block);
-//PwmOut speaker(p25);
 AnalogOut DACout(p18);
-wave_player waver(&DACout);
 
 GAME_INPUTS* gameInputs;
 

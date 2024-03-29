@@ -115,7 +115,7 @@
             ".text": 4694,
             ".data": 0,
             ".bss": 12,
-            ".text-delta": 16,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -134,10 +134,10 @@
     {
         "module": "main.o",
         "size": {
-            ".text": 437,
+            ".text": 465,
             ".data": 0,
             ".bss": 0,
-            ".text-delta": 0,
+            ".text-delta": 28,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -233,7 +233,7 @@
     {
         "module": "utilities/asyncLibraries",
         "size": {
-            ".text": 1932,
+            ".text": 2064,
             ".data": 0,
             ".bss": 3,
             ".text-delta": 0,
@@ -266,7 +266,7 @@
     {
         "module": "utilities/graphics",
         "size": {
-            ".text": 84503,
+            ".text": 84765,
             ".data": 0,
             ".bss": 144,
             ".text-delta": 0,
@@ -277,20 +277,9 @@
     {
         "module": "utilities/hardware",
         "size": {
-            ".text": 420,
+            ".text": 408,
             ".data": 0,
-            ".bss": 1788,
-            ".text-delta": 0,
-            ".data-delta": 0,
-            ".bss-delta": 0
-        }
-    },
-    {
-        "module": "utilities/wave_player",
-        "size": {
-            ".text": 48,
-            ".data": 0,
-            ".bss": 64,
+            ".bss": 1196,
             ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
@@ -298,10 +287,10 @@
     },
     {
         "summary": {
-            "static_ram": 11455,
+            "static_ram": 10799,
             "static_ram_delta": 0,
-            "total_flash": 473661,
-            "total_flash_delta": 16
+            "total_flash": 474023,
+            "total_flash_delta": 28
         }
     }
 ]

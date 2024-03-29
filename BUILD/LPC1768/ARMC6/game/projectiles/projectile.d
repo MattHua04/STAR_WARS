@@ -146,8 +146,7 @@ BUILD/LPC1768/ARMC6/game/projectiles/projectile.o: \
   mbed-os/platform/include/platform/mbed_stats.h \
   mbed-os/platform/include/platform/Stream.h \
   mbed-os/platform/include/platform/FileLike.h globals.h \
-  utilities/wave_player/wave_player.h utilities/4DGL-uLCD-SE/uLCD_4DGL.h \
-  utilities/Nav_Switch/Nav_Switch.h \
+  utilities/4DGL-uLCD-SE/uLCD_4DGL.h utilities/Nav_Switch/Nav_Switch.h \
   mbed-os/storage/blockdevice/COMPONENT_SD/include/SD/SDBlockDevice.h \
   mbed-os/hal/include/hal/static_pinmap.h \
   mbed-os/hal/include/hal/qspi_api.h mbed-os/hal/include/hal/ospi_api.h \

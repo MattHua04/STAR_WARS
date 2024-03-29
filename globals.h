@@ -2,7 +2,6 @@
 #define GLOBAL_H
 #include "mbed.h"
 #include "gameMusic.h"
-#include "wave_player.h"
 #include "uLCD_4DGL.h"
 #include <math.h>
 #include "Nav_Switch.h"
@@ -22,6 +21,8 @@
 #define PINK 0xff00fb
 #define DIRT   BROWN
 #define RED    0xFF0000
+#define MRED 0x750000
+#define DRED 0x420000
 #define BLUE   0x0000FF
 #define ORANGE 0xFFA500
 #define MGREY 0x8f8f8f
@@ -121,8 +122,7 @@ typedef enum {
 
 // === [global object] ===
 extern uLCD_4DGL uLCD;
-extern wave_player waver;
-extern PwmOut speaker;
+extern class uLCD lcd;
 extern SDBlockDevice sd_block;
 extern FATFileSystem fs;
 
@@ -141,16 +141,5 @@ extern FATFileSystem fs;
 
 // === [error code] ===
 #define ERROR_NONE 0 // All good in the hood
-#define ERROR_ENEMY_INDEX_GET_INFO      -1  // make sure your code gives the valid index for enemy_get_info()
-#define ERROR_ENEMY_INDEX_UPDATE_STATUS -2  // make sure your code gives the valid index for enemy_update_status()
-#define ERROR_ENEMY_SPEED               -3  // enemy speed has to be between 1 and 8
-#define ERROR_ENEMY_INTERVAL            -4  // enemy interval has to be between 1 and 100
-//otehr enemy error code
-
-// DLL
-#define ERROR_DLL_INSERT_HEAD             -14 // inserting into doubly linked list at head failed
-#define ERROR_DLL_DELETE                  -15 // deleting node from doubly linked list failed
-//other error codes
-
 
 #endif //GLOBAL_H

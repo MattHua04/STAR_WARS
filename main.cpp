@@ -30,6 +30,7 @@ int main()
     printf("Program Starting\n");
     drawProfileImg();
     wait_us(3000000);
+    drawBox(0, 127, 127, 0, 'R');
     musicInit();
     while (1) {
         loginInit();
