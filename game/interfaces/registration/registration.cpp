@@ -1,5 +1,6 @@
 #include "registration.h"
 #include "graphics.h"
+#include "menu.h"
 #include "users.h"
 #include "hardware.h"
 
@@ -184,6 +185,16 @@ int registrationUpdate(void) {
         if (exiting) {
             return 999;
         }
+    } else if (!inputs->superAttack) {
+        buttonSound();
+        getMenuSettings()->volume -= (getMenuSettings()->volume > 0) ? 0.05 : 0;
+        while (!readInputs()->superAttack) loadMusic();
+        return 0;
+    } else if (!inputs->pauseResume) {
+        buttonSound();
+        getMenuSettings()->volume += (getMenuSettings()->volume < 1) ? 0.05 : 0;
+        while (!readInputs()->pauseResume) loadMusic();
+        return 0;
     }
     switch (pageR) {
     // Username page
