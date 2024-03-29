@@ -5,49 +5,65 @@
 #include "globals.h"
 #include "hardware.h"
 
+typedef struct {
+    char     riff[4];
+    uint32_t fileSize;
+    char     wave[4];
+} WAVHeader;
+
+/**
+ * Prepares background music and game effects to be played
+ */
+void musicInit(void);
+
 /**
  * Plays background music
  */
-void printBuffer(void);
-
-void prepareMusicLoader(void);
-
-void musicInit(void);
-
 void playMusic(void);
 
+/**
+ * Loads 16kB buffers for background music
+ */
 void loadMusic(void);
 
+/**
+ * Plays normal projectile sound effect
+ */
 void projectileSound(void);
 
-void playProjectileSound(void);
-
+/**
+ * Plays laser projectile sound effect
+ */
 void laserSound(void);
 
-void playLaserSound(void);
-
+/**
+ * Plays missile projectile sound effect
+ */
 void missileSound(void);
 
-void playMissileSound(void);
-
+/**
+ * Plays explosion sound effect
+ */
 void explosionSound(void);
 
-void playExplosionSound(void);
-
+/**
+ * Plays projectile hit sound effect
+ */
 void hitSound(void);
 
-void playHitSound(void);
-
+/**
+ * Plays button press sound effect
+ */
 void buttonSound(void);
 
-void playButtonSound(void);
-
+/**
+ * Plays winning sound effect
+ */
 void winSound(void);
 
-void playWinSound(void);
-
+/**
+ * Plays losing sound effect
+ */
 void loseSound(void);
-
-void playLoseSound(void);
 
 #endif

@@ -9,6 +9,7 @@
 #include "finalBoss.h"
 #include "game.h"
 #include "registration.h"
+#include "uLCD.hpp"
 #include "users.h"
 
 int getHexColor(char color) {
@@ -33,15 +34,36 @@ int getHexColor(char color) {
     }
 }
 
+class uLCD lcd(P0_15, P0_16, p25, uLCD::B_1500000);
+
+void drawProfileImg(void) {
+    /**for (int i = 0; i < 128*128; i++) {
+        uLCD.pixel(i%128, i/128, profileImg[i]);
+    }
+    return;*/
+    int chunckWidth = 32;
+    for (int i = 0; i < 128; i += chunckWidth) {
+        int chunk[128 * chunckWidth];
+        for (int j = 0; j < chunckWidth; j++) {
+            for (int k = 0; k < 128; k++) {
+                chunk[j * 128 + k] = profileImg[i * 128 + j * 128 + k];
+            }
+        }
+        uLCD.BLIT(0, i, 128, chunckWidth, chunk);
+    }
+}
+
 void drawImg(int x, int y, int width, int height, const char* object) {
     int img[width*height];
-    for (int i = 0; i < sizeof(img) / 4; i++) {
-        img[i] = getHexColor(object[i]);
+    for (int i = 0; i < width*height; i++) {
+        img[i] = (getHexColor(object[i])); //uLCD::get4DGLColor
     }
     uLCD.BLIT(x, y, width, height, img);
+    //lcd.BLIT(x, y, width, height, img, false);
 }
 
 void drawBox(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY, char color) {
+    //lcd.drawRectangleFilled(topLeftX, topLeftY, bottomRightX, bottomRightY, uLCD::get4DGLColor(getHexColor(color)));
     uLCD.filled_rectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, getHexColor(color));
 }
 

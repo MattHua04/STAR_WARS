@@ -1,6 +1,6 @@
 BUILD/LPC1768/ARMC6/game/interfaces/login/login.o: \
   game/interfaces/login/login.cpp BUILD/LPC1768/ARMC6/mbed_config.h \
-  game/interfaces/menu/menu.h mbed-os/mbed.h \
+  utilities/audio/gameMusic.h mbed-os/mbed.h \
   mbed-os/platform/include/platform/mbed_version.h \
   mbed-os/rtos/include/rtos/rtos.h \
   mbed-os/rtos/include/rtos/internal/mbed_rtos_storage.h \
@@ -146,7 +146,6 @@ BUILD/LPC1768/ARMC6/game/interfaces/login/login.o: \
   mbed-os/platform/include/platform/mbed_stats.h \
   mbed-os/platform/include/platform/Stream.h \
   mbed-os/platform/include/platform/FileLike.h globals.h \
-  utilities/audio/gameMusic.h utilities/hardware/hardware.h \
   utilities/wave_player/wave_player.h utilities/4DGL-uLCD-SE/uLCD_4DGL.h \
   utilities/Nav_Switch/Nav_Switch.h \
   mbed-os/storage/blockdevice/COMPONENT_SD/include/SD/SDBlockDevice.h \
@@ -155,6 +154,7 @@ BUILD/LPC1768/ARMC6/game/interfaces/login/login.o: \
   mbed-os/storage/filesystem/fat/include/fat/FATFileSystem.h \
   mbed-os/storage/filesystem/fat/ChaN/ff.h \
   mbed-os/storage/filesystem/fat/ChaN/ffconf.h \
+  utilities/hardware/hardware.h game/interfaces/menu/menu.h \
   utilities/graphics/graphics.h game/gameLoops/game.h \
   utilities/doublyLinkedList/doublyLinkedList.h game/users/users.h \
   game/interfaces/login/login.h \

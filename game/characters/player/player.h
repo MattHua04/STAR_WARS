@@ -13,6 +13,7 @@
 #define PLAYER_SPEED 4
 #define PLAYER_WIDTH 11
 #define PLAYER_HEIGHT 11
+#define MAX_SUPER_CHARGE 10
 
 typedef struct {
     int x;

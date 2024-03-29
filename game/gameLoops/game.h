@@ -17,6 +17,8 @@ typedef struct {
     int level;
 } GAMELOOP;
 
+int* getInGame(void);
+
 /** Generate a random number
  */
 int randomNum(void);

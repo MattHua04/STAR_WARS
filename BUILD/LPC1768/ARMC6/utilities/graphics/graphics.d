@@ -160,4 +160,7 @@ BUILD/LPC1768/ARMC6/utilities/graphics/graphics.o: \
   game/interfaces/login/login.h game/projectiles/projectile.h \
   game/characters/player/player.h game/healthBars/healthBar.h \
   game/characters/enemies/enemy.h game/characters/finalBoss/finalBoss.h \
-  game/interfaces/registration/registration.h
+  game/interfaces/registration/registration.h \
+  utilities/asyncLibraries/MbedLibraryCollection/libraries/ulcd/uLCD.hpp \
+  utilities/asyncLibraries/MbedLibraryCollection/libraries/asyncIO/serialAsync.hpp \
+  utilities/asyncLibraries/MbedLibraryCollection/libraries/asyncIO/dma.h

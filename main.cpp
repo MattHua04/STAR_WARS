@@ -28,6 +28,8 @@ int main()
 {
     ASSERT_P(hardware_init() == ERROR_NONE, "Hardware init failed!");
     printf("Program Starting\n");
+    drawProfileImg();
+    wait_us(3000000);
     musicInit();
     while (1) {
         loginInit();
@@ -52,6 +54,7 @@ int main()
             uLCD.cls();
             playerInit();
             
+            *getInGame() = 1;
             if (getMenuSettings()->gameMode == GAME_MODE::LEVELS) {
                 generateGameLoop(1);
             } else if (getMenuSettings()->gameMode == GAME_MODE::INFINITE) {
@@ -59,8 +62,9 @@ int main()
             } else if (getMenuSettings()->gameMode == GAME_MODE::SCORECAP) {
                 generateGameLoop(5);
             }
-            // Have to update user data
-            // User data format: dSkin, hScore, eKilled, pDeaths, tPoints, tTime
+            *getInGame() = 0;
+
+            // Update user data
             getUserInfo()->highScore = (getPlayer()->score > getUserInfo()->highScore) ? getPlayer()->score : getUserInfo()->highScore;
             getUserInfo()->totalEnemiesKilled += getPlayer()->sessionKills;
             getUserInfo()->totalPlayerDeaths += getPlayer()->sessionDeaths;

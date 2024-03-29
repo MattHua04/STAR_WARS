@@ -40,7 +40,7 @@ void playerInit(void) {
     ((PLAYER*)getData(playerNode))->tick = 0;
     ((PLAYER*)getData(playerNode))->lastFireTick = -20;
     ((PLAYER*)getData(playerNode))->fireInterval = 20;
-    ((PLAYER*)getData(playerNode))->superChargeStatus = 0; // Should start as 0, 5 is for testing
+    ((PLAYER*)getData(playerNode))->superChargeStatus = 0; // Should start as 0
     ((PLAYER*)getData(playerNode))->superActive = false;
     ((PLAYER*)getData(playerNode))->type = CHARACTER_TYPE::PLAYER_CHARACTER;
     ((PLAYER*)getData(playerNode))->playerStatus =CHARACTER_STATUS::ACTIVE;
@@ -155,8 +155,8 @@ void playerFireProjectile(void) {
 }
 
 void playerSuperAttack(void) {
-    // Only start super attack if superChargeStatus is full (5)
-    if (player->superChargeStatus >= 5 && !player->superActive) {
+    // Only start super attack if superChargeStatus is full
+    if (player->superChargeStatus >= MAX_SUPER_CHARGE && !player->superActive) {
         laserSound();
         ((PLAYER*)getData(playerNode))->superChargeStatus = 0;
         ((PLAYER*)getData(playerNode))->superActive = true;

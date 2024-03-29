@@ -1,6 +1,7 @@
 #include "gameMusic.h"
 #include "LPC17xx.h"
 #include "PinNames.h"
+#include "game.h"
 #include "globals.h"
 #include "normalProjectileSound.h"
 #include "laserSound.h"
@@ -15,224 +16,122 @@
 #define MAX_DATA_SIZE 8192
 
 AnalogOut sound(p18);
-wave_player audioPlayer(&sound);
 unsigned short *bufferZero = (unsigned short*)0x2007C000;
 unsigned short *bufferOne = (unsigned short*)0x2007E000;
+WAVHeader header;
 unsigned int filePos = 78;
-Ticker mSoundLoader;
-Ticker mSound;
-Ticker pSound;
-Ticker lSound;
-Ticker missileSoundPlayer;
-Ticker xSound;
-Ticker hSound;
-Ticker bSound;
-Ticker winSoundPlayer;
-Ticker loseSoundPlayer;
+unsigned int fileEnd = 0;
+Ticker gameSound;
 int bufferReady = 0;
 int bufferInUse = 0;
 int mCounter = 0;
-int pCounter = 0;
-int lCounter = 0;
-int missileCounter = 0;
-int xCounter = 0;
-int hCounter = 0;
-int bCounter = 0;
-int winCounter = 0;
-int loseCounter = 0;
+int pCounter = -1;
+int lCounter = -1;
+int missileCounter = -1;
+int xCounter = -1;
+int hCounter = -1;
+int bCounter = -1;
+int winCounter = -1;
+int loseCounter = -1;
 FILE *songFile;
 
-void printBuffer(void) {
-    return;
-    printf("%d\n", filePos);
-    return;
-    if (bufferInUse == 0) {
-        printf("%d\n", bufferOne[0]);
-    } else {
-        printf("%d\n", bufferZero[0]);
-    }
-    bufferInUse = !bufferInUse;
-    bufferReady = 0;
-}
-
-void prepareMusicLoader(void) {
-    songFile = fopen("/sd/Interstellar.wav", "rb");
-    //mSoundLoader.attach(&loadMusic, 1.0 / 11025.0);
-}
-
 void musicInit(void) {
-    //songFile = fopen("/sd/Interstellar.wav", "r");
-    //audioPlayer.play(songFile);
-    //return;
-    prepareMusicLoader();
-    mSound.attach(&playMusic, 1.0 / 11025.0);
+    songFile = fopen("/sd/Interstellar.wav", "rb");
+    // Get file size to know when to loop back
+    fread(&header, sizeof(header), 1, songFile);
+    fileEnd = header.fileSize;
+    // Clear junk values
+    for (int i = 0; i < MAX_DATA_SIZE / sizeof(unsigned short); i++) {
+        bufferZero[i] = 0;
+        bufferOne[i] = 0;
+    }
+    gameSound.attach(&playMusic, 1.0 / 11025.0);
 }
 
 void loadMusic(void) {
-    if (!bufferReady && pCounter == 0 && lCounter == 0 && xCounter == 0 && hCounter == 0 && xCounter == 0 && bCounter == 0 && missileCounter == 0 && winCounter == 0 && loseCounter == 0) {
-        fseek(songFile, filePos, SEEK_SET);
-
+    if (!bufferReady) {
+        //fseek(songFile, filePos, SEEK_SET);
         unsigned short *addr;
         if (bufferInUse == 0) {
             addr = bufferOne;
         } else {
             addr = bufferZero;
         }
-
-        // Read the data
-        size_t bytes_read = fread(addr, sizeof(unsigned short), MAX_DATA_SIZE / sizeof(unsigned short), songFile);
-
-        // Check if end of file is reached
-        if (bytes_read == 0) {
+        // Read the audio data
+        fread(addr, sizeof(unsigned short), MAX_DATA_SIZE / sizeof(unsigned short), songFile);
+        // Check if end of file plus a little more is reached so as to not loop back immediately
+        if (filePos >= fileEnd + MAX_DATA_SIZE * 3) {
             // Reset file position to the beginning
             filePos = 78;
             fseek(songFile, filePos, SEEK_SET);
-            // Read data again
-            bytes_read = fread(addr, sizeof(unsigned short), MAX_DATA_SIZE / sizeof(unsigned short), songFile);
+            fread(addr, sizeof(unsigned short), MAX_DATA_SIZE / sizeof(unsigned short), songFile);
         }
-
-        filePos += MAX_DATA_SIZE; // Save the current position in the WAV file
-        
+        filePos += MAX_DATA_SIZE;
         bufferReady = 1;
     }
 }
 
 void playMusic(void) {
-    if ((mCounter > 0 || bufferReady) && pCounter == 0 && lCounter == 0 && xCounter == 0 && hCounter == 0 && xCounter == 0 && bCounter == 0 && missileCounter == 0 && winCounter == 0 && loseCounter == 0) {
-        if (bufferInUse == 0) {
-            sound.write_u16(((bufferZero[mCounter] + 32768) & 0xffff)>>4);
-        } else if (bufferInUse == 1) {
-            sound.write_u16(((bufferOne[mCounter] + 32768) & 0xffff)>>4);
-        }
+    // Mix all sound effects
+    unsigned short data = 32768;
+    data += (pCounter >= 0) ? pSoundData[pCounter++] - 32768 : 0;
+    data += (lCounter >= 0) ? lSoundData[lCounter++] - 32768 : 0;
+    data += (missileCounter >= 0) ? missileSoundData[missileCounter++] - 32768 : 0;
+    data += (xCounter >= 0) ? xSoundData[xCounter++] - 32768 : 0;
+    data += (hCounter >= 0) ? hSoundData[hCounter++] - 32768 : 0;
+    data += (bCounter >= 0) ? bSoundData[bCounter++] - 32768 : 0;
+    data += (winCounter >= 0) ? winSoundData[winCounter++] - 32768 : 0;
+    data += (loseCounter >= 0) ? loseSoundData[loseCounter++] - 32768 : 0;
+    // Output the mixed audio
+    if (bufferInUse == 0) {
+        sound.write_u16(((bufferZero[mCounter++] + data) & 0xffff)>>4);
+    } else if (bufferInUse == 1) {
+        sound.write_u16(((bufferOne[mCounter++] + data) & 0xffff)>>4);
     }
-    mCounter++;
+    // Iterate or reset all audio counters if necessary
     if (mCounter >= MAX_DATA_SIZE / sizeof(unsigned short)) {
         mCounter = 0;
         bufferInUse = !bufferInUse;
         bufferReady = 0;
     }
+    (pCounter >= 2360) ? pCounter = -1 : pCounter;
+    (lCounter >= 33748) ? lCounter = -1 : lCounter;
+    (missileCounter >= 4608) ? missileCounter = -1 : missileCounter;
+    (xCounter >= 26217) ? xCounter = -1 : xCounter;
+    (hCounter >= 2048) ? hCounter = -1 : hCounter;
+    (bCounter >= 1882) ? bCounter = -1 : bCounter;
+    (winCounter >= 28922) ? winCounter = -1 : winCounter;
+    (loseCounter >= 9939) ? loseCounter = -1 : loseCounter;
 }
 
 void projectileSound(void) {
-    pSound.attach(&playProjectileSound, 1.0 / 11025.0);
-}
-
-void playProjectileSound(void) {
-    if (winCounter > 0 || loseCounter > 0) {
-        pCounter = 0;
-        pSound.detach();
-    }
-    sound.write_u16(pSoundData[pCounter]>>6);
-    pCounter++;
-    if (pCounter >= 2360) {
-        pCounter = 0;
-        pSound.detach();
-    }
+    pCounter = 0;
 }
 
 void laserSound(void) {
-    lSound.attach(&playLaserSound, 1.0 / 11025.0);
-}
-
-void playLaserSound(void) {
-    if (winCounter > 0 || loseCounter > 0) {
-        lCounter = 0;
-        lSound.detach();
-    }
-    sound.write_u16(lSoundData[lCounter]>>4);
-    lCounter++;
-    if (lCounter >= 33748) {
-        lCounter = 0;
-        lSound.detach();
-    }
+    lCounter = 0;
 }
 
 void missileSound(void) {
-    missileSoundPlayer.attach(&playMissileSound, 1.0 / 11025.0);
-}
-
-void playMissileSound(void) {
-    if (winCounter > 0 || loseCounter > 0) {
-        missileCounter = 0;
-        missileSoundPlayer.detach();
-    }
-    sound.write_u16(missileSoundData[missileCounter]>>4);
-    missileCounter++;
-    if (missileCounter >= 4608) {
-        missileCounter = 0;
-        missileSoundPlayer.detach();
-    }
+    missileCounter = 0;
 }
 
 void explosionSound(void) {
-    xSound.attach(&playExplosionSound, 1.0 / 11025.0);
-}
-
-void playExplosionSound(void) {
-    if (winCounter > 0 || loseCounter > 0) {
-        xCounter = 0;
-        xSound.detach();
-    }
-    sound.write_u16(xSoundData[xCounter]>>7);
-    xCounter++;
-    if (xCounter >= 5344) {
-        xCounter = 0;
-        xSound.detach();
-    }
+    xCounter = 0;
 }
 
 void hitSound(void) {
-    hSound.attach(&playHitSound, 1.0 / 11025.0);
-}
-
-void playHitSound(void) {
-    if (winCounter > 0 || loseCounter > 0) {
-        hCounter = 0;
-        hSound.detach();
-    }
-    sound.write_u16(hSoundData[hCounter]>>6);
-    hCounter++;
-    if (hCounter >= 2048) {
-        hCounter = 0;
-        hSound.detach();
-    }
+    hCounter = 0;
 }
 
 void buttonSound(void) {
-    bSound.attach(&playButtonSound, 1.0 / 11025.0);
-}
-
-void playButtonSound(void) {
-    sound.write_u16(bSoundData[bCounter]>>6);
-    bCounter++;
-    if (bCounter >= 1882) {
-        bCounter = 0;
-        bSound.detach();
-    }
+    bCounter = 0;
 }
 
 void winSound(void) {
-    winSoundPlayer.attach(&playWinSound, 1.0 / 11025.0);
-}
-
-void playWinSound(void) {
-    sound.write_u16(winSoundData[winCounter]>>6);
-    winCounter++;
-    if (winCounter >= 28922) {
-        winCounter = 0;
-        winSoundPlayer.detach();
-    }
+    winCounter = 0;
 }
 
 void loseSound(void) {
-    loseSoundPlayer.attach(&playLoseSound, 1.0 / 11025.0);
-}
-
-void playLoseSound(void) {
-    sound.write_u16(loseSoundData[loseCounter]>>4);
-    loseCounter++;
-    if (loseCounter >= 9939) {
-        loseCounter = 0;
-        loseSoundPlayer.detach();
-    }
+    loseCounter = 0;
 }

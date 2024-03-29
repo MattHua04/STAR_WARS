@@ -1,3 +1,4 @@
+#include "gameMusic.h"
 #include "globals.h"
 #include "doublyLinkedList.h"
 #include "graphics.h"
@@ -11,11 +12,16 @@
 #include "projectile.h"
 
 Timer randNumSeed;
+int inGame = 0;
 
 GAMELOOP* gameLoop = NULL;
 
 GAMELOOP* getGameLoop(void) {
     return gameLoop;
+}
+
+int* getInGame(void) {
+    return &inGame;
 }
 
 int randomNum(void) {
@@ -66,11 +72,15 @@ void levelOne(void) {
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
         winSound();
-        wait_us(3000000);
+        Timer won;
+        won.start();
+        while (won.elapsed_time().count() < 3000000) loadMusic();
     } else if (gameLoop->gameStatus == GAMESTATUS::LOST) {
         drawGameLost();
         loseSound();
-        wait_us(3000000);
+        Timer lost;
+        lost.start();
+        while (lost.elapsed_time().count() < 3000000) loadMusic();
     }
     uLCD.cls();
     getPlayer()->superActive = false;
@@ -93,11 +103,15 @@ void levelTwo(void) {
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
         winSound();
-        wait_us(3000000);
+        Timer won;
+        won.start();
+        while (won.elapsed_time().count() < 3000000) loadMusic();
     } else if (gameLoop->gameStatus == GAMESTATUS::LOST) {
         drawGameLost();
         loseSound();
-        wait_us(3000000);
+        Timer lost;
+        lost.start();
+        while (lost.elapsed_time().count() < 3000000) loadMusic();
     }
     uLCD.cls();
     getPlayer()->superActive = false;
@@ -120,11 +134,15 @@ void levelThree(void) {
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
         winSound();
-        wait_us(3000000);
+        Timer won;
+        won.start();
+        while (won.elapsed_time().count() < 3000000) loadMusic();
     } else if (gameLoop->gameStatus == GAMESTATUS::LOST) {
         drawGameLost();
         loseSound();
-        wait_us(3000000);
+        Timer lost;
+        lost.start();
+        while (lost.elapsed_time().count() < 3000000) loadMusic();
     }
     uLCD.cls();
     getPlayer()->superActive = false;
@@ -171,11 +189,15 @@ void infiniteDuration(void) {
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
         winSound();
-        wait_us(3000000);
+        Timer won;
+        won.start();
+        while (won.elapsed_time().count() < 3000000) loadMusic();
     } else if (gameLoop->gameStatus == GAMESTATUS::LOST) {
         drawGameLost();
         loseSound();
-        wait_us(3000000);
+        Timer lost;
+        lost.start();
+        while (lost.elapsed_time().count() < 3000000) loadMusic();
     }
     uLCD.cls();
     getPlayer()->superActive = false;
@@ -222,11 +244,15 @@ void scoreCap(void) {
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
         winSound();
-        wait_us(3000000);
+        Timer won;
+        won.start();
+        while (won.elapsed_time().count() < 3000000) loadMusic();
     } else if (gameLoop->gameStatus == GAMESTATUS::LOST) {
         drawGameLost();
         loseSound();
-        wait_us(3000000);
+        Timer lost;
+        lost.start();
+        while (lost.elapsed_time().count() < 3000000) loadMusic();
     }
     uLCD.cls();
     getPlayer()->superActive = false;
@@ -240,16 +266,19 @@ void testLevel(void) {
     bossInit();
     projectileInit();
     healthBarInit();
-    //enemyGenerator(CHARACTER_TYPE::LONG_RANGE_ENEMY);
     start(false, false);
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
         winSound();
-        wait_us(3000000);
+        Timer won;
+        won.start();
+        while (won.elapsed_time().count() < 3000000) loadMusic();
     } else if (gameLoop->gameStatus == GAMESTATUS::LOST) {
         drawGameLost();
         loseSound();
-        wait_us(3000000);
+        Timer lost;
+        lost.start();
+        while (lost.elapsed_time().count() < 3000000) loadMusic();
     }
     uLCD.cls();
     getPlayer()->superActive = false;

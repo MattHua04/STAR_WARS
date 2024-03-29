@@ -1,5 +1,7 @@
-BUILD/LPC1768/ARMC6/game/gameLoops/game.o: game/gameLoops/game.cpp \
-  BUILD/LPC1768/ARMC6/mbed_config.h utilities/audio/gameMusic.h \
+BUILD/LPC1768/ARMC6/utilities/asyncLibraries/MbedLibraryCollection/libraries/asyncIO/dma.o: \
+  utilities/asyncLibraries/MbedLibraryCollection/libraries/asyncIO/dma.cpp \
+  BUILD/LPC1768/ARMC6/mbed_config.h \
+  utilities/asyncLibraries/MbedLibraryCollection/libraries/asyncIO/dma.h \
   mbed-os/mbed.h mbed-os/platform/include/platform/mbed_version.h \
   mbed-os/rtos/include/rtos/rtos.h \
   mbed-os/rtos/include/rtos/internal/mbed_rtos_storage.h \
@@ -144,19 +146,5 @@ BUILD/LPC1768/ARMC6/game/gameLoops/game.o: game/gameLoops/game.cpp \
   mbed-os/platform/include/platform/ScopedRamExecutionLock.h \
   mbed-os/platform/include/platform/mbed_stats.h \
   mbed-os/platform/include/platform/Stream.h \
-  mbed-os/platform/include/platform/FileLike.h globals.h \
-  utilities/wave_player/wave_player.h utilities/4DGL-uLCD-SE/uLCD_4DGL.h \
-  utilities/Nav_Switch/Nav_Switch.h \
-  mbed-os/storage/blockdevice/COMPONENT_SD/include/SD/SDBlockDevice.h \
-  mbed-os/hal/include/hal/static_pinmap.h \
-  mbed-os/hal/include/hal/qspi_api.h mbed-os/hal/include/hal/ospi_api.h \
-  mbed-os/storage/filesystem/fat/include/fat/FATFileSystem.h \
-  mbed-os/storage/filesystem/fat/ChaN/ff.h \
-  mbed-os/storage/filesystem/fat/ChaN/ffconf.h \
-  utilities/hardware/hardware.h \
-  utilities/doublyLinkedList/doublyLinkedList.h \
-  utilities/graphics/graphics.h game/gameLoops/game.h \
-  game/interfaces/menu/menu.h game/users/users.h \
-  game/interfaces/login/login.h game/healthBars/healthBar.h \
-  game/characters/player/player.h game/characters/enemies/enemy.h \
-  game/characters/finalBoss/finalBoss.h game/projectiles/projectile.h
+  mbed-os/platform/include/platform/FileLike.h \
+  utilities/asyncLibraries/MbedLibraryCollection/collectionCommon.hpp

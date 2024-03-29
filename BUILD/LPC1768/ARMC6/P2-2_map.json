@@ -2,7 +2,7 @@
     {
         "module": "[lib]/c_w.l",
         "size": {
-            ".text": 14263,
+            ".text": 21781,
             ".data": 16,
             ".bss": 552,
             ".text-delta": 0,
@@ -13,7 +13,7 @@
     {
         "module": "[lib]/fz_ws.l",
         "size": {
-            ".text": 4506,
+            ".text": 4894,
             ".data": 0,
             ".bss": 0,
             ".text-delta": 0,
@@ -22,9 +22,20 @@
         }
     },
     {
+        "module": "[lib]/libcpp_w.l",
+        "size": {
+            ".text": 66726,
+            ".data": 0,
+            ".bss": 2961,
+            ".text-delta": 0,
+            ".data-delta": 0,
+            ".bss-delta": 0
+        }
+    },
+    {
         "module": "[lib]/libcppabi_w.l",
         "size": {
-            ".text": 44,
+            ".text": 2615,
             ".data": 0,
             ".bss": 0,
             ".text-delta": 0,
@@ -35,7 +46,7 @@
     {
         "module": "[lib]/m_ws.l",
         "size": {
-            ".text": 388,
+            ".text": 878,
             ".data": 0,
             ".bss": 0,
             ".text-delta": 0,
@@ -57,7 +68,7 @@
     {
         "module": "game/characters",
         "size": {
-            ".text": 5946,
+            ".text": 5950,
             ".data": 0,
             ".bss": 20,
             ".text-delta": 0,
@@ -68,10 +79,10 @@
     {
         "module": "game/gameLoops",
         "size": {
-            ".text": 2136,
+            ".text": 2514,
             ".data": 0,
-            ".bss": 32,
-            ".text-delta": 4,
+            ".bss": 36,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -90,10 +101,10 @@
     {
         "module": "game/interfaces",
         "size": {
-            ".text": 13189,
+            ".text": 13485,
             ".data": 14,
             ".bss": 456,
-            ".text-delta": 348,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -101,10 +112,10 @@
     {
         "module": "game/projectiles",
         "size": {
-            ".text": 4678,
+            ".text": 4694,
             ".data": 0,
             ".bss": 12,
-            ".text-delta": 0,
+            ".text-delta": 16,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -112,7 +123,7 @@
     {
         "module": "game/users",
         "size": {
-            ".text": 1903,
+            ".text": 1891,
             ".data": 300,
             ".bss": 0,
             ".text-delta": 0,
@@ -123,7 +134,7 @@
     {
         "module": "main.o",
         "size": {
-            ".text": 413,
+            ".text": 437,
             ".data": 0,
             ".bss": 0,
             ".text-delta": 0,
@@ -134,7 +145,7 @@
     {
         "module": "mbed-os/drivers",
         "size": {
-            ".text": 4246,
+            ".text": 4318,
             ".data": 0,
             ".bss": 24,
             ".text-delta": 0,
@@ -156,7 +167,7 @@
     {
         "module": "mbed-os/platform",
         "size": {
-            ".text": 6925,
+            ".text": 6945,
             ".data": 80,
             ".bss": 372,
             ".text-delta": 0,
@@ -220,11 +231,22 @@
         }
     },
     {
+        "module": "utilities/asyncLibraries",
+        "size": {
+            ".text": 1932,
+            ".data": 0,
+            ".bss": 3,
+            ".text-delta": 0,
+            ".data-delta": 0,
+            ".bss-delta": 0
+        }
+    },
+    {
         "module": "utilities/audio",
         "size": {
-            ".text": 179134,
-            ".data": 12,
-            ".bss": 1288,
+            ".text": 220374,
+            ".data": 44,
+            ".bss": 104,
             ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
@@ -244,10 +266,10 @@
     {
         "module": "utilities/graphics",
         "size": {
-            ".text": 18823,
+            ".text": 84503,
             ".data": 0,
-            ".bss": 0,
-            ".text-delta": -4,
+            ".bss": 144,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -276,10 +298,10 @@
     },
     {
         "summary": {
-            "static_ram": 9495,
+            "static_ram": 11455,
             "static_ram_delta": 0,
-            "total_flash": 286286,
-            "total_flash_delta": 348
+            "total_flash": 473661,
+            "total_flash_delta": 16
         }
     }
 ]
