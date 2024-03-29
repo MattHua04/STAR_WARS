@@ -24,7 +24,8 @@
 #define EXIT_GAME 999
 #define REGISTER_USER 111
 
-int main() {
+int main()
+{
     ASSERT_P(hardware_init() == ERROR_NONE, "Hardware init failed!");
     printf("Program Starting\n");
     drawProfileImg();
