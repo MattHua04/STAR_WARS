@@ -12,7 +12,7 @@
 #include "uLCD.hpp"
 #include "users.h"
 
-class uLCD lcd(P0_13, P0_14, p15, uLCD::B_1500000);
+class uLCD lcd(p13, p14, p15, uLCD::B_1500000);
 
 int getHexColor(char color) {
     if (color == 'X' && getMenuSettings()->playerSkin) color = getMenuSettings()->playerSkin;
@@ -37,10 +37,6 @@ int getHexColor(char color) {
 }
 
 void drawProfileImg(void) {
-    /**for (int i = 0; i < 128*128; i++) {
-        uLCD.pixel(i%128, i/128, profileImg[i]);
-    }
-    return;*/
     int chunckWidth = 32;
     for (int i = 0; i < 128; i += chunckWidth) {
         int chunk[128 * chunckWidth];
