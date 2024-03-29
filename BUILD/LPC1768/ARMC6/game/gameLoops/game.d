@@ -156,6 +156,8 @@ BUILD/LPC1768/ARMC6/game/gameLoops/game.o: game/gameLoops/game.cpp \
   utilities/doublyLinkedList/doublyLinkedList.h \
   utilities/graphics/graphics.h game/gameLoops/game.h \
   game/interfaces/menu/menu.h game/users/users.h \
-  game/interfaces/login/login.h game/healthBars/healthBar.h \
-  game/characters/player/player.h game/characters/enemies/enemy.h \
-  game/characters/finalBoss/finalBoss.h game/projectiles/projectile.h
+  game/interfaces/login/login.h assets/profileImg.h assets/enemySprite.h \
+  assets/finalBossSprite.h assets/playerSprite.h \
+  game/healthBars/healthBar.h game/characters/player/player.h \
+  game/characters/enemies/enemy.h game/characters/finalBoss/finalBoss.h \
+  game/projectiles/projectile.h

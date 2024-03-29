@@ -112,10 +112,10 @@
     {
         "module": "game/projectiles",
         "size": {
-            ".text": 4694,
+            ".text": 4752,
             ".data": 0,
             ".bss": 12,
-            ".text-delta": 0,
+            ".text-delta": 58,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -137,7 +137,7 @@
             ".text": 437,
             ".data": 0,
             ".bss": 0,
-            ".text-delta": -16,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -233,7 +233,7 @@
     {
         "module": "utilities/asyncLibraries",
         "size": {
-            ".text": 2064,
+            ".text": 1932,
             ".data": 0,
             ".bss": 3,
             ".text-delta": 0,
@@ -266,7 +266,7 @@
     {
         "module": "utilities/graphics",
         "size": {
-            ".text": 84765,
+            ".text": 84757,
             ".data": 0,
             ".bss": 144,
             ".text-delta": 0,
@@ -289,8 +289,8 @@
         "summary": {
             "static_ram": 10799,
             "static_ram_delta": 0,
-            "total_flash": 473995,
-            "total_flash_delta": -16
+            "total_flash": 473913,
+            "total_flash_delta": 58
         }
     }
 ]

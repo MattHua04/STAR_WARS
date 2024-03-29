@@ -379,7 +379,7 @@ void updatePlayerProjectiles(void) {
                     getPlayer()->sessionKills++;
                     // If player is using super attack, add one to superChargeStatus only on kills
                     if (((PROJECTILE*)getData(currentNode))->projectileType == PROJECTILE_TYPE::LASER) {
-                        if (getPlayer()->superChargeStatus < 5) {
+                        if (getPlayer()->superChargeStatus < MAX_SUPER_CHARGE) {
                             getPlayer()->superChargeStatus++;
                         }
                     }
@@ -403,8 +403,8 @@ void updatePlayerProjectiles(void) {
                 }
                 // If player is using normal attack, add one to superChargeStatus and remove projectile on every hit
                 if (((PROJECTILE*)getData(currentNode))->projectileType != PROJECTILE_TYPE::LASER) {
-                    if (getPlayer()->superChargeStatus < 5) {
-                        getPlayer()->superChargeStatus++;
+                    if (getPlayer()->superChargeStatus < MAX_SUPER_CHARGE) {
+                        (getPlayer()->superChargeStatus + 2 > MAX_SUPER_CHARGE) ? getPlayer()->superChargeStatus = MAX_SUPER_CHARGE : getPlayer()->superChargeStatus += MAX_SUPER_CHARGE / 5;
                     }
                     LLNode* nextNode = currentNode->next;
                     free(((PROJECTILE*)getData(currentNode))->boundingBox);

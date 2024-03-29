@@ -157,6 +157,8 @@ BUILD/LPC1768/ARMC6/main.o: main.cpp BUILD/LPC1768/ARMC6/mbed_config.h \
   game/characters/enemies/enemy.h game/healthBars/healthBar.h \
   utilities/graphics/graphics.h game/gameLoops/game.h \
   game/interfaces/menu/menu.h game/users/users.h \
-  game/interfaces/login/login.h game/characters/finalBoss/finalBoss.h \
-  game/characters/player/player.h game/projectiles/projectile.h \
+  game/interfaces/login/login.h assets/profileImg.h assets/enemySprite.h \
+  assets/finalBossSprite.h assets/playerSprite.h \
+  game/characters/finalBoss/finalBoss.h game/characters/player/player.h \
+  game/projectiles/projectile.h \
   game/interfaces/registration/registration.h

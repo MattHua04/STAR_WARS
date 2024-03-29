@@ -158,5 +158,7 @@ BUILD/LPC1768/ARMC6/game/characters/finalBoss/finalBoss.o: \
   mbed-os/storage/filesystem/fat/ChaN/ffconf.h \
   utilities/graphics/graphics.h game/gameLoops/game.h \
   game/interfaces/menu/menu.h game/users/users.h \
-  game/interfaces/login/login.h game/characters/finalBoss/finalBoss.h \
-  game/projectiles/projectile.h game/characters/player/player.h
+  game/interfaces/login/login.h assets/profileImg.h assets/enemySprite.h \
+  assets/finalBossSprite.h assets/playerSprite.h \
+  game/characters/finalBoss/finalBoss.h game/projectiles/projectile.h \
+  game/characters/player/player.h

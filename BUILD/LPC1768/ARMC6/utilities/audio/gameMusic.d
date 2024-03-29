@@ -154,7 +154,6 @@ BUILD/LPC1768/ARMC6/utilities/audio/gameMusic.o: \
   mbed-os/storage/filesystem/fat/ChaN/ff.h \
   mbed-os/storage/filesystem/fat/ChaN/ffconf.h \
   utilities/hardware/hardware.h game/gameLoops/game.h \
-  utilities/audio/normalProjectileSound.h utilities/audio/laserSound.h \
-  utilities/audio/explosionSound.h utilities/audio/hit.h \
-  utilities/audio/button.h utilities/audio/win.h utilities/audio/lose.h \
-  utilities/audio/missile.h
+  assets/normalProjectileSound.h assets/laserSound.h \
+  assets/explosionSound.h assets/hit.h assets/button.h assets/win.h \
+  assets/lose.h assets/missile.h

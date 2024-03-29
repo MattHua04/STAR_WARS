@@ -158,7 +158,8 @@ BUILD/LPC1768/ARMC6/utilities/hardware/hardware.o: \
   game/characters/player/player.h game/healthBars/healthBar.h \
   utilities/graphics/graphics.h game/gameLoops/game.h \
   game/interfaces/menu/menu.h game/users/users.h \
-  game/interfaces/login/login.h \
+  game/interfaces/login/login.h assets/profileImg.h assets/enemySprite.h \
+  assets/finalBossSprite.h assets/playerSprite.h \
   utilities/asyncLibraries/MbedLibraryCollection/libraries/ulcd/uLCD.hpp \
   utilities/asyncLibraries/MbedLibraryCollection/libraries/asyncIO/serialAsync.hpp \
   utilities/asyncLibraries/MbedLibraryCollection/libraries/asyncIO/dma.h

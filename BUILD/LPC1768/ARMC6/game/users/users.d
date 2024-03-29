@@ -156,4 +156,5 @@ BUILD/LPC1768/ARMC6/game/users/users.o: game/users/users.cpp \
   mbed-os/storage/filesystem/fat/ChaN/ffconf.h game/users/users.h \
   utilities/graphics/graphics.h game/gameLoops/game.h \
   utilities/doublyLinkedList/doublyLinkedList.h \
-  game/interfaces/menu/menu.h
+  game/interfaces/menu/menu.h assets/profileImg.h assets/enemySprite.h \
+  assets/finalBossSprite.h assets/playerSprite.h

@@ -156,5 +156,6 @@ BUILD/LPC1768/ARMC6/game/interfaces/login/login.o: \
   utilities/hardware/hardware.h game/interfaces/menu/menu.h \
   utilities/graphics/graphics.h game/gameLoops/game.h \
   utilities/doublyLinkedList/doublyLinkedList.h game/users/users.h \
-  game/interfaces/login/login.h \
+  game/interfaces/login/login.h assets/profileImg.h assets/enemySprite.h \
+  assets/finalBossSprite.h assets/playerSprite.h \
   game/interfaces/registration/registration.h

@@ -59,8 +59,8 @@ void drawImg(int x, int y, int width, int height, const char* object) {
 }
 
 void drawBox(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY, char color) {
-    lcd.drawRectangleFilled(topLeftX, topLeftY, bottomRightX, bottomRightY, uLCD::get4DGLColor(getHexColor(color)));
-    //uLCD.filled_rectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, getHexColor(color));
+    //lcd.drawRectangleFilled(topLeftX, topLeftY, bottomRightX, bottomRightY, uLCD::get4DGLColor(getHexColor(color)));
+    uLCD.filled_rectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, getHexColor(color));
 }
 
 void drawPlayer(LLNode* player) {
