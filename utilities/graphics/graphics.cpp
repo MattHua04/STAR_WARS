@@ -1312,8 +1312,8 @@ void drawGameLost(void) {
     // Sun
     uLCD.filled_circle(127, 0, 30, RED);
     uLCD.circle(127, 0, 30, WHITE);
-    uLCD.circle(127, 0, 29, MRED);
-    uLCD.circle(127, 0, 28, DRED);
+    uLCD.circle(127, 0, 29, WHITE);
+    uLCD.circle(127, 0, 28, WHITE);
     // Moon
     uLCD.filled_circle(0, 7, 15, RED);
     uLCD.filled_circle(8, 19, 2, BLACK);
