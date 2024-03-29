@@ -32,7 +32,7 @@ void menuInit(void) {
     menuSettings.gameMode = GAME_MODE::LEVELS;
     menuSettings.scoreCap = 10;
     menuSettings.playerSkin = getUserInfo()->defaultSkin;
-    menuSettings.volume = 0.5;
+    menuSettings.volume = 0.25;
     // Skin selector button
     skinSelector.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
     skinSelector.boundingBox = (BOUNDINGBOX*)malloc(sizeof(BOUNDINGBOX));
@@ -104,12 +104,12 @@ int menuUpdate(void) {
         }
     } else if (!inputs->superAttack) {
         buttonSound();
-        menuSettings.volume -= (menuSettings.volume > 0) ? 0.1 : 0;
+        menuSettings.volume -= (menuSettings.volume > 0) ? 0.05 : 0;
         while (!readInputs()->superAttack) loadMusic();
         return 0;
     } else if (!inputs->pauseResume) {
         buttonSound();
-        menuSettings.volume += (menuSettings.volume < 1) ? 0.1 : 0;
+        menuSettings.volume += (menuSettings.volume < 1) ? 0.05 : 0;
         while (!readInputs()->pauseResume) loadMusic();
         return 0;
     }
