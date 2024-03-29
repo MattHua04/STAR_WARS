@@ -272,6 +272,7 @@ void drawMSButton(MENU_SETTINGS* menuSettings, BUTTON* modeSelector) {
         char message[] = "INF";
         int i = 0;
         while (message[i]) {
+            loadMusic();
             uLCD.text_bold(ON);
             uLCD.set_font(FONT_7X8);
             uLCD.locate(14 + i, 13);
@@ -284,6 +285,7 @@ void drawMSButton(MENU_SETTINGS* menuSettings, BUTTON* modeSelector) {
         char message[] = "123";
         int i = 0;
         while (message[i]) {
+            loadMusic();
             uLCD.text_bold(ON);
             uLCD.set_font(FONT_7X8);
             uLCD.locate(14 + i, 13);
@@ -303,6 +305,7 @@ void drawMSButton(MENU_SETTINGS* menuSettings, BUTTON* modeSelector) {
         sprintf(message, "%03d", menuSettings->scoreCap);
         int i = 0;
         while (message[i]) {
+            loadMusic();
             uLCD.text_bold(ON);
             uLCD.set_font(FONT_7X8);
             uLCD.locate(14 + i, 13);
@@ -350,6 +353,7 @@ void drawPlayButton(MENU_SETTINGS* menuSettings, BUTTON* play) {
     char message[] = "PLAY";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -414,6 +418,7 @@ void drawUserStatsButton(USER* user, BUTTON* userStats) {
         nameLength++;
     }
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -438,6 +443,7 @@ void drawDeleteUserButton(BUTTON* deleteProfile) {
     char message[20] = "DELETE PROFILE";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -467,6 +473,7 @@ void drawLoginBackground(void) {
     char message[30] = "STAR WARS";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(WHITE);
         uLCD.set_font(FONT_8X8);
@@ -557,10 +564,17 @@ void drawUserStatsBackground(USER* user) {
     // User highscore
     char hScoreStat[30] = "HI SCORE: ";
     char strHighScore[10];
-    sprintf(strHighScore, "%d", getSavedHighScore(user));
+    double highScore = (double)getSavedHighScore(user);
+    if (highScore >= 1000) {
+        highScore /= 1000;
+        sprintf(strHighScore, "%.1fK", highScore);
+    } else {
+        sprintf(strHighScore, "%d", (int)highScore);
+    }
     strcat(hScoreStat, strHighScore);
     int i = 0;
     while (hScoreStat[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(WHITE);
         uLCD.set_font(FONT_8X8);
@@ -572,10 +586,17 @@ void drawUserStatsBackground(USER* user) {
     // User enemies killed
     char eKilledStat[30] = "KILLS: ";
     char strEnemiesKilled[10];
-    sprintf(strEnemiesKilled, "%d", getSavedEnemiesKilled(user));
+    double totalKills = (double)getSavedEnemiesKilled(user);
+    if (totalKills >= 1000) {
+        totalKills /= 1000;
+        sprintf(strEnemiesKilled, "%.1fK", totalKills);
+    } else {
+        sprintf(strEnemiesKilled, "%d", (int)totalKills);
+    }
     strcat(eKilledStat, strEnemiesKilled);
     i = 0;
     while (eKilledStat[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(WHITE);
         uLCD.set_font(FONT_8X8);
@@ -587,10 +608,17 @@ void drawUserStatsBackground(USER* user) {
     // User player deaths
     char pDeathsStat[30] = "DEATHS: ";
     char strPlayerDeaths[10];
-    sprintf(strPlayerDeaths, "%d", getSavedPlayerDeaths(user));
+    double totalDeaths = (double)getSavedPlayerDeaths(user);
+    if (totalDeaths >= 1000) {
+        totalDeaths /= 1000;
+        sprintf(strPlayerDeaths, "%.1fK", totalDeaths);
+    } else {
+        sprintf(strPlayerDeaths, "%d", (int)totalDeaths);
+    }
     strcat(pDeathsStat, strPlayerDeaths);
     i = 0;
     while (pDeathsStat[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(WHITE);
         uLCD.set_font(FONT_8X8);
@@ -612,6 +640,7 @@ void drawUserStatsBackground(USER* user) {
     strcat(tPointsStat, strTotalPoints);
     i = 0;
     while (tPointsStat[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(WHITE);
         uLCD.set_font(FONT_8X8);
@@ -635,6 +664,7 @@ void drawUserStatsBackground(USER* user) {
     strcat(tTimeStat, strMins);
     i = 0;
     while (tTimeStat[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(WHITE);
         uLCD.set_font(FONT_8X8);
@@ -662,6 +692,7 @@ void drawLoginButton(BUTTON* button) {
     char message[] = "LOGIN";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -686,6 +717,7 @@ void drawInvalidLoginButton(BUTTON* button) {
     char message[] = "LOGIN";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -713,6 +745,7 @@ void drawRegisterButton(BUTTON* button) {
     char message[] = "REGISTER";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -743,6 +776,7 @@ void drawUserBaseButton(USER* userInfo, BUTTON* button) {
         nameLength++;
     }
     while (userInfo->username[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -771,6 +805,7 @@ void drawUserNumButton(USER* userInfo, BUTTON* button) {
     snprintf(strNum, 3, "%02d", userInfo->userNum);
     int i = 0;
     while (strNum[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -798,6 +833,7 @@ void drawBackButton(BUTTON* button) {
     char message[] = "<";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -825,6 +861,7 @@ void drawNextButton(BUTTON* button) {
     char message[] = ">";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -852,6 +889,7 @@ void drawInvalidNextButton(BUTTON* button) {
     char message[] = ">";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -879,6 +917,7 @@ void drawDeleteButton(BUTTON* button) {
     char message[] = "X";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_7X8);
@@ -906,6 +945,7 @@ void drawZeroButton(BUTTON* button) {
     char message[] = "0";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -933,6 +973,7 @@ void drawOneButton(BUTTON* button) {
     char message[] = "1";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -960,6 +1001,7 @@ void drawTwoButton(BUTTON* button) {
     char message[] = "2";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -987,6 +1029,7 @@ void drawThreeButton(BUTTON* button) {
     char message[] = "3";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -1014,6 +1057,7 @@ void drawFourButton(BUTTON* button) {
     char message[] = "4";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -1041,6 +1085,7 @@ void drawFiveButton(BUTTON* button) {
     char message[] = "5";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -1068,6 +1113,7 @@ void drawSixButton(BUTTON* button) {
     char message[] = "6";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -1095,6 +1141,7 @@ void drawSevenButton(BUTTON* button) {
     char message[] = "7";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -1122,6 +1169,7 @@ void drawEightButton(BUTTON* button) {
     char message[] = "8";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -1149,6 +1197,7 @@ void drawNineButton(BUTTON* button) {
     char message[] = "9";
     int i = 0;
     while (message[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -1192,6 +1241,7 @@ void drawDefaultSkinButton(USER* userInfo, BUTTON* button) {
     }
     int i = 0;
     while (skinType[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
@@ -1214,6 +1264,7 @@ void drawPassword(char password[5]) {
     }
     int i = 0;
     while (password[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(GREEN);
         uLCD.set_font(FONT_8X8);
@@ -1256,6 +1307,7 @@ void drawGameWon(void) {
         }
         int i = 0;
         while (message[i]) {
+            loadMusic();
             uLCD.text_bold(ON);
             uLCD.color(WHITE);
             uLCD.set_font(FONT_8X8);
@@ -1295,6 +1347,7 @@ void drawGameWon(void) {
         char message[30] = "YOU WON!";
         int i = 0;
         while (message[i]) {
+            loadMusic();
             uLCD.text_bold(ON);
             uLCD.color(WHITE);
             uLCD.set_font(FONT_8X8);
@@ -1343,6 +1396,7 @@ void drawGameLost(void) {
     char game[30] = "GAME    OVER";
     int i = 0;
     while (game[i]) {
+        loadMusic();
         uLCD.text_bold(ON);
         uLCD.color(RED);
         uLCD.set_font(FONT_8X8);
