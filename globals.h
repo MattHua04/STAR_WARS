@@ -113,6 +113,7 @@ typedef struct {
     GAME_MODE gameMode;
     int difficulty;
     int scoreCap;
+    double volume;
 } MENU_SETTINGS;
 
 typedef enum {

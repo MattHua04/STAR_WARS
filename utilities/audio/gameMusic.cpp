@@ -3,6 +3,7 @@
 #include "PinNames.h"
 #include "game.h"
 #include "globals.h"
+#include "menu.h"
 #include "normalProjectileSound.h"
 #include "laserSound.h"
 #include "explosionSound.h"
@@ -82,11 +83,12 @@ void playMusic(void) {
     data += (bCounter >= 0) ? bSoundData[bCounter++] - 32768 : 0;
     data += (winCounter >= 0) ? winSoundData[winCounter++] - 32768 : 0;
     data += (loseCounter >= 0) ? loseSoundData[loseCounter++] - 32768 : 0;
+    double scale = (getMenuSettings()->volume != NULL) ? getMenuSettings()->volume : 0.5;
     // Output the mixed audio
     if (bufferInUse == 0) {
-        sound.write_u16(((bufferZero[mCounter++] + data) & 0xffff)>>4);
+        sound.write_u16((unsigned short)(((bufferZero[mCounter++] + data) & 0xffff) * (0.875 * (pow(scale, 3)+ 0.125))));
     } else if (bufferInUse == 1) {
-        sound.write_u16(((bufferOne[mCounter++] + data) & 0xffff)>>4);
+        sound.write_u16((unsigned short)(((bufferOne[mCounter++] + data) & 0xffff) * (0.875 * (pow(scale, 3)+ 0.125))));
     }
     // Iterate or reset all audio counters if necessary
     if (mCounter >= MAX_DATA_SIZE / sizeof(unsigned short)) {
