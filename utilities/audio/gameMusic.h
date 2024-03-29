@@ -11,6 +11,13 @@ typedef struct {
     char     wave[4];
 } WAVHeader;
 
+const char songs[3][20] = {"Day_One", "Time", "Cornfield_Chase"};
+
+/**
+ * Use to change game audio volume
+ */
+double* getVolume(void);
+
 /**
  * Prepares background music and game effects to be played
  */
@@ -20,6 +27,16 @@ void musicInit(void);
  * Plays background music
  */
 void playMusic(void);
+
+/**
+ * Plays next song track
+ */
+void playNextTrack(void);
+
+/**
+ * Plays prev song track
+ */
+void playPrevTrack(void);
 
 /**
  * Loads 16kB buffers for background music

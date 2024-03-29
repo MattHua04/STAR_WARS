@@ -98,7 +98,11 @@ void drawEnemy(LLNode* enemy) {
     } else if (((ENEMY*)getData(enemy))->y < ((ENEMY*)getData(enemy))->py) { //Moved down
         drawBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((ENEMY*)getData(enemy))->y - ((ENEMY*)getData(enemy))->py), '0');
     }
-    drawImg(((ENEMY*)getData(enemy))->boundingBox->topLeft.x, 127 - ((ENEMY*)getData(enemy))->boundingBox->topLeft.y, 11, 11, ENEMY_IMGS[((ENEMY*)getData(enemy))->enemyDisplay]);
+    if (((ENEMY*)getData(enemy))->enemyType == CHARACTER_TYPE::SHORT_RANGE_ENEMY || ((ENEMY*)getData(enemy))->enemyType == CHARACTER_TYPE::LONG_RANGE_ENEMY) {
+        drawImg(((ENEMY*)getData(enemy))->boundingBox->topLeft.x, 127 - ((ENEMY*)getData(enemy))->boundingBox->topLeft.y, 11, 11, NORMAL_ENEMY_IMGS[((ENEMY*)getData(enemy))->enemyDisplay]);
+    } else {
+        drawImg(((ENEMY*)getData(enemy))->boundingBox->topLeft.x, 127 - ((ENEMY*)getData(enemy))->boundingBox->topLeft.y, 11, 11, MISSILE_ENEMY_IMGS[((ENEMY*)getData(enemy))->enemyDisplay]);
+    }
 }
 
 void eraseEnemy(LLNode* enemy) {
@@ -371,21 +375,21 @@ void drawDiffScale(MENU_SETTINGS* menuSettings, SLIDING_SCALE* difficulty) {
     if (difficulty->value == difficulty->maxVal) {
         drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'R');
         drawImg(64 - 9, 127 - 118, 19, 19, BOSS_IMGS[3]);
-        drawImg(39 - 5, 127 - 103, 11, 11, ENEMY_IMGS[3]);
-        drawImg(89 - 5, 127 - 103, 11, 11, ENEMY_IMGS[3]);
-        drawImg(64 - 5, 127 - 90, 11, 11, ENEMY_IMGS[3]);
+        drawImg(39 - 5, 127 - 103, 11, 11, NORMAL_ENEMY_IMGS[3]);
+        drawImg(89 - 5, 127 - 103, 11, 11, NORMAL_ENEMY_IMGS[3]);
+        drawImg(64 - 5, 127 - 90, 11, 11, NORMAL_ENEMY_IMGS[3]);
     } else if ((double)difficulty->value / difficulty->maxVal >= 0.75) {
         drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'O');
-        drawImg(39 - 5, 127 - 103, 11, 11, ENEMY_IMGS[3]);
-        drawImg(89 - 5, 127 - 103, 11, 11, ENEMY_IMGS[3]);
-        drawImg(64 - 5, 127 - 90, 11, 11, ENEMY_IMGS[3]);
+        drawImg(39 - 5, 127 - 103, 11, 11, NORMAL_ENEMY_IMGS[3]);
+        drawImg(89 - 5, 127 - 103, 11, 11, NORMAL_ENEMY_IMGS[3]);
+        drawImg(64 - 5, 127 - 90, 11, 11, NORMAL_ENEMY_IMGS[3]);
     } else if ((double)difficulty->value / difficulty->maxVal >= 0.50) {
         drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'Y');
-        drawImg(46 - 5, 127 - 100, 11, 11, ENEMY_IMGS[3]);
-        drawImg(82 - 5, 127 - 100, 11, 11, ENEMY_IMGS[3]);
+        drawImg(46 - 5, 127 - 100, 11, 11, NORMAL_ENEMY_IMGS[3]);
+        drawImg(82 - 5, 127 - 100, 11, 11, NORMAL_ENEMY_IMGS[3]);
     } else if ((double)difficulty->value / difficulty->maxVal >= 0.25) {
         drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'G');
-        drawImg(64 - 5, 127 - 100, 11, 11, ENEMY_IMGS[3]);
+        drawImg(64 - 5, 127 - 100, 11, 11, NORMAL_ENEMY_IMGS[3]);
     }
     if (difficulty->sliderStatus == BUTTON_STATUS::SELECTED) {
         uLCD.filled_circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, LGREY);
@@ -467,8 +471,8 @@ void drawLoginBackground(void) {
     uLCD.filled_circle(5, -1, 3, MGREY);
     uLCD.filled_circle(9, 2, 2, DGREY);
     drawImg(64 - 9, 127 - 113, 19, 19, BOSS_IMGS[3]);
-    drawImg(39 - 5, 127 - 98, 11, 11, ENEMY_IMGS[3]);
-    drawImg(89 - 5, 127 - 98, 11, 11, ENEMY_IMGS[3]);
+    drawImg(39 - 5, 127 - 98, 11, 11, NORMAL_ENEMY_IMGS[3]);
+    drawImg(89 - 5, 127 - 98, 11, 11, NORMAL_ENEMY_IMGS[3]);
     drawImg(64 - 5, 127 - 80, 11, 11, PLAYER_IMGS[3]);
     char message[30] = "STAR WARS";
     int i = 0;
@@ -500,8 +504,8 @@ void drawRegistrationBackground(void) {
     uLCD.filled_circle(7, 71, 4, BROWN);
     uLCD.filled_circle(11, 67, 2, MGREY);
     drawImg(64 - 9, 127 - 113, 19, 19, BOSS_IMGS[3]);
-    drawImg(39 - 5, 127 - 98, 11, 11, ENEMY_IMGS[3]);
-    drawImg(89 - 5, 127 - 98, 11, 11, ENEMY_IMGS[3]);
+    drawImg(39 - 5, 127 - 98, 11, 11, NORMAL_ENEMY_IMGS[3]);
+    drawImg(89 - 5, 127 - 98, 11, 11, NORMAL_ENEMY_IMGS[3]);
     drawImg(64 - 5, 127 - 80, 11, 11, PLAYER_IMGS[3]);
     uLCD.filled_rectangle(0, 127 - 39, 127, 127, DGREY);
 }
@@ -1390,9 +1394,9 @@ void drawGameLost(void) {
     uLCD.filled_circle(11, 112, 2, MRED);
 
     drawImg(64 - 9, 127 - 105, 19, 19, BOSS_IMGS[3]);
-    drawImg(39 - 5, 127 - 85, 11, 11, ENEMY_IMGS[3]);
-    drawImg(89 - 5, 127 - 85, 11, 11, ENEMY_IMGS[3]);
-    drawImg(64 - 5, 127 - 68, 11, 11, ENEMY_IMGS[3]);
+    drawImg(39 - 5, 127 - 85, 11, 11, NORMAL_ENEMY_IMGS[3]);
+    drawImg(89 - 5, 127 - 85, 11, 11, NORMAL_ENEMY_IMGS[3]);
+    drawImg(64 - 5, 127 - 68, 11, 11, NORMAL_ENEMY_IMGS[3]);
     char game[30] = "GAME    OVER";
     int i = 0;
     while (game[i]) {

@@ -154,6 +154,10 @@ BUILD/LPC1768/ARMC6/utilities/audio/gameMusic.o: \
   mbed-os/storage/filesystem/fat/ChaN/ff.h \
   mbed-os/storage/filesystem/fat/ChaN/ffconf.h \
   utilities/hardware/hardware.h game/gameLoops/game.h \
+  game/interfaces/menu/menu.h utilities/graphics/graphics.h \
+  utilities/doublyLinkedList/doublyLinkedList.h game/users/users.h \
+  game/interfaces/login/login.h assets/profileImg.h assets/enemySprite.h \
+  assets/finalBossSprite.h assets/playerSprite.h \
   assets/normalProjectileSound.h assets/laserSound.h \
   assets/explosionSound.h assets/hit.h assets/button.h assets/win.h \
   assets/lose.h assets/missile.h

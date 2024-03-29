@@ -193,13 +193,38 @@ int loginUpdate(void) {
         }
     } else if (!inputs->superAttack) {
         buttonSound();
-        getMenuSettings()->volume -= (getMenuSettings()->volume > 0) ? 0.05 : 0;
+        (*getVolume() > 0) ? *getVolume() -= 0.05 : *getVolume() = 0;
         while (!readInputs()->superAttack) loadMusic();
+        // If user double clicks then go to prev song
+        Timer doubleClick;
+        doubleClick.start();
+        while (doubleClick.elapsed_time().count() < 250000) {
+            loadMusic();
+            if (!readInputs()->superAttack) {
+                playPrevTrack();
+                while (!readInputs()->superAttack) loadMusic();
+                break;
+            }
+        }
+        wait_us(250000);
         return 0;
     } else if (!inputs->pauseResume) {
         buttonSound();
-        getMenuSettings()->volume += (getMenuSettings()->volume < 1) ? 0.05 : 0;
+        (*getVolume() < 1) ? *getVolume() += 0.05 : *getVolume() = 0;
         while (!readInputs()->pauseResume) loadMusic();
+        // If user double clicks then go to next song
+        Timer doubleClick;
+        doubleClick.start();
+        while (doubleClick.elapsed_time().count() < 250000) {
+            loadMusic();
+            if (!readInputs()->superAttack) {
+                playNextTrack();
+                while (!readInputs()->superAttack) loadMusic();
+                break;
+            }
+        }
+        wait_us(250000);
+        wait_us(250000);
         return 0;
     }
     switch (page) {

@@ -17,6 +17,7 @@
 #define MAX_DATA_SIZE 8192
 
 AnalogOut sound(p18);
+double volume = 0.05;
 unsigned short *bufferZero = (unsigned short*)0x2007C000;
 unsigned short *bufferOne = (unsigned short*)0x2007E000;
 WAVHeader header;
@@ -35,9 +36,21 @@ int bCounter = -1;
 int winCounter = -1;
 int loseCounter = -1;
 FILE *songFile;
+unsigned short currentSong = 0;
+
+double* getVolume(void) {
+    return &volume;
+}
 
 void musicInit(void) {
-    songFile = fopen("/sd/Interstellar.wav", "rb");
+    char fileName[100] = "/sd/";
+    strcat(fileName, songs[0]);
+    strcat(fileName, ".wav");
+    songFile = fopen(fileName, "rb");
+    if (songFile == NULL) {
+        printf("Failed to open song file\n");
+        return;
+    }
     // Get file size to know when to loop back
     fread(&header, sizeof(header), 1, songFile);
     fileEnd = header.fileSize;
@@ -49,9 +62,42 @@ void musicInit(void) {
     gameSound.attach(&playMusic, 1.0 / 11025.0);
 }
 
+void playNextTrack(void) {
+    for (int i = 0; i < MAX_DATA_SIZE / sizeof(unsigned short); i++) {
+        bufferZero[i] = 0;
+        bufferOne[i] = 0;
+    }
+    char fileName[100] = "/sd/";
+    strcat(fileName, songs[(currentSong < 2) ? ++currentSong : 0]);
+    strcat(fileName, ".wav");
+    songFile = fopen(fileName, "rb");
+    if (songFile == NULL) {
+        printf("Failed to open song file\n");
+        return;
+    }
+    fread(&header, sizeof(header), 1, songFile);
+    fileEnd = header.fileSize;
+}
+
+void playPrevTrack(void) {
+    for (int i = 0; i < MAX_DATA_SIZE / sizeof(unsigned short); i++) {
+        bufferZero[i] = 0;
+        bufferOne[i] = 0;
+    }
+    char fileName[100] = "/sd/";
+    strcat(fileName, songs[(currentSong < 2) ? --currentSong : 2]);
+    strcat(fileName, ".wav");
+    songFile = fopen(fileName, "rb");
+    if (songFile == NULL) {
+        printf("Failed to open song file\n");
+        return;
+    }
+    fread(&header, sizeof(header), 1, songFile);
+    fileEnd = header.fileSize;
+}
+
 void loadMusic(void) {
     if (!bufferReady) {
-        //fseek(songFile, filePos, SEEK_SET);
         unsigned short *addr;
         if (bufferInUse == 0) {
             addr = bufferOne;
@@ -64,7 +110,7 @@ void loadMusic(void) {
         if (filePos >= fileEnd + MAX_DATA_SIZE * 3) {
             // Reset file position to the beginning
             filePos = 78;
-            fseek(songFile, filePos, SEEK_SET);
+            playNextTrack();
             fread(addr, sizeof(unsigned short), MAX_DATA_SIZE / sizeof(unsigned short), songFile);
         }
         filePos += MAX_DATA_SIZE;
@@ -85,9 +131,9 @@ void playMusic(void) {
     data += (loseCounter >= 0) ? loseSoundData[loseCounter++] - 32768 : 0;
     // Output the mixed audio
     if (bufferInUse == 0) {
-        sound.write_u16((unsigned short)(((bufferZero[mCounter++] + data) & 0xffff) * ((getMenuSettings()->volume != NULL) ? getMenuSettings()->volume : 0.25)));
+        sound.write_u16((unsigned short)(((bufferZero[mCounter++] + data) & 0xffff) * volume));
     } else if (bufferInUse == 1) {
-        sound.write_u16((unsigned short)(((bufferOne[mCounter++] + data) & 0xffff) * ((getMenuSettings()->volume != NULL) ? getMenuSettings()->volume : 0.25)));
+        sound.write_u16((unsigned short)(((bufferOne[mCounter++] + data) & 0xffff) * volume));
     }
     // Iterate or reset all audio counters if necessary
     if (mCounter >= MAX_DATA_SIZE / sizeof(unsigned short)) {

@@ -68,7 +68,7 @@
     {
         "module": "game/characters",
         "size": {
-            ".text": 5950,
+            ".text": 5946,
             ".data": 0,
             ".bss": 20,
             ".text-delta": 0,
@@ -101,10 +101,10 @@
     {
         "module": "game/interfaces",
         "size": {
-            ".text": 13485,
+            ".text": 14555,
             ".data": 14,
-            ".bss": 456,
-            ".text-delta": 0,
+            ".bss": 472,
+            ".text-delta": 476,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -112,10 +112,10 @@
     {
         "module": "game/projectiles",
         "size": {
-            ".text": 4752,
+            ".text": 4748,
             ".data": 0,
             ".bss": 12,
-            ".text-delta": 58,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -134,7 +134,7 @@
     {
         "module": "main.o",
         "size": {
-            ".text": 437,
+            ".text": 425,
             ".data": 0,
             ".bss": 0,
             ".text-delta": 0,
@@ -244,10 +244,10 @@
     {
         "module": "utilities/audio",
         "size": {
-            ".text": 220374,
-            ".data": 44,
-            ".bss": 104,
-            ".text-delta": 0,
+            ".text": 220798,
+            ".data": 56,
+            ".bss": 112,
+            ".text-delta": 116,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -266,10 +266,10 @@
     {
         "module": "utilities/graphics",
         "size": {
-            ".text": 84757,
+            ".text": 83757,
             ".data": 0,
             ".bss": 144,
-            ".text-delta": 0,
+            ".text-delta": -8,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -287,10 +287,10 @@
     },
     {
         "summary": {
-            "static_ram": 10799,
+            "static_ram": 10835,
             "static_ram_delta": 0,
-            "total_flash": 473913,
-            "total_flash_delta": 58
+            "total_flash": 474399,
+            "total_flash_delta": 584
         }
     }
 ]

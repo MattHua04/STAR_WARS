@@ -5,13 +5,13 @@
 #include "game.h"
 #include "uLCD.hpp"
 
-uLCD_4DGL uLCD(p13,p14,p15);
+uLCD_4DGL uLCD(p13, p14, p15);
 Nav_Switch myNav(p26, p29, p28, p30, p27);
 DigitalIn normalAttack(p22);
 DigitalIn superAttack(p23);
 DigitalIn pauseResume(p24);
 DigitalIn quitGame(p25);
-SDBlockDevice sd_block(p5,p6,p7,p8);
+SDBlockDevice sd_block(p5, p6, p7, p8);
 FATFileSystem fs("sd", &sd_block);
 AnalogOut DACout(p18);
 

@@ -104,13 +104,38 @@ int menuUpdate(void) {
         }
     } else if (!inputs->superAttack) {
         buttonSound();
-        menuSettings.volume -= (menuSettings.volume > 0) ? 0.05 : 0;
+        (*getVolume() > 0) ? *getVolume() -= 0.05 : *getVolume() = 0;
         while (!readInputs()->superAttack) loadMusic();
+        // If user double clicks then go to prev song
+        Timer doubleClick;
+        doubleClick.start();
+        while (doubleClick.elapsed_time().count() < 250000) {
+            loadMusic();
+            if (!readInputs()->superAttack) {
+                playPrevTrack();
+                while (!readInputs()->superAttack) loadMusic();
+                break;
+            }
+        }
+        wait_us(250000);
         return 0;
     } else if (!inputs->pauseResume) {
         buttonSound();
-        menuSettings.volume += (menuSettings.volume < 1) ? 0.05 : 0;
+        (*getVolume() < 1) ? *getVolume() += 0.05 : *getVolume() = 0;
         while (!readInputs()->pauseResume) loadMusic();
+        // If user double clicks then go to next song
+        Timer doubleClick;
+        doubleClick.start();
+        while (doubleClick.elapsed_time().count() < 250000) {
+            loadMusic();
+            if (!readInputs()->superAttack) {
+                playNextTrack();
+                while (!readInputs()->superAttack) loadMusic();
+                break;
+            }
+        }
+        wait_us(250000);
+        wait_us(250000);
         return 0;
     }
     if (menuPage == MENU_PAGE::MENU_HOME) {
@@ -143,6 +168,7 @@ int menuUpdate(void) {
             }
         } else if (skinSelector.buttonStatus == BUTTON_STATUS::SELECTED) {
             if (inputs->up) {
+                buttonSound();
                 for (int i = sizeof(skins) - 1; i >= 0; i--) {
                     if (skins[i] == menuSettings.playerSkin) {
                         if (i > 0) {
@@ -163,6 +189,7 @@ int menuUpdate(void) {
                     }
                 }
             } else if (inputs->down) {
+                buttonSound();
                 for (int i = 0; i < sizeof(skins); i++) {
                     if (skins[i] == menuSettings.playerSkin) {
                         if (i < sizeof(skins) - 1) {
@@ -193,6 +220,7 @@ int menuUpdate(void) {
         } else if (modeSelector.buttonStatus == BUTTON_STATUS::SELECTED) {
             GAME_MODE gameModeLayout[] = {LEVELS, SCORECAP, INFINITE};
             if (inputs->up) {
+                buttonSound();
                 for (int i = 0; i < 3; i++) {
                     if (menuSettings.gameMode == gameModeLayout[i] && i < 2) {
                         menuSettings.gameMode = gameModeLayout[i + 1];
@@ -206,6 +234,7 @@ int menuUpdate(void) {
                 while (readInputs()->up) loadMusic();
                 return 0;
             } else if (inputs->down) {
+                buttonSound();
                 for (int i = 2; i >= 0; i--) {
                     if (menuSettings.gameMode == gameModeLayout[i] && i > 0) {
                         menuSettings.gameMode = gameModeLayout[i - 1];
@@ -246,6 +275,7 @@ int menuUpdate(void) {
                 while (readInputs()->down) loadMusic();
                 return 0;
             } else if (inputs->left) {
+                buttonSound();
                 if (difficulty.value > 1) {
                     difficulty.value--;
                     menuSettings.difficulty = difficulty.value;
@@ -255,6 +285,7 @@ int menuUpdate(void) {
                 while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
+                buttonSound();
                 if (difficulty.value < difficulty.maxVal) {
                     difficulty.value++;
                     menuSettings.difficulty = difficulty.value;

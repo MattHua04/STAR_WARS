@@ -24,10 +24,9 @@
 #define EXIT_GAME 999
 #define REGISTER_USER 111
 
-int main()
-{
+int main() {
     ASSERT_P(hardware_init() == ERROR_NONE, "Hardware init failed!");
-    printf("Program Starting\n");
+    printf("Game Starting\n");
     drawProfileImg();
     wait_us(3000000);
     //drawBox(0, 127, 127, 0, 'R');
@@ -81,6 +80,6 @@ int main()
     deletePlayer();
     deallocateHardware();
     deleteMenu();
-    printf("Stopping Program\n");
+    printf("Ending Game\n");
     return 0;
 }

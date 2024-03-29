@@ -1,6 +1,6 @@
 BUILD/LPC1768/ARMC6/game/interfaces/menu/menu.o: \
   game/interfaces/menu/menu.cpp BUILD/LPC1768/ARMC6/mbed_config.h \
-  utilities/graphics/graphics.h globals.h mbed-os/mbed.h \
+  utilities/audio/gameMusic.h mbed-os/mbed.h \
   mbed-os/platform/include/platform/mbed_version.h \
   mbed-os/rtos/include/rtos/rtos.h \
   mbed-os/rtos/include/rtos/internal/mbed_rtos_storage.h \
@@ -145,16 +145,16 @@ BUILD/LPC1768/ARMC6/game/interfaces/menu/menu.o: \
   mbed-os/platform/include/platform/ScopedRamExecutionLock.h \
   mbed-os/platform/include/platform/mbed_stats.h \
   mbed-os/platform/include/platform/Stream.h \
-  mbed-os/platform/include/platform/FileLike.h \
-  utilities/audio/gameMusic.h utilities/hardware/hardware.h \
+  mbed-os/platform/include/platform/FileLike.h globals.h \
   utilities/4DGL-uLCD-SE/uLCD_4DGL.h utilities/Nav_Switch/Nav_Switch.h \
   mbed-os/storage/blockdevice/COMPONENT_SD/include/SD/SDBlockDevice.h \
   mbed-os/hal/include/hal/static_pinmap.h \
   mbed-os/hal/include/hal/qspi_api.h mbed-os/hal/include/hal/ospi_api.h \
   mbed-os/storage/filesystem/fat/include/fat/FATFileSystem.h \
   mbed-os/storage/filesystem/fat/ChaN/ff.h \
-  mbed-os/storage/filesystem/fat/ChaN/ffconf.h game/gameLoops/game.h \
-  utilities/doublyLinkedList/doublyLinkedList.h \
+  mbed-os/storage/filesystem/fat/ChaN/ffconf.h \
+  utilities/hardware/hardware.h utilities/graphics/graphics.h \
+  game/gameLoops/game.h utilities/doublyLinkedList/doublyLinkedList.h \
   game/interfaces/menu/menu.h game/users/users.h \
   game/interfaces/login/login.h assets/profileImg.h assets/enemySprite.h \
   assets/finalBossSprite.h assets/playerSprite.h
