@@ -1,9 +1,9 @@
-#include "enemy.h"
-#include "finalBoss.h"
-#include "globals.h"
-#include "graphics.h"
-#include "projectile.h"
-#include "player.h"
+#include "enemy.hpp"
+#include "finalBoss.hpp"
+#include "globals.hpp"
+#include "graphics.hpp"
+#include "projectile.hpp"
+#include "player.hpp"
 
 BOSS* boss = NULL;
 LLNode* bossNode = NULL;

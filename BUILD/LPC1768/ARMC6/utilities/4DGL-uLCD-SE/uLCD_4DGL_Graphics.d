@@ -146,4 +146,4 @@ BUILD/LPC1768/ARMC6/utilities/4DGL-uLCD-SE/uLCD_4DGL_Graphics.o: \
   mbed-os/platform/include/platform/mbed_stats.h \
   mbed-os/platform/include/platform/Stream.h \
   mbed-os/platform/include/platform/FileLike.h \
-  utilities/4DGL-uLCD-SE/uLCD_4DGL.h
+  utilities/4DGL-uLCD-SE/uLCD_4DGL.hpp

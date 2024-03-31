@@ -18,7 +18,7 @@
 // along with uLCD_4DGL.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "mbed.h"
-#include "uLCD_4DGL.h"
+#include "uLCD_4DGL.hpp"
 
 
 //Media Commands

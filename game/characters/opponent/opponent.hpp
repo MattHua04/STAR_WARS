@@ -1,12 +1,12 @@
 #ifndef OPPONENT_H
 #define OPPONENT_H
 
-#include "doublyLinkedList.h"
+#include "doublyLinkedList.hpp"
 #include "mbed.h"
-#include "healthBar.h"
-#include "globals.h"
-#include "graphics.h"
-#include "player.h"
+#include "healthBar.hpp"
+#include "globals.hpp"
+#include "graphics.hpp"
+#include "player.hpp"
 
 /** Get the opponent object from other files
  */

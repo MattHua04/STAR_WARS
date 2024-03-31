@@ -1,10 +1,10 @@
 #ifndef PROJECTILE_H
 #define PROJECTILE_H
 
-#include "doublyLinkedList.h"
+#include "doublyLinkedList.hpp"
 #include "mbed.h"
-#include "globals.h"
-#include "graphics.h"
+#include "globals.hpp"
+#include "graphics.hpp"
 
 //==== [private settings] ====
 #define PROJECTILE_WIDTH 1

@@ -1,13 +1,13 @@
-#include "doublyLinkedList.h"
-#include "gameMusic.h"
-#include "hardware.h"
+#include "doublyLinkedList.hpp"
+#include "gameMusic.hpp"
+#include "hardware.hpp"
 #include "mbed.h"
-#include "healthBar.h"
-#include "globals.h"
-#include "graphics.h"
-#include "enemy.h"
-#include "player.h"
-#include "projectile.h"
+#include "healthBar.hpp"
+#include "globals.hpp"
+#include "graphics.hpp"
+#include "enemy.hpp"
+#include "player.hpp"
+#include "projectile.hpp"
 
 DLinkedList* enemyDLL = NULL;
 

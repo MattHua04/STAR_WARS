@@ -18,7 +18,7 @@
 // along with uLCD_4DGL.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "mbed.h"
-#include "uLCD_4DGL.h"
+#include "uLCD_4DGL.hpp"
 
 #define ARRAY_SIZE(X) sizeof(X)/sizeof(X[0])
 

@@ -1,5 +1,5 @@
 #include "mbed.h"
-#include "Nav_Switch.h"
+#include "Nav_Switch.hpp"
 
 
 Nav_Switch::Nav_Switch (PinName up,PinName down,PinName left,PinName right,PinName center):

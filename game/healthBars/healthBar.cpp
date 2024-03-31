@@ -1,10 +1,10 @@
-#include "graphics.h"
-#include "healthBar.h"
-#include "enemy.h"
-#include "opponent.h"
-#include "player.h"
-#include "finalBoss.h"
-#include "doublyLinkedList.h"
+#include "graphics.hpp"
+#include "healthBar.hpp"
+#include "enemy.hpp"
+#include "opponent.hpp"
+#include "player.hpp"
+#include "finalBoss.hpp"
+#include "doublyLinkedList.hpp"
 #include <cstdio>
 
 DLinkedList* enemyHealthBarDLL = NULL;

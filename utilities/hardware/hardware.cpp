@@ -1,8 +1,8 @@
-#include "globals.h"
-#include "doublyLinkedList.h"
-#include "player.h"
-#include "hardware.h"
-#include "game.h"
+#include "globals.hpp"
+#include "doublyLinkedList.hpp"
+#include "player.hpp"
+#include "hardware.hpp"
+#include "game.hpp"
 #include "uLCD.hpp"
 
 uLCD_4DGL uLCD(p13, p14, p15);

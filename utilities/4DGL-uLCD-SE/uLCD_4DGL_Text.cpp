@@ -18,7 +18,7 @@
 // along with uLCD_4DGL.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "mbed.h"
-#include "uLCD_4DGL.h"
+#include "uLCD_4DGL.hpp"
 
 //****************************************************************************************************
 void uLCD_4DGL :: set_font_size(char width, char height)     // set font size

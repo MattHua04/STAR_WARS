@@ -1,8 +1,8 @@
-#include "gameMusic.h"
-#include "graphics.h"
-#include "hardware.h"
-#include "login.h"
-#include "menu.h"
+#include "gameMusic.hpp"
+#include "graphics.hpp"
+#include "hardware.hpp"
+#include "login.hpp"
+#include "menu.hpp"
 
 MENU_PAGE menuPage;
 MENU_SETTINGS menuSettings;

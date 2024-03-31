@@ -1,6 +1,6 @@
 BUILD/LPC1768/ARMC6/utilities/graphics/graphics.o: \
   utilities/graphics/graphics.cpp BUILD/LPC1768/ARMC6/mbed_config.h \
-  utilities/graphics/graphics.h globals.h mbed-os/mbed.h \
+  utilities/graphics/graphics.hpp globals.hpp mbed-os/mbed.h \
   mbed-os/platform/include/platform/mbed_version.h \
   mbed-os/rtos/include/rtos/rtos.h \
   mbed-os/rtos/include/rtos/internal/mbed_rtos_storage.h \
@@ -146,22 +146,25 @@ BUILD/LPC1768/ARMC6/utilities/graphics/graphics.o: \
   mbed-os/platform/include/platform/mbed_stats.h \
   mbed-os/platform/include/platform/Stream.h \
   mbed-os/platform/include/platform/FileLike.h \
-  utilities/audio/gameMusic.h utilities/hardware/hardware.h \
-  utilities/4DGL-uLCD-SE/uLCD_4DGL.h utilities/Nav_Switch/Nav_Switch.h \
+  utilities/audio/gameMusic.hpp utilities/hardware/hardware.hpp \
+  utilities/4DGL-uLCD-SE/uLCD_4DGL.hpp \
+  utilities/Nav_Switch/Nav_Switch.hpp \
   mbed-os/storage/blockdevice/COMPONENT_SD/include/SD/SDBlockDevice.h \
   mbed-os/hal/include/hal/static_pinmap.h \
   mbed-os/hal/include/hal/qspi_api.h mbed-os/hal/include/hal/ospi_api.h \
   mbed-os/storage/filesystem/fat/include/fat/FATFileSystem.h \
   mbed-os/storage/filesystem/fat/ChaN/ff.h \
-  mbed-os/storage/filesystem/fat/ChaN/ffconf.h game/gameLoops/game.h \
-  utilities/doublyLinkedList/doublyLinkedList.h \
-  game/interfaces/menu/menu.h game/users/users.h \
-  game/interfaces/login/login.h assets/profileImg.h assets/enemySprite.h \
-  assets/finalBossSprite.h assets/playerSprite.h \
-  game/projectiles/projectile.h game/characters/player/player.h \
-  game/healthBars/healthBar.h game/characters/opponent/opponent.h \
-  game/characters/enemies/enemy.h game/characters/finalBoss/finalBoss.h \
-  game/interfaces/registration/registration.h \
+  mbed-os/storage/filesystem/fat/ChaN/ffconf.h game/gameLoops/game.hpp \
+  utilities/doublyLinkedList/doublyLinkedList.hpp \
+  game/interfaces/menu/menu.hpp game/users/users.hpp \
+  game/interfaces/login/login.hpp assets/profileImg.hpp \
+  assets/enemySprite.hpp assets/finalBossSprite.hpp \
+  assets/playerSprite.hpp game/projectiles/projectile.hpp \
+  game/characters/player/player.hpp game/healthBars/healthBar.hpp \
+  game/characters/opponent/opponent.hpp \
+  game/characters/enemies/enemy.hpp \
+  game/characters/finalBoss/finalBoss.hpp \
+  game/interfaces/registration/registration.hpp \
   utilities/asyncLibraries/MbedLibraryCollection/libraries/ulcd/uLCD.hpp \
   utilities/asyncLibraries/MbedLibraryCollection/libraries/asyncIO/serialAsync.hpp \
   utilities/asyncLibraries/MbedLibraryCollection/libraries/asyncIO/dma.h

@@ -1,12 +1,12 @@
-#include "gameMusic.h"
-#include "globals.h"
-#include "graphics.h"
-#include "opponent.h"
-#include "player.h"
-#include "enemy.h"
-#include "finalBoss.h"
-#include "projectile.h"
-#include "doublyLinkedList.h"
+#include "gameMusic.hpp"
+#include "globals.hpp"
+#include "graphics.hpp"
+#include "opponent.hpp"
+#include "player.hpp"
+#include "enemy.hpp"
+#include "finalBoss.hpp"
+#include "projectile.hpp"
+#include "doublyLinkedList.hpp"
 #include <cstdio>
 #include <math.h>
 

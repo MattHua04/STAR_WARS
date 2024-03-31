@@ -1,8 +1,8 @@
 #ifndef REGISTRATION_H
 #define REGISTRATION_H
 
-#include "graphics.h"
-#include "users.h"
+#include "graphics.hpp"
+#include "users.hpp"
 
 typedef enum {
     USERNAME,

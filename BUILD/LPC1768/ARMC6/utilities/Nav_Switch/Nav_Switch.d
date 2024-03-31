@@ -145,4 +145,4 @@ BUILD/LPC1768/ARMC6/utilities/Nav_Switch/Nav_Switch.o: \
   mbed-os/platform/include/platform/mbed_stats.h \
   mbed-os/platform/include/platform/Stream.h \
   mbed-os/platform/include/platform/FileLike.h \
-  utilities/Nav_Switch/Nav_Switch.h
+  utilities/Nav_Switch/Nav_Switch.hpp

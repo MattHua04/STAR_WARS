@@ -2,8 +2,8 @@
 #define MENUS_H
 
 #include "mbed.h"
-#include "globals.h"
-#include "graphics.h"
+#include "globals.hpp"
+#include "graphics.hpp"
 
 /** Get menu settings to determine game loop settings
  */

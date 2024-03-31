@@ -37,8 +37,8 @@ BUILD/LPC1768/ARMC6/main.o: main.cpp BUILD/LPC1768/ARMC6/mbed_config.h \
   mbed-os/drivers/include/drivers/TickerDataClock.h \
   mbed-os/platform/include/platform/ScopedLock.h \
   mbed-os/cmsis/CMSIS_5/CMSIS/TARGET_CORTEX_M/Include/cmsis_armclang_ltm.h \
-  utilities/doublyLinkedList/doublyLinkedList.h globals.h mbed-os/mbed.h \
-  mbed-os/platform/include/platform/mbed_version.h \
+  utilities/doublyLinkedList/doublyLinkedList.hpp globals.hpp \
+  mbed-os/mbed.h mbed-os/platform/include/platform/mbed_version.h \
   mbed-os/rtos/include/rtos/rtos.h mbed-os/rtos/include/rtos/Thread.h \
   mbed-os/platform/include/platform/Callback.h \
   mbed-os/platform/cxxsupport/mstd_new \
@@ -146,19 +146,20 @@ BUILD/LPC1768/ARMC6/main.o: main.cpp BUILD/LPC1768/ARMC6/mbed_config.h \
   mbed-os/platform/include/platform/mbed_stats.h \
   mbed-os/platform/include/platform/Stream.h \
   mbed-os/platform/include/platform/FileLike.h \
-  utilities/audio/gameMusic.h utilities/hardware/hardware.h \
-  utilities/4DGL-uLCD-SE/uLCD_4DGL.h utilities/Nav_Switch/Nav_Switch.h \
+  utilities/audio/gameMusic.hpp utilities/hardware/hardware.hpp \
+  utilities/4DGL-uLCD-SE/uLCD_4DGL.hpp \
+  utilities/Nav_Switch/Nav_Switch.hpp \
   mbed-os/storage/blockdevice/COMPONENT_SD/include/SD/SDBlockDevice.h \
   mbed-os/hal/include/hal/static_pinmap.h \
   mbed-os/hal/include/hal/qspi_api.h mbed-os/hal/include/hal/ospi_api.h \
   mbed-os/storage/filesystem/fat/include/fat/FATFileSystem.h \
   mbed-os/storage/filesystem/fat/ChaN/ff.h \
   mbed-os/storage/filesystem/fat/ChaN/ffconf.h \
-  game/characters/enemies/enemy.h game/healthBars/healthBar.h \
-  utilities/graphics/graphics.h game/gameLoops/game.h \
-  game/interfaces/menu/menu.h game/users/users.h \
-  game/interfaces/login/login.h assets/profileImg.h assets/enemySprite.h \
-  assets/finalBossSprite.h assets/playerSprite.h \
-  game/characters/finalBoss/finalBoss.h game/characters/player/player.h \
-  game/projectiles/projectile.h \
-  game/interfaces/registration/registration.h
+  game/characters/enemies/enemy.hpp game/healthBars/healthBar.hpp \
+  utilities/graphics/graphics.hpp game/gameLoops/game.hpp \
+  game/interfaces/menu/menu.hpp game/users/users.hpp \
+  game/interfaces/login/login.hpp assets/profileImg.hpp \
+  assets/enemySprite.hpp assets/finalBossSprite.hpp \
+  assets/playerSprite.hpp game/characters/finalBoss/finalBoss.hpp \
+  game/characters/player/player.hpp game/projectiles/projectile.hpp \
+  game/interfaces/registration/registration.hpp

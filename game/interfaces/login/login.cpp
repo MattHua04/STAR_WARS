@@ -1,9 +1,9 @@
-#include "gameMusic.h"
-#include "menu.h"
-#include "registration.h"
-#include "graphics.h"
-#include "users.h"
-#include "hardware.h"
+#include "gameMusic.hpp"
+#include "menu.hpp"
+#include "registration.hpp"
+#include "graphics.hpp"
+#include "users.hpp"
+#include "hardware.hpp"
 
 REGISTRATION_PAGE page;
 USER userInfo;

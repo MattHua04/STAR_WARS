@@ -2,10 +2,10 @@
 #define USERS_H
 
 #include "mbed.h"
-#include "globals.h"
-#include "graphics.h"
-#include "login.h"
-#include "menu.h"
+#include "globals.hpp"
+#include "graphics.hpp"
+#include "login.hpp"
+#include "menu.hpp"
 
 /** Get a list of usernames
  */

@@ -1,8 +1,8 @@
-#include "registration.h"
-#include "graphics.h"
-#include "menu.h"
-#include "users.h"
-#include "hardware.h"
+#include "registration.hpp"
+#include "graphics.hpp"
+#include "menu.hpp"
+#include "users.hpp"
+#include "hardware.hpp"
 
 REGISTRATION_PAGE pageR;
 USER newUser;

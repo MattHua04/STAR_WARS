@@ -1,11 +1,11 @@
-#include "gameMusic.h"
-#include "globals.h"
-#include "graphics.h"
-#include "doublyLinkedList.h"
-#include "hardware.h"
-#include "opponent.h"
-#include "healthBar.h"
-#include "projectile.h"
+#include "gameMusic.hpp"
+#include "globals.hpp"
+#include "graphics.hpp"
+#include "doublyLinkedList.hpp"
+#include "hardware.hpp"
+#include "opponent.hpp"
+#include "healthBar.hpp"
+#include "projectile.hpp"
 #include <cstdio>
 
 PLAYER* opponent = NULL;

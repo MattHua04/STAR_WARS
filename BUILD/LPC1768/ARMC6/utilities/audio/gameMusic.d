@@ -1,6 +1,6 @@
 BUILD/LPC1768/ARMC6/utilities/audio/gameMusic.o: \
   utilities/audio/gameMusic.cpp BUILD/LPC1768/ARMC6/mbed_config.h \
-  utilities/audio/gameMusic.h mbed-os/mbed.h \
+  utilities/audio/gameMusic.hpp mbed-os/mbed.h \
   mbed-os/platform/include/platform/mbed_version.h \
   mbed-os/rtos/include/rtos/rtos.h \
   mbed-os/rtos/include/rtos/internal/mbed_rtos_storage.h \
@@ -145,19 +145,20 @@ BUILD/LPC1768/ARMC6/utilities/audio/gameMusic.o: \
   mbed-os/platform/include/platform/ScopedRamExecutionLock.h \
   mbed-os/platform/include/platform/mbed_stats.h \
   mbed-os/platform/include/platform/Stream.h \
-  mbed-os/platform/include/platform/FileLike.h globals.h \
-  utilities/4DGL-uLCD-SE/uLCD_4DGL.h utilities/Nav_Switch/Nav_Switch.h \
+  mbed-os/platform/include/platform/FileLike.h globals.hpp \
+  utilities/4DGL-uLCD-SE/uLCD_4DGL.hpp \
+  utilities/Nav_Switch/Nav_Switch.hpp \
   mbed-os/storage/blockdevice/COMPONENT_SD/include/SD/SDBlockDevice.h \
   mbed-os/hal/include/hal/static_pinmap.h \
   mbed-os/hal/include/hal/qspi_api.h mbed-os/hal/include/hal/ospi_api.h \
   mbed-os/storage/filesystem/fat/include/fat/FATFileSystem.h \
   mbed-os/storage/filesystem/fat/ChaN/ff.h \
   mbed-os/storage/filesystem/fat/ChaN/ffconf.h \
-  utilities/hardware/hardware.h game/gameLoops/game.h \
-  game/interfaces/menu/menu.h utilities/graphics/graphics.h \
-  utilities/doublyLinkedList/doublyLinkedList.h game/users/users.h \
-  game/interfaces/login/login.h assets/profileImg.h assets/enemySprite.h \
-  assets/finalBossSprite.h assets/playerSprite.h \
-  assets/normalProjectileSound.h assets/laserSound.h \
-  assets/explosionSound.h assets/hit.h assets/button.h assets/win.h \
-  assets/lose.h assets/missile.h
+  utilities/hardware/hardware.hpp game/gameLoops/game.hpp \
+  game/interfaces/menu/menu.hpp utilities/graphics/graphics.hpp \
+  utilities/doublyLinkedList/doublyLinkedList.hpp game/users/users.hpp \
+  game/interfaces/login/login.hpp assets/profileImg.hpp \
+  assets/enemySprite.hpp assets/finalBossSprite.hpp \
+  assets/playerSprite.hpp assets/normalProjectileSound.hpp \
+  assets/laserSound.hpp assets/explosionSound.hpp assets/hit.hpp \
+  assets/button.hpp assets/win.hpp assets/lose.hpp assets/missile.hpp

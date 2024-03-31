@@ -1,11 +1,11 @@
 #ifndef FINALBOSS_H
 #define FINALBOSS_H
 
-#include "doublyLinkedList.h"
+#include "doublyLinkedList.hpp"
 #include "mbed.h"
-#include "healthBar.h"
-#include "globals.h"
-#include "graphics.h"
+#include "healthBar.hpp"
+#include "globals.hpp"
+#include "graphics.hpp"
 
 //==== [private settings] ====
 #define BOSS_WIDTH 19

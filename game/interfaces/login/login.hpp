@@ -1,7 +1,7 @@
 #ifndef LOGIN_H
 #define LOGIN_H
 
-#include "globals.h"
+#include "globals.hpp"
 
 /** Get information about currently logged in user
  */

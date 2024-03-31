@@ -1,10 +1,10 @@
 #ifndef HEALTHBAR_H
 #define HEALTHBAR_H
 
-#include "doublyLinkedList.h"
+#include "doublyLinkedList.hpp"
 #include "mbed.h"
-#include "globals.h"
-#include "graphics.h"
+#include "globals.hpp"
+#include "graphics.hpp"
 
 //==== [private settings] ====
 #define BAR_HEIGHT 3
