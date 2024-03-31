@@ -175,7 +175,6 @@ void loginInit(void) {
 /** Update the login screen
  */
 int loginUpdate(void) {
-    loadMusic();
     GAME_INPUTS* inputs = readInputs();
     if (!inputs->quitGame) {
         buttonSound();
@@ -193,37 +192,36 @@ int loginUpdate(void) {
         }
     } else if (!inputs->superAttack) {
         buttonSound();
-        (*getVolume() > 0) ? *getVolume() -= 0.05 : *getVolume() = 0;
-        while (!readInputs()->superAttack) loadMusic();
         // If user double clicks then go to prev song
         Timer doubleClick;
         doubleClick.start();
-        while (doubleClick.elapsed_time().count() < 250000) {
+        while (doubleClick.elapsed_time().count() < 2000000) {
             loadMusic();
-            if (!readInputs()->superAttack) {
-                playPrevTrack();
-                while (!readInputs()->superAttack) loadMusic();
-                break;
+            if (readInputs()->superAttack) {
+                (*getVolume() > 0) ? *getVolume() -= 0.05 : *getVolume() = 0;
+                wait_us(250000);
+                return 0;
             }
         }
+        playPrevTrack();
+        while (!readInputs()->superAttack) loadMusic();
         wait_us(250000);
         return 0;
     } else if (!inputs->pauseResume) {
         buttonSound();
-        (*getVolume() < 1) ? *getVolume() += 0.05 : *getVolume() = 0;
-        while (!readInputs()->pauseResume) loadMusic();
         // If user double clicks then go to next song
-        Timer doubleClick;
-        doubleClick.start();
-        while (doubleClick.elapsed_time().count() < 250000) {
+        Timer hold;
+        hold.start();
+        while (hold.elapsed_time().count() < 2000000) {
             loadMusic();
-            if (!readInputs()->superAttack) {
-                playNextTrack();
-                while (!readInputs()->superAttack) loadMusic();
-                break;
+            if (readInputs()->pauseResume) {
+                (*getVolume() < 1) ? *getVolume() += 0.05 : *getVolume() = 0;
+                wait_us(25000);
+                return 0;
             }
         }
-        wait_us(250000);
+        playNextTrack();
+        while (!readInputs()->pauseResume) loadMusic();
         wait_us(250000);
         return 0;
     }

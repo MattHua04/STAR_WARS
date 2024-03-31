@@ -159,4 +159,5 @@ BUILD/LPC1768/ARMC6/game/healthBars/healthBar.o: \
   game/interfaces/login/login.h assets/profileImg.h assets/enemySprite.h \
   assets/finalBossSprite.h assets/playerSprite.h \
   game/healthBars/healthBar.h game/characters/enemies/enemy.h \
-  game/characters/player/player.h game/characters/finalBoss/finalBoss.h
+  game/characters/opponent/opponent.h game/characters/player/player.h \
+  game/characters/finalBoss/finalBoss.h

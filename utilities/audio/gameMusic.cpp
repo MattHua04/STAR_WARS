@@ -17,7 +17,7 @@
 #define MAX_DATA_SIZE 8192
 
 AnalogOut sound(p18);
-double volume = 0.05;
+double volume = 0.25;
 unsigned short *bufferZero = (unsigned short*)0x2007C000;
 unsigned short *bufferOne = (unsigned short*)0x2007E000;
 WAVHeader header;
@@ -43,14 +43,14 @@ double* getVolume(void) {
 }
 
 void musicInit(void) {
-    char fileName[100] = "/sd/";
-    strcat(fileName, songs[0]);
-    strcat(fileName, ".wav");
-    songFile = fopen(fileName, "rb");
-    if (songFile == NULL) {
+    currentSong = -1;
+    FILE* tempFile;
+openFile: tempFile = fopen("/sd/bootupSound.wav", "rb");
+    if (tempFile == NULL) {
         printf("Failed to open song file\n");
-        return;
+        goto openFile;
     }
+    songFile = tempFile;
     // Get file size to know when to loop back
     fread(&header, sizeof(header), 1, songFile);
     fileEnd = header.fileSize;
@@ -63,35 +63,39 @@ void musicInit(void) {
 }
 
 void playNextTrack(void) {
-    for (int i = 0; i < MAX_DATA_SIZE / sizeof(unsigned short); i++) {
-        bufferZero[i] = 0;
-        bufferOne[i] = 0;
-    }
+    fclose(songFile);
     char fileName[100] = "/sd/";
-    strcat(fileName, songs[(currentSong < 2) ? ++currentSong : 0]);
+    strcat(fileName, songs[(currentSong < 2) ? ++currentSong : (currentSong = 0)]);
     strcat(fileName, ".wav");
-    songFile = fopen(fileName, "rb");
-    if (songFile == NULL) {
+    FILE* tempFile;
+openFile: tempFile = fopen(fileName, "rb");
+    if (tempFile == NULL) {
         printf("Failed to open song file\n");
-        return;
+        goto openFile;
     }
+    songFile = tempFile;
     fread(&header, sizeof(header), 1, songFile);
     fileEnd = header.fileSize;
 }
 
 void playPrevTrack(void) {
-    for (int i = 0; i < MAX_DATA_SIZE / sizeof(unsigned short); i++) {
-        bufferZero[i] = 0;
-        bufferOne[i] = 0;
-    }
+    fclose(songFile);
     char fileName[100] = "/sd/";
-    strcat(fileName, songs[(currentSong < 2) ? --currentSong : 2]);
+    strcat(fileName, songs[(currentSong > 0) ? --currentSong : (currentSong = 2)]);
     strcat(fileName, ".wav");
-    songFile = fopen(fileName, "rb");
-    if (songFile == NULL) {
+    FILE* tempFile;
+    int attempts = 0;
+openFile: tempFile = fopen(fileName, "rb");
+    attempts++;
+    if (tempFile == NULL) {
         printf("Failed to open song file\n");
-        return;
+        if (attempts < 10) {
+            goto openFile;
+        } else {
+            return;
+        }
     }
+    songFile = tempFile;
     fread(&header, sizeof(header), 1, songFile);
     fileEnd = header.fileSize;
 }
@@ -106,8 +110,8 @@ void loadMusic(void) {
         }
         // Read the audio data
         fread(addr, sizeof(unsigned short), MAX_DATA_SIZE / sizeof(unsigned short), songFile);
-        // Check if end of file plus a little more is reached so as to not loop back immediately
-        if (filePos >= fileEnd + MAX_DATA_SIZE * 3) {
+        // Check for end of file
+        if (filePos >= fileEnd) {
             // Reset file position to the beginning
             filePos = 78;
             playNextTrack();

@@ -158,6 +158,6 @@ BUILD/LPC1768/ARMC6/game/projectiles/projectile.o: \
   game/interfaces/menu/menu.h game/users/users.h \
   game/interfaces/login/login.h assets/profileImg.h assets/enemySprite.h \
   assets/finalBossSprite.h assets/playerSprite.h \
-  game/characters/player/player.h game/healthBars/healthBar.h \
-  game/characters/enemies/enemy.h game/characters/finalBoss/finalBoss.h \
-  game/projectiles/projectile.h
+  game/characters/opponent/opponent.h game/healthBars/healthBar.h \
+  game/characters/player/player.h game/characters/enemies/enemy.h \
+  game/characters/finalBoss/finalBoss.h game/projectiles/projectile.h

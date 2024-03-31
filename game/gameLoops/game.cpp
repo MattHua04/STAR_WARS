@@ -4,6 +4,7 @@
 #include "graphics.h"
 #include "healthBar.h"
 #include "menu.h"
+#include "opponent.h"
 #include "player.h"
 #include "enemy.h"
 #include "finalBoss.h"
@@ -18,10 +19,6 @@ GAMELOOP* gameLoop = NULL;
 
 GAMELOOP* getGameLoop(void) {
     return gameLoop;
-}
-
-int* getInGame(void) {
-    return &inGame;
 }
 
 int randomNum(void) {
@@ -56,6 +53,9 @@ void generateGameLoop(int level) {
     case 5:
         scoreCap();
         break;
+    case 6:
+        pvp();
+        break;
     }
     randNumSeed.reset();
 }
@@ -68,7 +68,7 @@ void levelOne(void) {
     for (int i = 0; i < getMenuSettings()->difficulty; i++) {
         enemyGenerator(CHARACTER_TYPE::SHORT_RANGE_ENEMY);
     }
-    start(false, false);
+    start(false, false, false);
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
         winSound();
@@ -99,7 +99,7 @@ void levelTwo(void) {
         enemyGenerator(CHARACTER_TYPE::LONG_RANGE_ENEMY);
     }
     enemyGenerator(CHARACTER_TYPE::MISSILE_ENEMY);
-    start(false, false);
+    start(false, false, false);
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
         winSound();
@@ -130,7 +130,7 @@ void levelThree(void) {
     for (int i = 0; i < (int)round((double)(getMenuSettings()->difficulty - 1) / 2); i++) {
         enemyGenerator(CHARACTER_TYPE::LONG_RANGE_ENEMY);
     }
-    start(false, false);
+    start(false, false, false);
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
         winSound();
@@ -181,7 +181,7 @@ void infiniteDuration(void) {
                 enemyGenerator(CHARACTER_TYPE::LONG_RANGE_ENEMY);
             }
         }
-        start(true, false);
+        start(true, false, false);
         if (gameLoop->gameStatus == GAMESTATUS::WON || gameLoop->gameStatus == GAMESTATUS::LOST) {
             break;
         }
@@ -236,7 +236,7 @@ void scoreCap(void) {
                 enemyGenerator(CHARACTER_TYPE::LONG_RANGE_ENEMY);
             }
         }
-        start(false, true);
+        start(false, true, false);
         if (gameLoop->gameStatus == GAMESTATUS::WON || gameLoop->gameStatus == GAMESTATUS::LOST) {
             break;
         }
@@ -260,13 +260,39 @@ void scoreCap(void) {
     deleteBoss();
 }
 
+void pvp(void) {
+    uLCD.cls();
+    enemyInit();
+    opponentInit();
+    projectileInit();
+    healthBarInit();
+    start(false, false, true);
+    if (gameLoop->gameStatus == GAMESTATUS::WON) {
+        drawGameWon();
+        winSound();
+        Timer won;
+        won.start();
+        while (won.elapsed_time().count() < 3000000) loadMusic();
+    } else if (gameLoop->gameStatus == GAMESTATUS::LOST) {
+        drawGameLost();
+        loseSound();
+        Timer lost;
+        lost.start();
+        while (lost.elapsed_time().count() < 3000000) loadMusic();
+    }
+    uLCD.cls();
+    getPlayer()->superActive = false;
+    deallocateEnemies();
+    deleteOpponent();
+}
+
 void testLevel(void) {
     uLCD.cls();
     enemyInit();
     bossInit();
     projectileInit();
     healthBarInit();
-    start(false, false);
+    start(false, false, false);
     if (gameLoop->gameStatus == GAMESTATUS::WON) {
         drawGameWon();
         winSound();
@@ -286,60 +312,83 @@ void testLevel(void) {
     deleteBoss();
 }
 
-void start(bool infinite, bool scoreCap) {
+void start(bool infinite, bool scoreCap, bool pvp) {
     Timer t;
     // Stop loop when all enemies are destroyed or player is destroyed
     while (1) {
         loadMusic();
         t.start();
-        // Update projectiles, player, enemies, boss, and healthBars
-        //printf("Started updating stuff\n");
-        //printf("ri\n");
+        // Update everything
         updatePlayerProjectiles();
-        //printf("pp\n");
+        updateOpponentProjectiles();
         updateBossProjectiles();
-        //printf("bp\n");
         updateEnemyProjectiles();
-        //printf("ep\n");
         playerUpdate();
-        //printf("pu\n");
+        opponentUpdate();
         bossUpdate();
-        //printf("bu\n");
         enemiesUpdate();
-        //printf("eu\n");
         updateBars();
-        //printf("Finished updating stuff\n");
-        uLCD.color(WHITE);
-        uLCD.locate(0, 0);
-        uLCD.textbackground_color(BLACK);
-        if (getPlayer()->score >= 1000) {
-            uLCD.printf("SCORE: %dK\r", getPlayer()->score / 1000);
-        } else if (getPlayer()->score >= 100) {
-            uLCD.printf("SCORE:%d\r", getPlayer()->score);
-        } else {
-            uLCD.printf("SCORE: %d\r", getPlayer()->score);
-        }
-        uLCD.locate(10, 0);
-        if (getMenuSettings()->gameMode == GAME_MODE::INFINITE) {
-            uLCD.printf("INFINITE\r");
-        } else if (getMenuSettings()->gameMode == GAME_MODE::LEVELS) {
-            uLCD.printf("LEVEL: %d\r", gameLoop->level);
-        } else if (getMenuSettings()->gameMode == GAME_MODE::SCORECAP) {
-            if (getMenuSettings()->scoreCap == 100) {
-                uLCD.printf("GOAL:100\r");
+        if (getMenuSettings()->gameMode != GAME_MODE::PVP) {
+            uLCD.color(WHITE);
+            uLCD.locate(0, 0);
+            uLCD.textbackground_color(BLACK);
+            if (getPlayer()->score >= 1000) {
+                uLCD.printf("SCORE: %dK\r", getPlayer()->score / 1000);
+            } else if (getPlayer()->score >= 100) {
+                uLCD.printf("SCORE:%d\r", getPlayer()->score);
             } else {
-                uLCD.printf("GOAL: %d\r", getMenuSettings()->scoreCap);
+                uLCD.printf("SCORE: %d\r", getPlayer()->score);
+            }
+            uLCD.locate(10, 0);
+            if (getMenuSettings()->gameMode == GAME_MODE::INFINITE) {
+                uLCD.printf("INFINITE\r");
+            } else if (getMenuSettings()->gameMode == GAME_MODE::LEVELS) {
+                uLCD.printf("LEVEL: %d\r", gameLoop->level);
+            } else if (getMenuSettings()->gameMode == GAME_MODE::SCORECAP) {
+                if (getMenuSettings()->scoreCap == 100) {
+                    uLCD.printf("GOAL:100\r");
+                } else {
+                    uLCD.printf("GOAL: %d\r", getMenuSettings()->scoreCap);
+                }
+            }
+        } else { // If gamemode is pvp then display score ratio
+            if (getPlayer()->score > getOpponent()->score) {
+                uLCD.color(GREEN);
+            } else if (getPlayer()->score < getOpponent()->score){
+                uLCD.color(RED);
+            } else {
+                uLCD.color(WHITE);
+            }
+            uLCD.textbackground_color(BLACK);
+            if (getPlayer()->score >= 1000) {
+                uLCD.locate(6, 0);
+                uLCD.printf("%dK\r", getPlayer()->score / 1000);
+            } else if (getPlayer()->score >= 100) {
+                uLCD.locate(5, 0);
+                uLCD.printf("%d\r", getPlayer()->score);
+            } else if (getPlayer()->score >= 10) {
+                uLCD.locate(6, 0);
+                uLCD.printf("%d\r", getPlayer()->score);
+            } else {
+                uLCD.locate(7, 0);
+                uLCD.printf("%d\r", getPlayer()->score);
+            }
+            uLCD.locate(10, 0);
+            if (getOpponent()->score >= 1000) {
+                uLCD.printf("%dK\r", getOpponent()->score / 1000);
+            } else {
+                uLCD.printf("%d\r", getOpponent()->score);
             }
         }
         // Check for pause
         GAME_INPUTS* gameInputs = readInputs();
-        if (!gameInputs->quitGame) {
+        if (!gameInputs->quitGame || (getMenuSettings()->gameMode == GAME_MODE::PVP && !gameInputs->opQuitGame)) {
             Timer quit;
             bool quitting = true;
             quit.start();
             while (quitting && quit.elapsed_time().count() < 3000000) {
                 loadMusic();
-                if (readInputs()->quitGame) {
+                if ((readInputs()->quitGame && getMenuSettings()->gameMode == GAME_MODE::PVP && readInputs()->opQuitGame) || (readInputs()->quitGame && getMenuSettings()->gameMode != GAME_MODE::PVP)) {
                     quitting = false;
                 }
             }
@@ -348,15 +397,15 @@ void start(bool infinite, bool scoreCap) {
                 break;
             }
         }
-        if (gameInputs->normalAttack && gameInputs->superAttack && !gameInputs->pauseResume) {
+        if ((gameInputs->normalAttack && gameInputs->superAttack && !gameInputs->pauseResume) || (getMenuSettings()->gameMode == GAME_MODE::PVP && gameInputs->opNormalAttack && gameInputs->opSuperAttack && !gameInputs->opPauseResume)) {
             printf("Game Paused\n");
             drawPaused();
             getGameLoop()->gameStatus = GAMESTATUS::PAUSED;
-            while ((gameInputs = readInputs()) && gameInputs->normalAttack && gameInputs->superAttack && !gameInputs->pauseResume) loadMusic();
+            while (readInputs()->normalAttack && readInputs()->superAttack && !readInputs()->pauseResume || (getMenuSettings()->gameMode == GAME_MODE::PVP && readInputs()->opNormalAttack && readInputs()->opSuperAttack && !readInputs()->opPauseResume)) loadMusic();
             // Pause
             while ((gameInputs = readInputs())) {
                 loadMusic();
-                if (gameInputs->normalAttack && gameInputs->superAttack && !gameInputs->pauseResume) {
+                if (gameInputs->normalAttack && gameInputs->superAttack && !gameInputs->pauseResume || (getMenuSettings()->gameMode == GAME_MODE::PVP && gameInputs->opNormalAttack && gameInputs->opSuperAttack && !gameInputs->opPauseResume)) {
                     printf("Game Resumed\n");
                     erasePaused();
                     drawResumed();
@@ -371,11 +420,27 @@ void start(bool infinite, bool scoreCap) {
         if (getPlayer()->playerStatus == CHARACTER_STATUS::DEAD && getPlayer()->destroyedTick == 20) {
             gameLoop->gameStatus = GAMESTATUS::LOST;
             break;
-        } else if (getEnemyDLL()->size == 0 && getBoss() == NULL) {
+        } else if (getEnemyDLL()->size == 0 && getBoss() == NULL && getOpponent() == NULL) {
             if (!scoreCap && !infinite) {
                 gameLoop->gameStatus = GAMESTATUS::WON;
             }
             break;
+        } else if (pvp && getPlayer()->score >= 10 || getOpponent()->score >= 10) {
+            if (getPlayer()->score >= 10 && getOpponent()->score < 10) {
+                gameLoop->gameStatus = GAMESTATUS::WON;
+                break;
+            } else if (getPlayer()->score < 10 && getOpponent()->score >= 10) {
+                gameLoop->gameStatus = GAMESTATUS::LOST;
+                break;
+            } else if (getPlayer()->score >= 10 && getOpponent()->score >= 10) {
+                if (getPlayer()->score > getOpponent()->score) {
+                    gameLoop->gameStatus = GAMESTATUS::WON;
+                    break;
+                } else if (getPlayer()->score < getOpponent()->score) {
+                    gameLoop->gameStatus = GAMESTATUS::LOST;
+                    break;
+                }
+            }
         } else if (scoreCap && getPlayer()->score >= getMenuSettings()->scoreCap) {
             gameLoop->gameStatus = GAMESTATUS::WON;
             break;
@@ -384,8 +449,14 @@ void start(bool infinite, bool scoreCap) {
             break;
         }
         int waitTime = 50000 - t.elapsed_time().count();
-        if (waitTime > 0) {
-            wait_us(waitTime);
+        Timer waitForGameTick;
+        waitForGameTick.start();
+        while (waitForGameTick.elapsed_time().count() < waitTime) loadMusic();
+        if (pvp) {
+            // For pvp, need to sync game ticks for both devices
+            notifyPvp(true);
+            while (!readPvp()) loadMusic();
+            notifyPvp(false);
         }
         getPlayer()->sessionPlayTime += t.elapsed_time().count();
         t.reset();

@@ -43,13 +43,12 @@ void playerInit(void) {
     ((PLAYER*)getData(playerNode))->superChargeStatus = 0; // Should start as 0
     ((PLAYER*)getData(playerNode))->superActive = false;
     ((PLAYER*)getData(playerNode))->type = CHARACTER_TYPE::PLAYER_CHARACTER;
-    ((PLAYER*)getData(playerNode))->playerStatus =CHARACTER_STATUS::ACTIVE;
+    ((PLAYER*)getData(playerNode))->playerStatus = CHARACTER_STATUS::ACTIVE;
     ((PLAYER*)getData(playerNode))->playerDisplay = CHARACTER_DISPLAY::DEFAULT;
     ((PLAYER*)getData(playerNode))->damagedTick = 0; // Lasts for 10 ticks
     ((PLAYER*)getData(playerNode))->lastDamaged = -999; // Player can start healing once its current tick is 60 greater than lastDamaged
     ((PLAYER*)getData(playerNode))->destroyedTick = 0; // Lasts for 20 ticks
     ((PLAYER*)getData(playerNode))->healthBar = createPlayerBar(playerNode);
-    //drawPlayer(playerNode);
 }
 
 void playerNoMove(void) {

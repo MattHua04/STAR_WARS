@@ -41,6 +41,7 @@ typedef enum {
 
 typedef enum {
     PLAYER_CHARACTER,
+    OPPONENT_CHARACTER,
     SHORT_RANGE_ENEMY,
     LONG_RANGE_ENEMY,
     MISSILE_ENEMY,
@@ -99,6 +100,7 @@ typedef enum {
     LEVELS = 0,
     SCORECAP = 1,
     INFINITE = 2,
+    PVP = 3,
 } GAME_MODE;
 
 typedef struct {

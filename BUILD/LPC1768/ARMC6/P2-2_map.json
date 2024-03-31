@@ -68,9 +68,9 @@
     {
         "module": "game/characters",
         "size": {
-            ".text": 5946,
+            ".text": 7534,
             ".data": 0,
-            ".bss": 20,
+            ".bss": 28,
             ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
@@ -79,9 +79,9 @@
     {
         "module": "game/gameLoops",
         "size": {
-            ".text": 2514,
+            ".text": 3297,
             ".data": 0,
-            ".bss": 36,
+            ".bss": 32,
             ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
@@ -90,9 +90,9 @@
     {
         "module": "game/healthBars",
         "size": {
-            ".text": 544,
+            ".text": 682,
             ".data": 0,
-            ".bss": 12,
+            ".bss": 16,
             ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
@@ -101,10 +101,10 @@
     {
         "module": "game/interfaces",
         "size": {
-            ".text": 14555,
+            ".text": 14604,
             ".data": 14,
             ".bss": 472,
-            ".text-delta": 476,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -112,9 +112,9 @@
     {
         "module": "game/projectiles",
         "size": {
-            ".text": 4748,
+            ".text": 6450,
             ".data": 0,
-            ".bss": 12,
+            ".bss": 16,
             ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
@@ -123,7 +123,7 @@
     {
         "module": "game/users",
         "size": {
-            ".text": 1891,
+            ".text": 1903,
             ".data": 300,
             ".bss": 0,
             ".text-delta": 0,
@@ -134,7 +134,7 @@
     {
         "module": "main.o",
         "size": {
-            ".text": 425,
+            ".text": 485,
             ".data": 0,
             ".bss": 0,
             ".text-delta": 0,
@@ -222,7 +222,7 @@
     {
         "module": "utilities/Nav_Switch",
         "size": {
-            ".text": 140,
+            ".text": 128,
             ".data": 0,
             ".bss": 0,
             ".text-delta": 0,
@@ -244,10 +244,10 @@
     {
         "module": "utilities/audio",
         "size": {
-            ".text": 220798,
+            ".text": 220768,
             ".data": 56,
             ".bss": 112,
-            ".text-delta": 116,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -266,10 +266,10 @@
     {
         "module": "utilities/graphics",
         "size": {
-            ".text": 83757,
+            ".text": 84543,
             ".data": 0,
             ".bss": 144,
-            ".text-delta": -8,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -277,9 +277,9 @@
     {
         "module": "utilities/hardware",
         "size": {
-            ".text": 408,
+            ".text": 704,
             ".data": 0,
-            ".bss": 1196,
+            ".bss": 1416,
             ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
@@ -287,10 +287,10 @@
     },
     {
         "summary": {
-            "static_ram": 10835,
+            "static_ram": 11067,
             "static_ram_delta": 0,
-            "total_flash": 474399,
-            "total_flash_delta": 584
+            "total_flash": 479771,
+            "total_flash_delta": 0
         }
     }
 ]

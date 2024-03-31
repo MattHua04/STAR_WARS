@@ -17,7 +17,7 @@
 /**
  * Returns the hex equivalent of a char color
  */
-int getHexColor(char color);
+int getHexColor(char color, bool isOpponent);
 
 /**
  * Draws github profile pic
@@ -30,6 +30,11 @@ void drawProfileImg(void);
 void drawImg(const char* object, int x, int y, int width, int height);
 
 /**
+ * Specifically meant to draw opponent player since player image needs to be mirrored
+ */
+void drawImgOpponent(const char* object, int x, int y, int width, int height);
+
+/**
  * Draws a box bounded by a top left and bottom right cord
  */
 void drawBox(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY, char color);
@@ -40,6 +45,13 @@ void drawBox(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY, cha
 void drawPlayer(LLNode* player);
 
 void erasePlayer(LLNode* player);
+
+/**
+ * Draws the opponent player
+ */
+void drawOpponent(LLNode* opponent);
+
+void eraseOpponent(LLNode* opponent);
 
 /**
  * Draw an enemy
@@ -61,6 +73,13 @@ void eraseBoss(LLNode* boss);
 void drawPlayerProjectile(LLNode* projectile);
 
 void erasePlayerProjectile(LLNode* projectile);
+
+/**
+ * Draws opponent projectile depending on attack type
+ */
+void drawOpponentProjectile(LLNode* projectile);
+
+void eraseOpponentProjectile(LLNode* projectile);
 
 /**
  * Draws enemy projectile depending on enemy type

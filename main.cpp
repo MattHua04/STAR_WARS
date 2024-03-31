@@ -27,20 +27,22 @@
 int main() {
     ASSERT_P(hardware_init() == ERROR_NONE, "Hardware init failed!");
     printf("Game Starting\n");
-    drawProfileImg();
-    wait_us(3000000);
-    //drawBox(0, 127, 127, 0, 'R');
     musicInit();
+    drawProfileImg();
+    Timer startup;
+    startup.start();
+    while (startup.elapsed_time().count() < 5000000) loadMusic();
+    //drawBox(0, 127, 127, 0, 'R');
     while (1) {
         loginInit();
         int loginOutput;
-        while ((loginOutput = loginUpdate()) == 0);
+        while ((loginOutput = loginUpdate()) == 0) loadMusic();;
         deleteLogin();
         if (loginOutput == EXIT_GAME) break;
         else if (loginOutput == REGISTER_USER) {
             registrationInit();
             int registrationOutput;
-            while ((registrationOutput = registrationUpdate()) == 0);
+            while ((registrationOutput = registrationUpdate()) == 0) loadMusic();;
             deleteRegistration();
             if (registrationOutput == EXIT_GAME) break;
             else if (registrationOutput == -1) continue; // Essentially returns to login page
@@ -49,20 +51,20 @@ int main() {
             // Only enter game menu once logged in
             menuInit();
             int menuOutput;
-            while ((menuOutput = menuUpdate()) == 0);
+            while ((menuOutput = menuUpdate()) == 0) loadMusic();;
             if (menuOutput == EXIT_GAME) break; // Essentially returns to login page
             uLCD.cls();
             playerInit();
             
-            *getInGame() = 1;
             if (getMenuSettings()->gameMode == GAME_MODE::LEVELS) {
                 generateGameLoop(1);
             } else if (getMenuSettings()->gameMode == GAME_MODE::INFINITE) {
                 generateGameLoop(4);
             } else if (getMenuSettings()->gameMode == GAME_MODE::SCORECAP) {
                 generateGameLoop(5);
+            } else if (getMenuSettings()->gameMode == GAME_MODE::PVP) {
+                generateGameLoop(6);
             }
-            *getInGame() = 0;
 
             // Update user data
             getUserInfo()->highScore = (getPlayer()->score > getUserInfo()->highScore) ? getPlayer()->score : getUserInfo()->highScore;

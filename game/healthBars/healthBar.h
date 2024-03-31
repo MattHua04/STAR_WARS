@@ -42,6 +42,10 @@ LLNode* createEnemyBar(LLNode* character);
  */
 LLNode* createPlayerBar(LLNode* character);
 
+/** Create a new healthBar for a opponent player 
+ */
+LLNode* createOpponentBar(LLNode* character);
+
 /** Create a new healthBar for a final boss 
  */
 LLNode* createBossBar(LLNode* character);
@@ -53,6 +57,10 @@ void deallocateEnemyHealthBars(void);
 /** Delete player health bar
  */
 void deletePlayerHealthBar(void);
+
+/** Delete opponent player health bar
+ */
+void deleteOpponentHealthBar(void);
 
 /** Delete boss health bar
  */

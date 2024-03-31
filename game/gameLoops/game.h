@@ -17,8 +17,6 @@ typedef struct {
     int level;
 } GAMELOOP;
 
-int* getInGame(void);
-
 /** Generate a random number
  */
 int randomNum(void);
@@ -55,8 +53,12 @@ void infiniteDuration(void);
  */
 void scoreCap(void);
 
+/** Make a pvp game
+ */
+void pvp(void);
+
 /** Start a gameLoop
  */
-void start(bool infinite, bool scoreCap);
+void start(bool infinite, bool scoreCap, bool pvp);
 
 #endif

@@ -5,6 +5,7 @@
 #include "menu.h"
 #include "projectile.h"
 #include "player.h"
+#include "opponent.h"
 #include "enemy.h"
 #include "finalBoss.h"
 #include "game.h"
@@ -14,8 +15,9 @@
 
 class uLCD lcd(p13, p14, p15, uLCD::B_1500000);
 
-int getHexColor(char color) {
-    if (color == 'X' && getMenuSettings()->playerSkin) color = getMenuSettings()->playerSkin;
+int getHexColor(char color, bool isOpponent) {
+    if (color == 'X' && isOpponent) color = 'R';
+    else if (color == 'X' && getMenuSettings()->playerSkin) color = getMenuSettings()->playerSkin;
     else if (color == 'X' && getNewUser()->defaultSkin) color = getNewUser()->defaultSkin;
     else if (color == 'X' && getUserInfo()->defaultSkin) color = getUserInfo()->defaultSkin;
     else if (color == 'X') color = 'B';
@@ -50,9 +52,18 @@ void drawProfileImg(void) {
 }
 
 void drawImg(int x, int y, int width, int height, const char* object) {
-    int img[width*height];
-    for (int i = 0; i < width*height; i++) {
-        img[i] = (getHexColor(object[i])); //uLCD::get4DGLColor
+    int img[width * height];
+    for (int i = 0; i < width * height; i++) {
+        img[i] = (getHexColor(object[i], false)); //uLCD::get4DGLColor
+    }
+    uLCD.BLIT(x, y, width, height, img);
+    //lcd.BLIT(x, y, width, height, img, false);
+}
+
+void drawImgOpponent(int x, int y, int width, int height, const char* object) {
+    int img[width * height];
+    for (int i = width * height - 1; i >= 0; i--) {
+        img[width * height - 1 - i] = (getHexColor(object[i], true)); //uLCD::get4DGLColor
     }
     uLCD.BLIT(x, y, width, height, img);
     //lcd.BLIT(x, y, width, height, img, false);
@@ -60,7 +71,7 @@ void drawImg(int x, int y, int width, int height, const char* object) {
 
 void drawBox(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY, char color) {
     //lcd.drawRectangleFilled(topLeftX, topLeftY, bottomRightX, bottomRightY, uLCD::get4DGLColor(getHexColor(color)));
-    uLCD.filled_rectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, getHexColor(color));
+    uLCD.filled_rectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, getHexColor(color, false));
 }
 
 void drawPlayer(LLNode* player) {
@@ -82,6 +93,27 @@ void drawPlayer(LLNode* player) {
 
 void erasePlayer(LLNode* player) {
     drawBox(((PLAYER*)getData(player))->boundingBox->topLeft.x, 127 - ((PLAYER*)getData(player))->boundingBox->topLeft.y, ((PLAYER*)getData(player))->boundingBox->bottomRight.x, 127 - ((PLAYER*)getData(player))->boundingBox->bottomRight.y, '0');
+}
+
+void drawOpponent(LLNode* opponent) {
+    int pTopLeftX = ((PLAYER*)getData(opponent))->boundingBox->topLeft.x - (((PLAYER*)getData(opponent))->x - ((PLAYER*)getData(opponent))->px);
+    int pBottomRightX = ((PLAYER*)getData(opponent))->boundingBox->bottomRight.x - (((PLAYER*)getData(opponent))->x - ((PLAYER*)getData(opponent))->px);
+    int pTopLeftY = 127 - (((PLAYER*)getData(opponent))->boundingBox->topLeft.y - (((PLAYER*)getData(opponent))->y - ((PLAYER*)getData(opponent))->py));
+    int pBottomRightY = 127 - (((PLAYER*)getData(opponent))->boundingBox->bottomRight.y - (((PLAYER*)getData(opponent))->y - ((PLAYER*)getData(opponent))->py));
+    if (((PLAYER*)getData(opponent))->x > ((PLAYER*)getData(opponent))->px) { //Moved right
+        drawBox(pTopLeftX, pTopLeftY, pTopLeftX + (((PLAYER*)getData(opponent))->x - ((PLAYER*)getData(opponent))->px), pBottomRightY, '0');
+    } else if (((PLAYER*)getData(opponent))->x < ((PLAYER*)getData(opponent))->px) { //Moved left
+        drawBox(pBottomRightX - (((PLAYER*)getData(opponent))->px - ((PLAYER*)getData(opponent))->x), pTopLeftY, pBottomRightX, pBottomRightY, '0');
+    } else if (((PLAYER*)getData(opponent))->y > ((PLAYER*)getData(opponent))->py) { //Moved up
+        drawBox(pTopLeftX, pBottomRightY + (((PLAYER*)getData(opponent))->py - ((PLAYER*)getData(opponent))->y), pBottomRightX, pBottomRightY, '0');
+    } else if (((PLAYER*)getData(opponent))->y < ((PLAYER*)getData(opponent))->py) { //Moved down
+        drawBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((PLAYER*)getData(opponent))->y - ((PLAYER*)getData(opponent))->py), '0');
+    }
+    drawImgOpponent(((PLAYER*)getData(opponent))->boundingBox->topLeft.x, 127 - ((PLAYER*)getData(opponent))->boundingBox->topLeft.y, 11, 11, PLAYER_IMGS[((PLAYER*)getData(opponent))->playerDisplay]);
+}
+
+void eraseOpponent(LLNode* opponent) {
+    drawBox(((PLAYER*)getData(opponent))->boundingBox->topLeft.x, 127 - ((PLAYER*)getData(opponent))->boundingBox->topLeft.y, ((PLAYER*)getData(opponent))->boundingBox->bottomRight.x, 127 - ((PLAYER*)getData(opponent))->boundingBox->bottomRight.y, '0');
 }
 
 void drawEnemy(LLNode* enemy) {
@@ -148,6 +180,14 @@ void erasePlayerProjectile(LLNode* projectile) {
     } else {
         drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, '0');
     }
+}
+
+void drawOpponentProjectile(LLNode* projectile) {
+    drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, 'R');
+}
+
+void eraseOpponentProjectile(LLNode* projectile) {
+    drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, '0');
 }
 
 void drawEnemyProjectile(LLNode* projectile) {
@@ -318,6 +358,19 @@ void drawMSButton(MENU_SETTINGS* menuSettings, BUTTON* modeSelector) {
             uLCD.printf("%c", message[i]);
             i++;
         }
+    } else if (menuSettings->gameMode == GAME_MODE::PVP) {
+        char message[] = "PVP";
+        int i = 0;
+        while (message[i]) {
+            loadMusic();
+            uLCD.text_bold(ON);
+            uLCD.set_font(FONT_7X8);
+            uLCD.locate(14 + i, 13);
+            uLCD.color(color);
+            uLCD.text_mode(TRANSPARENT);
+            uLCD.printf("%c", message[i]);
+            i++;
+        }
     }
 }
 
@@ -369,34 +422,57 @@ void drawPlayButton(MENU_SETTINGS* menuSettings, BUTTON* play) {
 }
 
 void drawDiffScale(MENU_SETTINGS* menuSettings, SLIDING_SCALE* difficulty) {
-    drawBox(0, 127 - 47, 127, 127 - 37, '0');
-    drawBox(0, difficulty->boundingBox->topLeft.y, 127, difficulty->boundingBox->bottomRight.y, '3');
-    drawBox(39 - 5, 127 - 118, 89 - 5 + 11, 127 - 76, '0');
-    if (difficulty->value == difficulty->maxVal) {
-        drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'R');
-        drawImg(64 - 9, 127 - 118, 19, 19, BOSS_IMGS[3]);
-        drawImg(39 - 5, 127 - 103, 11, 11, NORMAL_ENEMY_IMGS[3]);
-        drawImg(89 - 5, 127 - 103, 11, 11, NORMAL_ENEMY_IMGS[3]);
-        drawImg(64 - 5, 127 - 90, 11, 11, NORMAL_ENEMY_IMGS[3]);
-    } else if ((double)difficulty->value / difficulty->maxVal >= 0.75) {
-        drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'O');
-        drawImg(39 - 5, 127 - 103, 11, 11, NORMAL_ENEMY_IMGS[3]);
-        drawImg(89 - 5, 127 - 103, 11, 11, NORMAL_ENEMY_IMGS[3]);
-        drawImg(64 - 5, 127 - 90, 11, 11, NORMAL_ENEMY_IMGS[3]);
-    } else if ((double)difficulty->value / difficulty->maxVal >= 0.50) {
-        drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'Y');
-        drawImg(46 - 5, 127 - 100, 11, 11, NORMAL_ENEMY_IMGS[3]);
-        drawImg(82 - 5, 127 - 100, 11, 11, NORMAL_ENEMY_IMGS[3]);
-    } else if ((double)difficulty->value / difficulty->maxVal >= 0.25) {
-        drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'G');
-        drawImg(64 - 5, 127 - 100, 11, 11, NORMAL_ENEMY_IMGS[3]);
-    }
-    if (difficulty->sliderStatus == BUTTON_STATUS::SELECTED) {
-        uLCD.filled_circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, LGREY);
-        uLCD.circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, WHITE);
-    } else {
-        uLCD.filled_circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, DGREY);
-        uLCD.circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, MGREY);
+    if (menuSettings->gameMode != GAME_MODE::PVP) {
+        drawBox(0, 127 - 47, 127, 127 - 37, '0');
+        drawBox(0, difficulty->boundingBox->topLeft.y, 127, difficulty->boundingBox->bottomRight.y, '3');
+        drawBox(39 - 5, 127 - 118, 89 - 5 + 11, 127 - 76, '0');
+        if (difficulty->value == difficulty->maxVal) {
+            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'R');
+            drawImg(64 - 9, 127 - 118, 19, 19, BOSS_IMGS[3]);
+            drawImg(39 - 5, 127 - 103, 11, 11, MISSILE_ENEMY_IMGS[3]);
+            drawImg(89 - 5, 127 - 103, 11, 11, MISSILE_ENEMY_IMGS[3]);
+            drawImg(64 - 5, 127 - 90, 11, 11, NORMAL_ENEMY_IMGS[3]);
+        } else if ((double)difficulty->value / difficulty->maxVal >= 0.75) {
+            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'O');
+            drawImg(39 - 5, 127 - 103, 11, 11, MISSILE_ENEMY_IMGS[3]);
+            drawImg(89 - 5, 127 - 103, 11, 11, MISSILE_ENEMY_IMGS[3]);
+            drawImg(64 - 5, 127 - 90, 11, 11, NORMAL_ENEMY_IMGS[3]);
+        } else if ((double)difficulty->value / difficulty->maxVal >= 0.50) {
+            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'Y');
+            drawImg(46 - 5, 127 - 100, 11, 11, NORMAL_ENEMY_IMGS[3]);
+            drawImg(82 - 5, 127 - 100, 11, 11, NORMAL_ENEMY_IMGS[3]);
+        } else if ((double)difficulty->value / difficulty->maxVal >= 0.25) {
+            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'G');
+            drawImg(64 - 5, 127 - 100, 11, 11, NORMAL_ENEMY_IMGS[3]);
+        }
+        if (difficulty->sliderStatus == BUTTON_STATUS::SELECTED) {
+            uLCD.filled_circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, LGREY);
+            uLCD.circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, WHITE);
+        } else {
+            uLCD.filled_circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, DGREY);
+            uLCD.circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, MGREY);
+        }
+    } else { // Draw the opponent if the gamemode is pvp
+        drawBox(0, 127 - 47, 127, 127 - 37, '0');
+        drawBox(0, difficulty->boundingBox->topLeft.y, 127, difficulty->boundingBox->bottomRight.y, '3');
+        drawBox(39 - 5, 127 - 118, 89 - 5 + 11, 127 - 76, '0');
+        if (difficulty->value == difficulty->maxVal) {
+            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'R');
+        } else if ((double)difficulty->value / difficulty->maxVal >= 0.75) {
+            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'O');
+        } else if ((double)difficulty->value / difficulty->maxVal >= 0.50) {
+            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'Y');
+        } else if ((double)difficulty->value / difficulty->maxVal >= 0.25) {
+            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'G');
+        }
+        if (difficulty->sliderStatus == BUTTON_STATUS::SELECTED) {
+            uLCD.filled_circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, LGREY);
+            uLCD.circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, WHITE);
+        } else {
+            uLCD.filled_circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, DGREY);
+            uLCD.circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, MGREY);
+        }
+        drawImgOpponent(64 - 5, 127 - 100, 11, 11, PLAYER_IMGS[3]);
     }
 }
 
@@ -1394,8 +1470,8 @@ void drawGameLost(void) {
     uLCD.filled_circle(11, 112, 2, MRED);
 
     drawImg(64 - 9, 127 - 105, 19, 19, BOSS_IMGS[3]);
-    drawImg(39 - 5, 127 - 85, 11, 11, NORMAL_ENEMY_IMGS[3]);
-    drawImg(89 - 5, 127 - 85, 11, 11, NORMAL_ENEMY_IMGS[3]);
+    drawImg(39 - 5, 127 - 85, 11, 11, MISSILE_ENEMY_IMGS[3]);
+    drawImg(89 - 5, 127 - 85, 11, 11, MISSILE_ENEMY_IMGS[3]);
     drawImg(64 - 5, 127 - 68, 11, 11, NORMAL_ENEMY_IMGS[3]);
     char game[30] = "GAME    OVER";
     int i = 0;

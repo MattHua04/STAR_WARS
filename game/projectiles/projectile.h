@@ -62,6 +62,11 @@ void generateEnemyProjectile(LLNode* projectileOwner);
 */
 void generatePlayerProjectile(LLNode* projectileOwner);
 
+/** Add a opponentProjectile to projectileDLL.
+ * Initialize projectile and drawOpponentProjectile.
+*/
+void generateOpponentProjectile(LLNode* projectileOwner);
+
 /** Add a bossProjectile to projectileDLL.
  * Initialize projectile and drawEnemyProjectile.
 */
@@ -82,6 +87,13 @@ void updateEnemyProjectiles(void);
  * Check if projectile collides with enemy.
 */
 void updatePlayerProjectiles(void);
+
+/** Loop through all projectiles in opponentProjectileDLL and
+ * move each projectile by default distance scaled by projectileSpeed
+ * Check if projectile collides with screen bounds.
+ * Check if projectile collides with enemy.
+*/
+void updateOpponentProjectiles(void);
 
 /** Loop through all projectiles in bossProjectileDLL and
  * move each projectile by default distance scaled by projectileSpeed

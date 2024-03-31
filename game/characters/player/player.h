@@ -82,4 +82,4 @@ void playerUpdate(void);
  */
 void deletePlayer(void);
 
-#endif //PLAYER_PUBLIC_H
+#endif

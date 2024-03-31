@@ -20,7 +20,7 @@ MENU_SETTINGS* getMenuSettings() {
 
 void menuInit(void) {
     drawMenuBackground();
-    if (menuSettings.playerSkin && menuSettings.gameMode && menuSettings.difficulty) {
+    if (menuSettings.playerSkin != NULL && menuSettings.gameMode != NULL && menuSettings.difficulty != NULL) {
         drawUserStatsButton(getUserInfo(), &userStats);
         drawDiffScale(&menuSettings, &difficulty);
         drawSSButton(&menuSettings, &skinSelector);
@@ -86,7 +86,6 @@ void menuInit(void) {
 }
 
 int menuUpdate(void) {
-    loadMusic();
     GAME_INPUTS* inputs = readInputs();
     if (!inputs->quitGame) {
         buttonSound();
@@ -104,44 +103,54 @@ int menuUpdate(void) {
         }
     } else if (!inputs->superAttack) {
         buttonSound();
-        (*getVolume() > 0) ? *getVolume() -= 0.05 : *getVolume() = 0;
-        while (!readInputs()->superAttack) loadMusic();
         // If user double clicks then go to prev song
         Timer doubleClick;
         doubleClick.start();
-        while (doubleClick.elapsed_time().count() < 250000) {
+        while (doubleClick.elapsed_time().count() < 2000000) {
             loadMusic();
-            if (!readInputs()->superAttack) {
-                playPrevTrack();
-                while (!readInputs()->superAttack) loadMusic();
-                break;
+            if (readInputs()->superAttack) {
+                (*getVolume() > 0) ? *getVolume() -= 0.05 : *getVolume() = 0;
+                wait_us(250000);
+                return 0;
             }
         }
+        playPrevTrack();
+        while (!readInputs()->superAttack) loadMusic();
         wait_us(250000);
         return 0;
     } else if (!inputs->pauseResume) {
         buttonSound();
-        (*getVolume() < 1) ? *getVolume() += 0.05 : *getVolume() = 0;
-        while (!readInputs()->pauseResume) loadMusic();
         // If user double clicks then go to next song
-        Timer doubleClick;
-        doubleClick.start();
-        while (doubleClick.elapsed_time().count() < 250000) {
+        Timer hold;
+        hold.start();
+        while (hold.elapsed_time().count() < 2000000) {
             loadMusic();
-            if (!readInputs()->superAttack) {
-                playNextTrack();
-                while (!readInputs()->superAttack) loadMusic();
-                break;
+            if (readInputs()->pauseResume) {
+                (*getVolume() < 1) ? *getVolume() += 0.05 : *getVolume() = 0;
+                wait_us(25000);
+                return 0;
             }
         }
-        wait_us(250000);
+        playNextTrack();
+        while (!readInputs()->pauseResume) loadMusic();
         wait_us(250000);
         return 0;
     }
     if (menuPage == MENU_PAGE::MENU_HOME) {
         if (play.buttonStatus == BUTTON_STATUS::SELECTED) {
+            notifyPvp(true);
             if (!inputs->normalAttack) {
                 buttonSound();
+                if (getMenuSettings()->gameMode == GAME_MODE::PVP && readPvp()) {
+                    if (!inputs->opNormalAttack) {
+                        while (!readInputs()->normalAttack || !readInputs()->opNormalAttack) loadMusic();
+                        notifyPvp(false);
+                        return 1;
+                    } else {
+                        while (!readInputs()->normalAttack) loadMusic();
+                        return 0;
+                    }
+                }
                 while (!readInputs()->normalAttack) loadMusic();
                 return 1;
             } else if (inputs->right) {
@@ -167,6 +176,7 @@ int menuUpdate(void) {
                 return 0;
             }
         } else if (skinSelector.buttonStatus == BUTTON_STATUS::SELECTED) {
+            notifyPvp(false);
             if (inputs->up) {
                 buttonSound();
                 for (int i = sizeof(skins) - 1; i >= 0; i--) {
@@ -218,11 +228,13 @@ int menuUpdate(void) {
                 return 0;
             }
         } else if (modeSelector.buttonStatus == BUTTON_STATUS::SELECTED) {
-            GAME_MODE gameModeLayout[] = {LEVELS, SCORECAP, INFINITE};
+            notifyPvp(false);
+            GAME_MODE gameModeLayout[] = {LEVELS, SCORECAP, INFINITE, PVP};
             if (inputs->up) {
                 buttonSound();
-                for (int i = 0; i < 3; i++) {
-                    if (menuSettings.gameMode == gameModeLayout[i] && i < 2) {
+                GAME_MODE prevMode = menuSettings.gameMode;
+                for (int i = 0; i < 4; i++) {
+                    if (menuSettings.gameMode == gameModeLayout[i] && i < 3) {
                         menuSettings.gameMode = gameModeLayout[i + 1];
                         break;
                     } else if (menuSettings.gameMode == gameModeLayout[i]) {
@@ -231,20 +243,32 @@ int menuUpdate(void) {
                     }
                 }
                 drawMSButton(&menuSettings, &modeSelector);
+                // If the mode is pvp then draw the opponent instead of the normal enemies
+                if (menuSettings.gameMode == GAME_MODE::PVP || prevMode == GAME_MODE::PVP) {
+                    drawDiffScale(&menuSettings, &difficulty);
+                }
                 while (readInputs()->up) loadMusic();
                 return 0;
             } else if (inputs->down) {
                 buttonSound();
-                for (int i = 2; i >= 0; i--) {
+                GAME_MODE prevMode = menuSettings.gameMode;
+                for (int i = 3; i >= 0; i--) {
                     if (menuSettings.gameMode == gameModeLayout[i] && i > 0) {
                         menuSettings.gameMode = gameModeLayout[i - 1];
                         break;
                     } else if (menuSettings.gameMode == gameModeLayout[i]) {
-                        menuSettings.gameMode = gameModeLayout[2];
+                        menuSettings.gameMode = gameModeLayout[3];
                         break;
                     }
                 }
                 drawMSButton(&menuSettings, &modeSelector);
+                if (prevMode == GAME_MODE::PVP) {
+                    drawDiffScale(&menuSettings, &difficulty);
+                }
+                // If the mode is pvp then draw the opponent instead of the normal enemies
+                if (menuSettings.gameMode == GAME_MODE::PVP || prevMode == GAME_MODE::PVP) {
+                    drawDiffScale(&menuSettings, &difficulty);
+                }
                 while (readInputs()->down) loadMusic();
                 return 0;
             } else if (inputs->left) {
@@ -267,6 +291,7 @@ int menuUpdate(void) {
                 return 0;
             }
         } else if (difficulty.sliderStatus == BUTTON_STATUS::SELECTED) {
+            notifyPvp(false);
             if (inputs->down) {
                 play.buttonStatus = BUTTON_STATUS::SELECTED;
                 difficulty.sliderStatus = BUTTON_STATUS::NOT_SELECTED;
@@ -303,6 +328,7 @@ int menuUpdate(void) {
                 return 0;
             }
         } else if (userStats.buttonStatus == BUTTON_STATUS::SELECTED) {
+            notifyPvp(false);
             if (inputs->down) {
                 userStats.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 difficulty.sliderStatus = BUTTON_STATUS::SELECTED;
