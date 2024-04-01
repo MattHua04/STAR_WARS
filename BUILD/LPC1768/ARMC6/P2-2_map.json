@@ -68,7 +68,7 @@
     {
         "module": "game/characters",
         "size": {
-            ".text": 7534,
+            ".text": 7538,
             ".data": 0,
             ".bss": 28,
             ".text-delta": 0,
@@ -79,7 +79,7 @@
     {
         "module": "game/gameLoops",
         "size": {
-            ".text": 3297,
+            ".text": 3305,
             ".data": 0,
             ".bss": 32,
             ".text-delta": 0,
@@ -101,7 +101,7 @@
     {
         "module": "game/interfaces",
         "size": {
-            ".text": 14604,
+            ".text": 14714,
             ".data": 14,
             ".bss": 472,
             ".text-delta": 0,
@@ -123,10 +123,10 @@
     {
         "module": "game/users",
         "size": {
-            ".text": 1903,
+            ".text": 1911,
             ".data": 300,
             ".bss": 0,
-            ".text-delta": 0,
+            ".text-delta": -24,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -134,7 +134,7 @@
     {
         "module": "main.o",
         "size": {
-            ".text": 485,
+            ".text": 489,
             ".data": 0,
             ".bss": 0,
             ".text-delta": 0,
@@ -266,7 +266,7 @@
     {
         "module": "utilities/graphics",
         "size": {
-            ".text": 84543,
+            ".text": 84811,
             ".data": 0,
             ".bss": 144,
             ".text-delta": 0,
@@ -289,8 +289,8 @@
         "summary": {
             "static_ram": 11067,
             "static_ram_delta": 0,
-            "total_flash": 479771,
-            "total_flash_delta": 0
+            "total_flash": 480173,
+            "total_flash_delta": -24
         }
     }
 ]

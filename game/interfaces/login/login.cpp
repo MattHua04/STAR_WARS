@@ -332,9 +332,12 @@ int loginUpdate(void) {
                 return 0;
             } else if (!inputs->normalAttack) {
                 buttonSound();
-                if (userExists(userInfo.username, userInfo.userNum)) {
+                if (userExists(userInfo.username, userInfo.userNum) == 1) {
                     printf("User doesn't exists. Please register new user.\n");
                     drawInvalidLoginButton(&loginUser);
+                    while (!readInputs()->normalAttack) loadMusic();
+                    return 0;
+                } else if (userExists(userInfo.username, userInfo.userNum) == -1) {
                     while (!readInputs()->normalAttack) loadMusic();
                     return 0;
                 }
@@ -445,6 +448,9 @@ int loginUpdate(void) {
                 if (!userInfo.password[3] || !checkPassword(&userInfo)) {
                     drawInvalidNextButton(&nextStep);
                     drawInvalidPassword(userInfo.password);
+                    while (!readInputs()->normalAttack) loadMusic();
+                    return 0;
+                } else if (checkPassword(&userInfo) == -1) {
                     while (!readInputs()->normalAttack) loadMusic();
                     return 0;
                 }

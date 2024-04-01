@@ -354,6 +354,9 @@ int registrationUpdate(void) {
                     drawInvalidNextButton(&nextStepR);
                     while (!readInputs()->normalAttack) loadMusic();
                     return 0;
+                } else if (userExists(newUser.username, newUser.userNum) == -1) {
+                    while (!readInputs()->normalAttack) loadMusic();
+                    return 0;
                 }
                 nextStepR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 zeroR.buttonStatus = BUTTON_STATUS::SELECTED;
@@ -452,6 +455,7 @@ int registrationUpdate(void) {
                 defaultSkinSelectorR.buttonStatus = BUTTON_STATUS::SELECTED;
                 // Draw all the buttons on the next page
                 uLCD.cls();
+                drawRegistrationSkinSelectionBackground();
                 drawDefaultSkinButton(&newUser, &defaultSkinSelectorR);
                 drawBackButton(&backStepR);
                 drawNextButton(&nextStepR);

@@ -14,7 +14,7 @@
 #include "missile.hpp"
 #include <cstdint>
 
-#define MAX_DATA_SIZE 8192
+#define MAX_DATA_SIZE 8192 / 2
 
 AnalogOut sound(p18);
 double volume = 0.25;

@@ -164,6 +164,11 @@ void drawLoginBackground(void);
 void drawRegistrationBackground(void);
 
 /**
+ * Draws registration skin selection page background
+ */
+void drawRegistrationSkinSelectionBackground(void);
+
+/**
  * Draws menu background
  */
 void drawMenuBackground(void);

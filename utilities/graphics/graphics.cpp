@@ -586,6 +586,34 @@ void drawRegistrationBackground(void) {
     uLCD.filled_rectangle(0, 127 - 39, 127, 127, DGREY);
 }
 
+void drawRegistrationSkinSelectionBackground(void) {
+    // Sun
+    uLCD.filled_circle(127, 20, 30, YELLOW);
+    uLCD.circle(127, 20, 30, WHITE);
+    uLCD.circle(127, 20, 28, WHITE);
+    // Moon
+    uLCD.filled_circle(0, 32, 15, LGREY);
+    uLCD.filled_circle(8, 44, 2, BLACK);
+    uLCD.filled_circle(0, 41, 3, MGREY);
+    uLCD.filled_circle(-1, 37, 2, DGREY);
+    uLCD.filled_circle(5, 31, 3, MGREY);
+    uLCD.filled_circle(9, 34, 2, DGREY);
+    // Earth
+    uLCD.filled_circle(127, 115, 25, BLUE);
+    uLCD.filled_circle(120, 105, 9, GREEN);
+    uLCD.filled_circle(110, 115, 4, GREEN);
+    uLCD.filled_circle(112, 110, 3, GREEN);
+    uLCD.filled_circle(108, 110, 2, DGREEN);
+    uLCD.filled_circle(120, 102, 3, DGREEN);
+    uLCD.filled_circle(126, 108, 5, DGREEN);
+    // Mars
+    uLCD.filled_circle(0, 110, 15, ORANGE);
+    uLCD.filled_circle(0, 100, 3, BROWN);
+    uLCD.filled_circle(-1, 104, 2, MGREY);
+    uLCD.filled_circle(7, 111, 4, BROWN);
+    uLCD.filled_circle(11, 107, 2, MGREY);
+}
+
 void drawMenuBackground(void) {
     // Sun
     uLCD.filled_circle(127, 0, 30, YELLOW);

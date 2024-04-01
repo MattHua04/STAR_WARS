@@ -236,7 +236,7 @@ int checkPassword(USER* user) {
     allUsersData = opendir("/sd/Users");
     if (allUsersData == NULL) {
         printf("Unable to open Users directory\n");
-        return 0;
+        return -1;
     }
     // File name to look for
     char searchFileName[100] = "";
