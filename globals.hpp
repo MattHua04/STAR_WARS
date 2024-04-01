@@ -97,10 +97,10 @@ typedef struct {
 } USER;
 
 typedef enum {
-    LEVELS = 0,
-    SCORECAP = 1,
-    INFINITE = 2,
-    PVP = 3,
+    LEVELS = 1,
+    SCORECAP = 2,
+    INFINITE = 3,
+    PVP = 4,
 } GAME_MODE;
 
 typedef struct {
