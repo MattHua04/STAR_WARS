@@ -5,7 +5,7 @@
 #include "game.hpp"
 #include "uLCD.hpp"
 
-uLCD_4DGL uLCD(p13, p14, p15);
+uLCD_4DGL uLCD(p13, p14, p15); // Would be p9, p10, p11 for provided schematic
 Nav_Switch myNav(p26, p29, p28, p30, p30); // Don't need center so just saving a pin. Would be p12, p15, p14, p16, p16 for provided schematic
 DigitalIn normalAttack(p22); // Would be p21 for provided schematic
 DigitalIn superAttack(p23); // Would be p22 for provided schematic
@@ -18,6 +18,8 @@ DigitalIn opponentPauseResume(p20); // Would be p28 for provided schematic
 DigitalIn opponentQuitGame(p21); // Would be p29 for provided schematic
 DigitalOut notifyInPvpMode(p16); // Would be p13 for provided schematic
 DigitalIn readInPvpMode(p27); // Would be p30 for provided schematic
+// u, d, l, r
+
 SDBlockDevice sd_block(p5, p6, p7, p8);
 FATFileSystem fs("sd", &sd_block);
 AnalogOut DACout(p18);

@@ -11,6 +11,7 @@
 #include "hardware.hpp"
 #include "game.hpp"
 #include "projectile.hpp"
+#include <cstdio>
 
 Timer randNumSeed;
 int inGame = 0;
@@ -314,7 +315,54 @@ void testLevel(void) {
 
 void start(bool infinite, bool scoreCap, bool pvp) {
     Timer t;
-    // Stop loop when all enemies are destroyed or player is destroyed
+    // Count down for pvp
+    if (getMenuSettings()->gameMode == GAME_MODE::PVP) {
+        updatePlayerProjectiles();
+        updateOpponentProjectiles();
+        updateBossProjectiles();
+        updateEnemyProjectiles();
+        playerUpdate();
+        opponentUpdate();
+        bossUpdate();
+        enemiesUpdate();
+        updateBars();
+        t.start();
+        char countDownColors[4] = {'G', 'Y', 'O', 'R'};
+        for (int i = 3; i >= 0; i--) {
+            char message[10];
+            if (i == 0) {
+                strcpy(message, "FIGHT!");
+            } else {
+                sprintf(message, "%d", i);
+            }
+            int msgLength = 0;
+            while (message[msgLength]) {
+                msgLength++;
+            }
+            int j = 0;
+            while (message[j]) {
+                loadMusic();
+                uLCD.text_width(2);
+                uLCD.text_height(2);
+                uLCD.text_bold(ON);
+                uLCD.locate(5 - (int)round((double)msgLength / 2) + j, 3);
+                uLCD.color(getHexColor(countDownColors[i], false));
+                uLCD.textbackground_color(BLACK);
+                uLCD.printf("%c", message[j]);
+                j++;
+            }
+            // Reset text size
+            uLCD.text_width(1);
+            uLCD.text_height(1);
+            while (t.elapsed_time().count() < 1000000) loadMusic();
+            // Sync countdown with opponent
+            notifyPvp(true);
+            while (!readPvp()) loadMusic();
+            notifyPvp(false);
+            t.reset();
+        }
+        drawBox(0, 40, 127, 70, '0');
+    }
     while (1) {
         loadMusic();
         t.start();
