@@ -193,13 +193,12 @@ int registrationUpdate(void) {
             loadMusic();
             if (readInputs()->superAttack) {
                 (*getVolume() > 0) ? *getVolume() -= 0.05 : *getVolume() = 0;
-                wait_us(250000);
                 return 0;
             }
         }
         playPrevTrack();
         while (!readInputs()->superAttack) loadMusic();
-        wait_us(250000);
+        
         return 0;
     } else if (!inputs->pauseResume) {
         buttonSound();
@@ -210,13 +209,11 @@ int registrationUpdate(void) {
             loadMusic();
             if (readInputs()->pauseResume) {
                 (*getVolume() < 1) ? *getVolume() += 0.05 : *getVolume() = 0;
-                wait_us(25000);
                 return 0;
             }
         }
         playNextTrack();
         while (!readInputs()->pauseResume) loadMusic();
-        wait_us(250000);
         return 0;
     }
     switch (pageR) {
@@ -493,7 +490,7 @@ int registrationUpdate(void) {
                 }
                 drawPassword(newUser.password);
                 while (!readInputs()->normalAttack) loadMusic();
-                wait_us(250000);
+                
                 return 0;
             }
         }
@@ -536,7 +533,6 @@ int registrationUpdate(void) {
                 }
                 drawPassword(newUser.password);
                 while (!readInputs()->normalAttack) loadMusic();
-                wait_us(250000);
                 return 0;
             }
             break;
@@ -577,7 +573,6 @@ int registrationUpdate(void) {
                 }
                 drawPassword(newUser.password);
                 while (!readInputs()->normalAttack) loadMusic();
-                wait_us(250000);
                 return 0;
             }
             break;
@@ -624,7 +619,6 @@ int registrationUpdate(void) {
                 }
                 drawPassword(newUser.password);
                 while (!readInputs()->normalAttack) loadMusic();
-                wait_us(250000);
                 return 0;
             }
             break;
@@ -665,7 +659,6 @@ int registrationUpdate(void) {
                 }
                 drawPassword(newUser.password);
                 while (!readInputs()->normalAttack) loadMusic();
-                wait_us(250000);
                 return 0;
             }
             break;
@@ -706,7 +699,6 @@ int registrationUpdate(void) {
                 }
                 drawPassword(newUser.password);
                 while (!readInputs()->normalAttack) loadMusic();
-                wait_us(250000);
                 return 0;
             }
             break;
@@ -753,7 +745,6 @@ int registrationUpdate(void) {
                 }
                 drawPassword(newUser.password);
                 while (!readInputs()->normalAttack) loadMusic();
-                wait_us(250000);
                 return 0;
             }
             break;
@@ -794,7 +785,6 @@ int registrationUpdate(void) {
                 }
                 drawPassword(newUser.password);
                 while (!readInputs()->normalAttack) loadMusic();
-                wait_us(250000);
                 return 0;
             }
             break;
@@ -841,7 +831,6 @@ int registrationUpdate(void) {
                 }
                 drawPassword(newUser.password);
                 while (!readInputs()->normalAttack) loadMusic();
-                wait_us(250000);
                 return 0;
             }
             break;
@@ -882,7 +871,6 @@ int registrationUpdate(void) {
                 }
                 drawPassword(newUser.password);
                 while (!readInputs()->normalAttack) loadMusic();
-                wait_us(250000);
                 return 0;
             }
             break;
@@ -929,7 +917,6 @@ int registrationUpdate(void) {
                 }
                 drawPassword(newUser.password);
                 while (!readInputs()->normalAttack) loadMusic();
-                wait_us(250000);
                 return 0;
             }
             break;

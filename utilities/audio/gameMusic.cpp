@@ -14,7 +14,7 @@
 #include "missile.hpp"
 #include <cstdint>
 
-#define MAX_DATA_SIZE 8192 / 2
+#define MAX_DATA_SIZE 8192
 
 AnalogOut sound(p18);
 double volume = 0.25;
@@ -43,12 +43,18 @@ double* getVolume(void) {
 }
 
 void musicInit(void) {
+    int attempts = 0;
     currentSong = -1;
     FILE* tempFile;
 openFile: tempFile = fopen("/sd/bootupSound.wav", "rb");
     if (tempFile == NULL) {
+        attempts++;
         printf("Failed to open song file\n");
-        goto openFile;
+        if (attempts < 10) {
+            goto openFile;
+        } else {
+            return;
+        }
     }
     songFile = tempFile;
     // Get file size to know when to loop back
@@ -63,6 +69,7 @@ openFile: tempFile = fopen("/sd/bootupSound.wav", "rb");
 }
 
 void playNextTrack(void) {
+    int attempts = 0;
     fclose(songFile);
     char fileName[100] = "/sd/";
     strcat(fileName, songs[(currentSong < 2) ? ++currentSong : (currentSong = 0)]);
@@ -70,8 +77,13 @@ void playNextTrack(void) {
     FILE* tempFile;
 openFile: tempFile = fopen(fileName, "rb");
     if (tempFile == NULL) {
+        attempts++;
         printf("Failed to open song file\n");
-        goto openFile;
+        if (attempts < 10) {
+            goto openFile;
+        } else {
+            return;
+        }
     }
     songFile = tempFile;
     fread(&header, sizeof(header), 1, songFile);
@@ -79,15 +91,15 @@ openFile: tempFile = fopen(fileName, "rb");
 }
 
 void playPrevTrack(void) {
+    int attempts = 0;
     fclose(songFile);
     char fileName[100] = "/sd/";
     strcat(fileName, songs[(currentSong > 0) ? --currentSong : (currentSong = 2)]);
     strcat(fileName, ".wav");
     FILE* tempFile;
-    int attempts = 0;
 openFile: tempFile = fopen(fileName, "rb");
-    attempts++;
     if (tempFile == NULL) {
+        attempts++;
         printf("Failed to open song file\n");
         if (attempts < 10) {
             goto openFile;

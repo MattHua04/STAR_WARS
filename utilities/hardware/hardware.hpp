@@ -24,12 +24,25 @@ int hardware_init(void);
 void deallocateHardware(void);
 
 /**
- * Read all the user inputs. 
- * This is all input hardware interaction should happen.
- * Returns a GameInputs struct that has all the inputs recorded.
- * This GameInputs is used elsewhere to compute the game update.
+ * Just return the current game inputs
+ * Useful for maintaing a constant set of inputs through one gameloop iteration
+ */
+GAME_INPUTS* getCurrentInputs(void);
+
+/**
+ * Read all the user and opponent inputs. 
  */
 GAME_INPUTS* readInputs(void);
+
+/**
+ * Read only the user inputs. 
+ */
+GAME_INPUTS* readMyInputs(void);
+
+/**
+ * Read only the opponent inputs. 
+ */
+GAME_INPUTS* readOpponentInputs(void);
 
 /**
  * Tell the opponent that player is in PvP mode
@@ -40,5 +53,15 @@ void notifyPvp(bool ready);
  * See if the opponent is in PvP mode
  */
 int readPvp(void);
+
+/**
+ * Send a signal to other device during syncing
+ */
+void syncSignal(bool state);
+
+/**
+ * Read the state of syncing pin
+ */
+int readSyncState(void);
 
 #endif // HARDWARE_H

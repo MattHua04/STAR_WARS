@@ -163,7 +163,7 @@ void opponentUpdate(void) {
         return;
     }
     if (getOpponent()->playerStatus != CHARACTER_STATUS::DEAD) {
-        GAME_INPUTS* inputs = readInputs();
+        GAME_INPUTS* inputs = getCurrentInputs();
         // Get joystick input
         // Switched all movement since opponent is mirrored
         if (inputs->opUp) {

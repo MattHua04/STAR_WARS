@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#define SYNC_TIME 10000
+
 /**
  * Structure that represents all the inputs to the game.
  * If additional hardware is added, new elements should be added to this struct.

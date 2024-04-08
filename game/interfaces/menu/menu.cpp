@@ -110,13 +110,12 @@ int menuUpdate(void) {
             loadMusic();
             if (readInputs()->superAttack) {
                 (*getVolume() > 0) ? *getVolume() -= 0.05 : *getVolume() = 0;
-                wait_us(250000);
+                
                 return 0;
             }
         }
         playPrevTrack();
         while (!readInputs()->superAttack) loadMusic();
-        wait_us(250000);
         return 0;
     } else if (!inputs->pauseResume) {
         buttonSound();
@@ -133,26 +132,35 @@ int menuUpdate(void) {
         }
         playNextTrack();
         while (!readInputs()->pauseResume) loadMusic();
-        wait_us(250000);
         return 0;
     }
     if (menuPage == MENU_PAGE::MENU_HOME) {
         if (play.buttonStatus == BUTTON_STATUS::SELECTED) {
-            notifyPvp(true);
             if (!inputs->normalAttack) {
                 buttonSound();
-                if (getMenuSettings()->gameMode == GAME_MODE::PVP && readPvp()) {
-                    if (!inputs->opNormalAttack) {
-                        while (!readInputs()->normalAttack || !readInputs()->opNormalAttack) loadMusic();
-                        notifyPvp(false);
-                        return 1;
-                    } else {
-                        while (!readInputs()->normalAttack) loadMusic();
-                        return 0;
-                    }
+                if (menuSettings.gameMode == GAME_MODE::PVP) {
+                    notifyPvp(true);
+                } else {
+                    notifyPvp(false);
                 }
-                while (!readInputs()->normalAttack) loadMusic();
-                return 1;
+                if (getMenuSettings()->gameMode == GAME_MODE::PVP && readPvp()) {
+                    while ((inputs = readInputs()) && !inputs->normalAttack) {
+                        loadMusic();
+                        if (!inputs->opNormalAttack && readPvp()) {
+                            while ((inputs = readInputs()) && !inputs->normalAttack || !inputs->opNormalAttack) loadMusic();
+                            notifyPvp(false);
+                            return 1;
+                        }
+                    }
+                    notifyPvp(false);
+                    return 0;
+                } else if (getMenuSettings()->gameMode != GAME_MODE::PVP) {
+                    while (!readInputs()->normalAttack) loadMusic();
+                    notifyPvp(false);
+                    return 1;
+                }
+                notifyPvp(false);
+                return 0;
             } else if (inputs->right) {
                 play.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 modeSelector.buttonStatus = BUTTON_STATUS::SELECTED;
@@ -287,7 +295,6 @@ int menuUpdate(void) {
                 }
                 drawMSButton(&menuSettings, &modeSelector);
                 while (!readInputs()->normalAttack) loadMusic();
-                wait_us(250000);
                 return 0;
             }
         } else if (difficulty.sliderStatus == BUTTON_STATUS::SELECTED) {

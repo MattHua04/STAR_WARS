@@ -327,12 +327,25 @@ void start(bool infinite, bool scoreCap, bool pvp) {
         enemiesUpdate();
         updateBars();
         t.start();
+        while (t.elapsed_time().count() < 1000000) loadMusic();
+        // Sync countdown with opponent
+        if (!readSyncState()) {
+            syncSignal(true);
+            while (readSyncState());
+            wait_us(100);
+        } else {
+            syncSignal(false);
+            wait_us(100);
+        }
+        t.reset();
         char countDownColors[4] = {'G', 'Y', 'O', 'R'};
         for (int i = 3; i >= 0; i--) {
             char message[10];
             if (i == 0) {
+                winSound();
                 strcpy(message, "FIGHT!");
             } else {
+                buttonSound();
                 sprintf(message, "%d", i);
             }
             int msgLength = 0;
@@ -356,16 +369,49 @@ void start(bool infinite, bool scoreCap, bool pvp) {
             uLCD.text_height(1);
             while (t.elapsed_time().count() < 1000000) loadMusic();
             // Sync countdown with opponent
-            notifyPvp(true);
-            while (!readPvp()) loadMusic();
-            notifyPvp(false);
+            if (!readSyncState()) {
+                syncSignal(true);
+                while (readSyncState());
+                wait_us(100);
+            } else {
+                syncSignal(false);
+                wait_us(100);
+            }
             t.reset();
         }
         drawBox(0, 40, 127, 70, '0');
     }
+    int run = 0;
     while (1) {
         loadMusic();
         t.start();
+        if (pvp) {
+            // For pvp, need to sync game ticks for both devices
+            if (!readSyncState()) {
+                syncSignal(true);
+                while (readSyncState());
+                wait_us(100);
+            } else {
+                syncSignal(false);
+                wait_us(100);
+            }
+        }
+        GAME_INPUTS* gameInputs = readMyInputs();
+        if (pvp) {
+            // For pvp, need to sync game ticks for both devices
+            if (!readSyncState()) {
+                syncSignal(true);
+                while (readSyncState());
+                wait_us(100);
+            } else {
+                syncSignal(false);
+                wait_us(100);
+            }
+            gameInputs = readOpponentInputs();
+        }
+        printf("\033[F%d\n", run++);
+        //printf("\033[FMe: %d, %d, %d, %d Op: %d, %d, %d, %d | %d", gameInputs->up, gameInputs->down, gameInputs->left, gameInputs->right, gameInputs->opUp, gameInputs->opDown, gameInputs->opLeft, gameInputs->opRight, run++);
+        //wait_us(10000000);
         // Update everything
         updatePlayerProjectiles();
         updateOpponentProjectiles();
@@ -428,37 +474,61 @@ void start(bool infinite, bool scoreCap, bool pvp) {
                 uLCD.printf("%d\r", getOpponent()->score);
             }
         }
-        // Check for pause
-        GAME_INPUTS* gameInputs = readInputs();
+        if (pvp) {
+            // For pvp, need to sync game ticks for both devices
+            if (!readSyncState()) {
+                syncSignal(true);
+                while (readSyncState());
+                wait_us(100);
+            } else {
+                syncSignal(false);
+                wait_us(100);
+            }
+        }
+        // Check for quit
         if (!gameInputs->quitGame || (getMenuSettings()->gameMode == GAME_MODE::PVP && !gameInputs->opQuitGame)) {
             Timer quit;
             bool quitting = true;
             quit.start();
-            while (quitting && quit.elapsed_time().count() < 3000000) {
+            while ((gameInputs = readInputs()) && quitting && quit.elapsed_time().count() < 3000000) {
                 loadMusic();
-                if ((readInputs()->quitGame && getMenuSettings()->gameMode == GAME_MODE::PVP && readInputs()->opQuitGame) || (readInputs()->quitGame && getMenuSettings()->gameMode != GAME_MODE::PVP)) {
+                if ((gameInputs->quitGame && getMenuSettings()->gameMode == GAME_MODE::PVP && gameInputs->opQuitGame) || (gameInputs->quitGame && getMenuSettings()->gameMode != GAME_MODE::PVP)) {
                     quitting = false;
                 }
             }
             if (quitting) {
                 gameLoop->gameStatus = GAMESTATUS::LOST;
+                notifyPvp(true);
                 break;
             }
         }
+        // Check for pause
         if ((gameInputs->normalAttack && gameInputs->superAttack && !gameInputs->pauseResume) || (getMenuSettings()->gameMode == GAME_MODE::PVP && gameInputs->opNormalAttack && gameInputs->opSuperAttack && !gameInputs->opPauseResume)) {
             printf("Game Paused\n");
             drawPaused();
             getGameLoop()->gameStatus = GAMESTATUS::PAUSED;
-            while (readInputs()->normalAttack && readInputs()->superAttack && !readInputs()->pauseResume || (getMenuSettings()->gameMode == GAME_MODE::PVP && readInputs()->opNormalAttack && readInputs()->opSuperAttack && !readInputs()->opPauseResume)) loadMusic();
+            while ((gameInputs = readInputs()) && gameInputs->normalAttack && gameInputs->superAttack && !gameInputs->pauseResume || (getMenuSettings()->gameMode == GAME_MODE::PVP && gameInputs->opNormalAttack && gameInputs->opSuperAttack && !gameInputs->opPauseResume)) loadMusic();
             // Pause
-            while ((gameInputs = readInputs())) {
+            while (1) {
                 loadMusic();
+                if (pvp) {
+                    // For pvp, need to sync game ticks for both devices
+                    if (!readSyncState()) {
+                        syncSignal(true);
+                        while (readSyncState());
+                        wait_us(100);
+                    } else {
+                        syncSignal(false);
+                        wait_us(100);
+                    }
+                }
+                gameInputs = readInputs();
                 if (gameInputs->normalAttack && gameInputs->superAttack && !gameInputs->pauseResume || (getMenuSettings()->gameMode == GAME_MODE::PVP && gameInputs->opNormalAttack && gameInputs->opSuperAttack && !gameInputs->opPauseResume)) {
                     printf("Game Resumed\n");
                     erasePaused();
                     drawResumed();
                     getGameLoop()->gameStatus = GAMESTATUS::RUNNING;
-                    while ((gameInputs = readInputs()) && gameInputs->normalAttack && gameInputs->superAttack && !gameInputs->pauseResume) loadMusic();
+                    while ((gameInputs = readInputs()) && gameInputs->normalAttack && gameInputs->superAttack && !gameInputs->pauseResume || (getMenuSettings()->gameMode == GAME_MODE::PVP && gameInputs->opNormalAttack && gameInputs->opSuperAttack && !gameInputs->opPauseResume)) loadMusic();
                     eraseResumed();
                     break;
                 }
@@ -467,15 +537,18 @@ void start(bool infinite, bool scoreCap, bool pvp) {
         // Check for game win or loss
         if (getPlayer()->playerStatus == CHARACTER_STATUS::DEAD && getPlayer()->destroyedTick == 20) {
             gameLoop->gameStatus = GAMESTATUS::LOST;
+            notifyPvp(true);
             break;
         } else if (getEnemyDLL()->size == 0 && getBoss() == NULL && getOpponent() == NULL) {
             if (!scoreCap && !infinite) {
                 gameLoop->gameStatus = GAMESTATUS::WON;
+                notifyPvp(true);
             }
             break;
         } else if (pvp && getPlayer()->score >= 10 || getOpponent()->score >= 10) {
             if (getPlayer()->score >= 10 && getOpponent()->score < 10) {
                 gameLoop->gameStatus = GAMESTATUS::WON;
+                notifyPvp(true);
                 break;
             } else if (getPlayer()->score < 10 && getOpponent()->score >= 10) {
                 gameLoop->gameStatus = GAMESTATUS::LOST;
@@ -483,9 +556,11 @@ void start(bool infinite, bool scoreCap, bool pvp) {
             } else if (getPlayer()->score >= 10 && getOpponent()->score >= 10) {
                 if (getPlayer()->score > getOpponent()->score) {
                     gameLoop->gameStatus = GAMESTATUS::WON;
+                    notifyPvp(true);
                     break;
                 } else if (getPlayer()->score < getOpponent()->score) {
                     gameLoop->gameStatus = GAMESTATUS::LOST;
+                    notifyPvp(true);
                     break;
                 }
             }
@@ -500,12 +575,6 @@ void start(bool infinite, bool scoreCap, bool pvp) {
         Timer waitForGameTick;
         waitForGameTick.start();
         while (waitForGameTick.elapsed_time().count() < waitTime) loadMusic();
-        if (pvp) {
-            // For pvp, need to sync game ticks for both devices
-            notifyPvp(true);
-            while (!readPvp()) loadMusic();
-            notifyPvp(false);
-        }
         getPlayer()->sessionPlayTime += t.elapsed_time().count();
         t.reset();
     }

@@ -303,14 +303,17 @@ void drawSSButton(MENU_SETTINGS* menuSettings, BUTTON* skinSelector) {
 
 void drawMSButton(MENU_SETTINGS* menuSettings, BUTTON* modeSelector) {
     int color;
+    int textBackground;
     if (modeSelector->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(modeSelector->boundingBox->topLeft.x, modeSelector->boundingBox->topLeft.y, modeSelector->boundingBox->bottomRight.x, modeSelector->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(modeSelector->boundingBox->topLeft.x, modeSelector->boundingBox->topLeft.y, modeSelector->boundingBox->bottomRight.x, modeSelector->boundingBox->bottomRight.y, WHITE);
         color = RED;
+        textBackground = LGREY;
     } else {
         drawBox(modeSelector->boundingBox->topLeft.x, modeSelector->boundingBox->topLeft.y, modeSelector->boundingBox->bottomRight.x, modeSelector->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(modeSelector->boundingBox->topLeft.x, modeSelector->boundingBox->topLeft.y, modeSelector->boundingBox->bottomRight.x, modeSelector->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     if (menuSettings->gameMode == GAME_MODE::INFINITE) {
         char message[] = "INF";
@@ -321,7 +324,7 @@ void drawMSButton(MENU_SETTINGS* menuSettings, BUTTON* modeSelector) {
             uLCD.set_font(FONT_7X8);
             uLCD.locate(14 + i, 13);
             uLCD.color(color);
-            uLCD.text_mode(TRANSPARENT);
+            uLCD.textbackground_color(textBackground);
             uLCD.printf("%c", message[i]);
             i++;
         }
@@ -334,16 +337,15 @@ void drawMSButton(MENU_SETTINGS* menuSettings, BUTTON* modeSelector) {
             uLCD.set_font(FONT_7X8);
             uLCD.locate(14 + i, 13);
             uLCD.color(color);
-            uLCD.text_mode(TRANSPARENT);
+            uLCD.textbackground_color(textBackground);
             uLCD.printf("%c", message[i]);
             i++;
         }
     } else if (menuSettings->gameMode == GAME_MODE::SCORECAP) {
-        uLCD.text_bold(ON);
         uLCD.set_font(FONT_7X8);
         uLCD.locate(14, 12);
         uLCD.color(color);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("___");
         char message[5];
         sprintf(message, "%03d", menuSettings->scoreCap);
@@ -354,7 +356,7 @@ void drawMSButton(MENU_SETTINGS* menuSettings, BUTTON* modeSelector) {
             uLCD.set_font(FONT_7X8);
             uLCD.locate(14 + i, 13);
             uLCD.color(color);
-            uLCD.text_mode(TRANSPARENT);
+            uLCD.textbackground_color(textBackground);
             uLCD.printf("%c", message[i]);
             i++;
         }
@@ -367,7 +369,7 @@ void drawMSButton(MENU_SETTINGS* menuSettings, BUTTON* modeSelector) {
             uLCD.set_font(FONT_7X8);
             uLCD.locate(14 + i, 13);
             uLCD.color(color);
-            uLCD.text_mode(TRANSPARENT);
+            uLCD.textbackground_color(textBackground);
             uLCD.printf("%c", message[i]);
             i++;
         }
@@ -398,14 +400,17 @@ void eraseResumed(void) {
 
 void drawPlayButton(MENU_SETTINGS* menuSettings, BUTTON* play) {
     int color;
+    int textBackground;
     if (play->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(play->boundingBox->topLeft.x, play->boundingBox->topLeft.y, play->boundingBox->bottomRight.x, play->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(play->boundingBox->topLeft.x, play->boundingBox->topLeft.y, play->boundingBox->bottomRight.x, play->boundingBox->bottomRight.y, WHITE);
         color = GREEN;
+        textBackground = LGREY;
     } else {
         drawBox(play->boundingBox->topLeft.x, play->boundingBox->topLeft.y, play->boundingBox->bottomRight.x, play->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(play->boundingBox->topLeft.x, play->boundingBox->topLeft.y, play->boundingBox->bottomRight.x, play->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "PLAY";
     int i = 0;
@@ -415,35 +420,35 @@ void drawPlayButton(MENU_SETTINGS* menuSettings, BUTTON* play) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(7 + i, 13);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
 }
 
 void drawDiffScale(MENU_SETTINGS* menuSettings, SLIDING_SCALE* difficulty) {
+    drawBox(0, 127 - 47, 127, 127 - 37, '0');
+    drawBox(0, difficulty->boundingBox->topLeft.y, 127, difficulty->boundingBox->bottomRight.y, '3');
+    drawBox(39 - 5, 127 - 116, 89 - 5 + 11, 127 - 76, '0');
     if (menuSettings->gameMode != GAME_MODE::PVP) {
-        drawBox(0, 127 - 47, 127, 127 - 37, '0');
-        drawBox(0, difficulty->boundingBox->topLeft.y, 127, difficulty->boundingBox->bottomRight.y, '3');
-        drawBox(39 - 5, 127 - 118, 89 - 5 + 11, 127 - 76, '0');
         if (difficulty->value == difficulty->maxVal) {
             drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'R');
-            drawImg(64 - 9, 127 - 118, 19, 19, BOSS_IMGS[3]);
-            drawImg(39 - 5, 127 - 103, 11, 11, MISSILE_ENEMY_IMGS[3]);
-            drawImg(89 - 5, 127 - 103, 11, 11, MISSILE_ENEMY_IMGS[3]);
-            drawImg(64 - 5, 127 - 90, 11, 11, NORMAL_ENEMY_IMGS[3]);
+            drawImg(64 - 9, 127 - 116, 19, 19, BOSS_IMGS[3]);
+            drawImg(39 - 5, 127 - 101, 11, 11, MISSILE_ENEMY_IMGS[3]);
+            drawImg(89 - 5, 127 - 101, 11, 11, MISSILE_ENEMY_IMGS[3]);
+            drawImg(64 - 5, 127 - 88, 11, 11, NORMAL_ENEMY_IMGS[3]);
         } else if ((double)difficulty->value / difficulty->maxVal >= 0.75) {
             drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'O');
-            drawImg(39 - 5, 127 - 103, 11, 11, MISSILE_ENEMY_IMGS[3]);
-            drawImg(89 - 5, 127 - 103, 11, 11, MISSILE_ENEMY_IMGS[3]);
-            drawImg(64 - 5, 127 - 90, 11, 11, NORMAL_ENEMY_IMGS[3]);
+            drawImg(39 - 5, 127 - 101, 11, 11, MISSILE_ENEMY_IMGS[3]);
+            drawImg(89 - 5, 127 - 101, 11, 11, MISSILE_ENEMY_IMGS[3]);
+            drawImg(64 - 5, 127 - 88, 11, 11, NORMAL_ENEMY_IMGS[3]);
         } else if ((double)difficulty->value / difficulty->maxVal >= 0.50) {
             drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'Y');
-            drawImg(46 - 5, 127 - 100, 11, 11, NORMAL_ENEMY_IMGS[3]);
-            drawImg(82 - 5, 127 - 100, 11, 11, NORMAL_ENEMY_IMGS[3]);
+            drawImg(46 - 5, 127 - 98, 11, 11, NORMAL_ENEMY_IMGS[3]);
+            drawImg(82 - 5, 127 - 98, 11, 11, NORMAL_ENEMY_IMGS[3]);
         } else if ((double)difficulty->value / difficulty->maxVal >= 0.25) {
             drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'G');
-            drawImg(64 - 5, 127 - 100, 11, 11, NORMAL_ENEMY_IMGS[3]);
+            drawImg(64 - 5, 127 - 98, 11, 11, NORMAL_ENEMY_IMGS[3]);
         }
         if (difficulty->sliderStatus == BUTTON_STATUS::SELECTED) {
             uLCD.filled_circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, LGREY);
@@ -453,9 +458,6 @@ void drawDiffScale(MENU_SETTINGS* menuSettings, SLIDING_SCALE* difficulty) {
             uLCD.circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, MGREY);
         }
     } else { // Draw the opponent if the gamemode is pvp
-        drawBox(0, 127 - 47, 127, 127 - 37, '0');
-        drawBox(0, difficulty->boundingBox->topLeft.y, 127, difficulty->boundingBox->bottomRight.y, '3');
-        drawBox(39 - 5, 127 - 118, 89 - 5 + 11, 127 - 76, '0');
         if (difficulty->value == difficulty->maxVal) {
             drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'R');
         } else if ((double)difficulty->value / difficulty->maxVal >= 0.75) {
@@ -478,14 +480,17 @@ void drawDiffScale(MENU_SETTINGS* menuSettings, SLIDING_SCALE* difficulty) {
 
 void drawUserStatsButton(USER* user, BUTTON* userStats) {
     int color;
+    int textBackground;
     if (userStats->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(userStats->boundingBox->topLeft.x, userStats->boundingBox->topLeft.y, userStats->boundingBox->bottomRight.x, userStats->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(userStats->boundingBox->topLeft.x, userStats->boundingBox->topLeft.y, userStats->boundingBox->bottomRight.x, userStats->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = LGREY;
     } else {
         drawBox(userStats->boundingBox->topLeft.x, userStats->boundingBox->topLeft.y, userStats->boundingBox->bottomRight.x, userStats->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(userStats->boundingBox->topLeft.x, userStats->boundingBox->topLeft.y, userStats->boundingBox->bottomRight.x, userStats->boundingBox->bottomRight.y, MGREY);
         color = WHITE;
+        textBackground = DGREY;
     }
     char message[20];
     strcpy(message, user->username);
@@ -503,7 +508,7 @@ void drawUserStatsButton(USER* user, BUTTON* userStats) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate((9 - (int)round((double)nameLength / 2)) + i, 0);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -511,14 +516,17 @@ void drawUserStatsButton(USER* user, BUTTON* userStats) {
 
 void drawDeleteUserButton(BUTTON* deleteProfile) {
     int color;
+    int textBackground;
     if (deleteProfile->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(deleteProfile->boundingBox->topLeft.x, deleteProfile->boundingBox->topLeft.y, deleteProfile->boundingBox->bottomRight.x, deleteProfile->boundingBox->bottomRight.y, 'R');
         uLCD.rectangle(deleteProfile->boundingBox->topLeft.x, deleteProfile->boundingBox->topLeft.y, deleteProfile->boundingBox->bottomRight.x, deleteProfile->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = RED;
     } else {
         drawBox(deleteProfile->boundingBox->topLeft.x, deleteProfile->boundingBox->topLeft.y, deleteProfile->boundingBox->bottomRight.x, deleteProfile->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(deleteProfile->boundingBox->topLeft.x, deleteProfile->boundingBox->topLeft.y, deleteProfile->boundingBox->bottomRight.x, deleteProfile->boundingBox->bottomRight.y, MGREY);
         color = RED;
+        textBackground = DGREY;
     }
     char message[20] = "DELETE PROFILE";
     int i = 0;
@@ -528,7 +536,7 @@ void drawDeleteUserButton(BUTTON* deleteProfile) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(2 + i, 14);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -558,7 +566,7 @@ void drawLoginBackground(void) {
         uLCD.color(WHITE);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(4 + i, 0);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(BLACK);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -687,7 +695,7 @@ void drawUserStatsBackground(USER* user) {
         uLCD.color(WHITE);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(2 + i, 3);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(BLACK);
         uLCD.printf("%c", hScoreStat[i]);
         i++;
     }
@@ -709,7 +717,7 @@ void drawUserStatsBackground(USER* user) {
         uLCD.color(WHITE);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(2 + i, 5);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(BLACK);
         uLCD.printf("%c", eKilledStat[i]);
         i++;
     }
@@ -731,7 +739,7 @@ void drawUserStatsBackground(USER* user) {
         uLCD.color(WHITE);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(2 + i, 7);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(BLACK);
         uLCD.printf("%c", pDeathsStat[i]);
         i++;
     }
@@ -753,7 +761,7 @@ void drawUserStatsBackground(USER* user) {
         uLCD.color(WHITE);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(2 + i, 9);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(BLACK);
         uLCD.printf("%c", tPointsStat[i]);
         i++;
     }
@@ -777,7 +785,7 @@ void drawUserStatsBackground(USER* user) {
         uLCD.color(WHITE);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(2 + i, 11);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(BLACK);
         uLCD.printf("%c", tTimeStat[i]);
         i++;
     }
@@ -788,14 +796,17 @@ void drawUserStatsBackground(USER* user) {
  */
 void drawLoginButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "LOGIN";
     int i = 0;
@@ -805,7 +816,7 @@ void drawLoginButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(6 + i, 12);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -813,14 +824,17 @@ void drawLoginButton(BUTTON* button) {
 
 void drawInvalidLoginButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = RED;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "LOGIN";
     int i = 0;
@@ -830,7 +844,7 @@ void drawInvalidLoginButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(6 + i, 12);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -841,14 +855,17 @@ void drawInvalidLoginButton(BUTTON* button) {
  */
 void drawRegisterButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "REGISTER";
     int i = 0;
@@ -858,7 +875,7 @@ void drawRegisterButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(5 + i, 14);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -869,14 +886,17 @@ void drawRegisterButton(BUTTON* button) {
  */
 void drawUserBaseButton(USER* userInfo, BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     int nameLength = 0;
     int i = 0;
@@ -889,7 +909,7 @@ void drawUserBaseButton(USER* userInfo, BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate((7 - (int)round((double)nameLength / 2)) + i, 10);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", userInfo->username[i]);
         i++;
     }
@@ -900,14 +920,17 @@ void drawUserBaseButton(USER* userInfo, BUTTON* button) {
  */
 void drawUserNumButton(USER* userInfo, BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char strNum[3];
     snprintf(strNum, 3, "%02d", userInfo->userNum);
@@ -918,7 +941,7 @@ void drawUserNumButton(USER* userInfo, BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         if (strNum[1]) uLCD.locate(15 + i, 10);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", strNum[i]);
         i++;
     }
@@ -929,14 +952,17 @@ void drawUserNumButton(USER* userInfo, BUTTON* button) {
  */
 void drawBackButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = RED;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "<";
     int i = 0;
@@ -946,7 +972,7 @@ void drawBackButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(1 + i, 1);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -957,14 +983,17 @@ void drawBackButton(BUTTON* button) {
  */
 void drawNextButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = GREEN;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = ">";
     int i = 0;
@@ -974,7 +1003,7 @@ void drawNextButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(16 + i, 1);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -985,14 +1014,17 @@ void drawNextButton(BUTTON* button) {
  */
 void drawInvalidNextButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = RED;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = ">";
     int i = 0;
@@ -1002,7 +1034,7 @@ void drawInvalidNextButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(16 + i, 1);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -1013,14 +1045,17 @@ void drawInvalidNextButton(BUTTON* button) {
  */
 void drawDeleteButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = RED;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "X";
     int i = 0;
@@ -1030,7 +1065,7 @@ void drawDeleteButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_7X8);
         uLCD.locate(12 + i, 14);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -1041,14 +1076,17 @@ void drawDeleteButton(BUTTON* button) {
  */
 void drawZeroButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "0";
     int i = 0;
@@ -1058,7 +1096,7 @@ void drawZeroButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(8 + i, 14);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -1069,14 +1107,17 @@ void drawZeroButton(BUTTON* button) {
  */
 void drawOneButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "1";
     int i = 0;
@@ -1086,7 +1127,7 @@ void drawOneButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(5 + i, 11);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -1097,14 +1138,17 @@ void drawOneButton(BUTTON* button) {
  */
 void drawTwoButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "2";
     int i = 0;
@@ -1114,7 +1158,7 @@ void drawTwoButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(8 + i, 11);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -1125,14 +1169,17 @@ void drawTwoButton(BUTTON* button) {
  */
 void drawThreeButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "3";
     int i = 0;
@@ -1142,7 +1189,7 @@ void drawThreeButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(12 + i, 11);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -1153,14 +1200,17 @@ void drawThreeButton(BUTTON* button) {
  */
 void drawFourButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "4";
     int i = 0;
@@ -1170,7 +1220,7 @@ void drawFourButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(5 + i, 8);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -1181,14 +1231,17 @@ void drawFourButton(BUTTON* button) {
  */
 void drawFiveButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "5";
     int i = 0;
@@ -1198,7 +1251,7 @@ void drawFiveButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(8 + i, 8);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -1209,14 +1262,17 @@ void drawFiveButton(BUTTON* button) {
  */
 void drawSixButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "6";
     int i = 0;
@@ -1226,7 +1282,7 @@ void drawSixButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(12 + i, 8);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -1237,14 +1293,17 @@ void drawSixButton(BUTTON* button) {
  */
 void drawSevenButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "7";
     int i = 0;
@@ -1254,7 +1313,7 @@ void drawSevenButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(5 + i, 5);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -1265,14 +1324,17 @@ void drawSevenButton(BUTTON* button) {
  */
 void drawEightButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "8";
     int i = 0;
@@ -1282,7 +1344,7 @@ void drawEightButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(8 + i, 5);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -1293,14 +1355,17 @@ void drawEightButton(BUTTON* button) {
  */
 void drawNineButton(BUTTON* button) {
     int color;
+    int textBackground;
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
         color = BLACK;
+        textBackground = LGREY;
     } else {
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
         color = MGREY;
+        textBackground = DGREY;
     }
     char message[] = "9";
     int i = 0;
@@ -1310,7 +1375,7 @@ void drawNineButton(BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(12 + i, 5);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", message[i]);
         i++;
     }
@@ -1321,6 +1386,7 @@ void drawNineButton(BUTTON* button) {
  */
 void drawDefaultSkinButton(USER* userInfo, BUTTON* button) {
     int color;
+    int textBackground;
     char skinType[20];
     switch (userInfo->defaultSkin) {
     case 'R': uLCD.filled_circle(64, 127 - 18, 8, RED); strcpy(skinType, "FIRE RED"); color = RED; break;
@@ -1333,10 +1399,12 @@ void drawDefaultSkinButton(USER* userInfo, BUTTON* button) {
     }
 
     if (button->buttonStatus == BUTTON_STATUS::SELECTED) {
+        textBackground = LGREY;
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '5');
         uLCD.circle(64, 127 - 18, 9, WHITE);
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, WHITE);
     } else {
+        textBackground = DGREY;
         drawBox(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, '3');
         uLCD.circle(64, 127 - 18, 9, MGREY);
         uLCD.rectangle(button->boundingBox->topLeft.x, button->boundingBox->topLeft.y, button->boundingBox->bottomRight.x, button->boundingBox->bottomRight.y, MGREY);
@@ -1354,7 +1422,7 @@ void drawDefaultSkinButton(USER* userInfo, BUTTON* button) {
         uLCD.color(color);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(9 + i - (int)round((double)skinTypeNameLength / 2), 10);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(textBackground);
         uLCD.printf("%c", skinType[i]);
         i++;
     }
@@ -1374,6 +1442,7 @@ void drawPassword(char password[5]) {
     while (password[i]) {
         loadMusic();
         uLCD.text_bold(ON);
+        uLCD.textbackground_color(BLACK);
         uLCD.color(GREEN);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(9 + i - (int)round((double)pwLength / 2), 1);
@@ -1394,6 +1463,7 @@ void drawInvalidPassword(char password[5]) {
     int i = 0;
     while (password[i]) {
         uLCD.text_bold(ON);
+        uLCD.textbackground_color(BLACK);
         uLCD.color(RED);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(9 + i - (int)round((double)pwLength / 2), 1);
@@ -1420,7 +1490,7 @@ void drawGameWon(void) {
             uLCD.color(WHITE);
             uLCD.set_font(FONT_8X8);
             uLCD.locate(9 + i - (int)round((double)msgLength / 2), 5);
-            uLCD.text_mode(TRANSPARENT);
+            uLCD.textbackground_color(BLACK);
             uLCD.printf("%c", message[i]);
             i++;
         }
@@ -1460,7 +1530,7 @@ void drawGameWon(void) {
             uLCD.color(WHITE);
             uLCD.set_font(FONT_8X8);
             uLCD.locate(5 + i, 5);
-            uLCD.text_mode(TRANSPARENT);
+            uLCD.textbackground_color(BLACK);
             uLCD.printf("%c", message[i]);
             i++;
         }
@@ -1501,7 +1571,7 @@ void drawGameLost(void) {
     drawImg(39 - 5, 127 - 85, 11, 11, MISSILE_ENEMY_IMGS[3]);
     drawImg(89 - 5, 127 - 85, 11, 11, MISSILE_ENEMY_IMGS[3]);
     drawImg(64 - 5, 127 - 68, 11, 11, NORMAL_ENEMY_IMGS[3]);
-    char game[30] = "GAME    OVER";
+    char game[30] = "GAME";
     int i = 0;
     while (game[i]) {
         loadMusic();
@@ -1509,8 +1579,20 @@ void drawGameLost(void) {
         uLCD.color(RED);
         uLCD.set_font(FONT_8X8);
         uLCD.locate(3 + i, 8);
-        uLCD.text_mode(TRANSPARENT);
+        uLCD.textbackground_color(BLACK);
         uLCD.printf("%c", game[i]);
+        i++;
+    }
+    char over[30] = "OVER";
+    i = 0;
+    while (game[i]) {
+        loadMusic();
+        uLCD.text_bold(ON);
+        uLCD.color(RED);
+        uLCD.set_font(FONT_8X8);
+        uLCD.locate(11 + i, 8);
+        uLCD.textbackground_color(BLACK);
+        uLCD.printf("%c", over[i]);
         i++;
     }
 }

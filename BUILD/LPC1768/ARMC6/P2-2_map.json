@@ -68,7 +68,7 @@
     {
         "module": "game/characters",
         "size": {
-            ".text": 7534,
+            ".text": 7538,
             ".data": 0,
             ".bss": 28,
             ".text-delta": 0,
@@ -79,7 +79,7 @@
     {
         "module": "game/gameLoops",
         "size": {
-            ".text": 3657,
+            ".text": 3929,
             ".data": 0,
             ".bss": 32,
             ".text-delta": 0,
@@ -101,7 +101,7 @@
     {
         "module": "game/interfaces",
         "size": {
-            ".text": 14714,
+            ".text": 14730,
             ".data": 14,
             ".bss": 472,
             ".text-delta": 0,
@@ -134,7 +134,7 @@
     {
         "module": "main.o",
         "size": {
-            ".text": 489,
+            ".text": 501,
             ".data": 0,
             ".bss": 0,
             ".text-delta": 0,
@@ -145,7 +145,7 @@
     {
         "module": "mbed-os/drivers",
         "size": {
-            ".text": 4318,
+            ".text": 4024,
             ".data": 0,
             ".bss": 24,
             ".text-delta": 0,
@@ -211,18 +211,7 @@
     {
         "module": "utilities/4DGL-uLCD-SE",
         "size": {
-            ".text": 2326,
-            ".data": 0,
-            ".bss": 0,
-            ".text-delta": 0,
-            ".data-delta": 0,
-            ".bss-delta": 0
-        }
-    },
-    {
-        "module": "utilities/Nav_Switch",
-        "size": {
-            ".text": 128,
+            ".text": 2304,
             ".data": 0,
             ".bss": 0,
             ".text-delta": 0,
@@ -244,7 +233,7 @@
     {
         "module": "utilities/audio",
         "size": {
-            ".text": 220768,
+            ".text": 220794,
             ".data": 56,
             ".bss": 112,
             ".text-delta": 0,
@@ -266,7 +255,7 @@
     {
         "module": "utilities/graphics",
         "size": {
-            ".text": 84811,
+            ".text": 85341,
             ".data": 0,
             ".bss": 144,
             ".text-delta": 0,
@@ -277,9 +266,9 @@
     {
         "module": "utilities/hardware",
         "size": {
-            ".text": 704,
+            ".text": 2418,
             ".data": 0,
-            ".bss": 1416,
+            ".bss": 1672,
             ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
@@ -287,9 +276,9 @@
     },
     {
         "summary": {
-            "static_ram": 11067,
+            "static_ram": 11323,
             "static_ram_delta": 0,
-            "total_flash": 480601,
+            "total_flash": 482731,
             "total_flash_delta": 0
         }
     }

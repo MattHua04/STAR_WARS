@@ -26,7 +26,8 @@
 
 int main() {
     ASSERT_P(hardware_init() == ERROR_NONE, "Hardware init failed!");
-    printf("Game Starting\n");
+    printf("\033cGame Starting\n");
+    uLCD.cls();
     musicInit();
     drawProfileImg();
     Timer startup;
@@ -79,6 +80,7 @@ int main() {
             getPlayer()->sessionPlayTime = 0;
         }
     }
+    uLCD.cls();
     deletePlayer();
     deallocateHardware();
     deleteMenu();

@@ -168,7 +168,7 @@ void playerUpdate(void) {
         return;
     }
     if (getPlayer()->playerStatus != CHARACTER_STATUS::DEAD) {
-        GAME_INPUTS* inputs = readInputs();
+        GAME_INPUTS* inputs = getCurrentInputs();
         // Get joystick input
         if (inputs->up) {
             playerMoveUp();

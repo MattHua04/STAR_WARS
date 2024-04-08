@@ -1,5 +1,12 @@
 BUILD/LPC1768/ARMC6/utilities/hardware/hardware.o: \
   utilities/hardware/hardware.cpp BUILD/LPC1768/ARMC6/mbed_config.h \
+  mbed-os/hal/include/hal/PinNameAliases.h \
+  mbed-os/targets/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768/PinNames.h \
+  mbed-os/targets/TARGET_NXP/TARGET_LPC176X/device/cmsis.h \
+  mbed-os/targets/TARGET_NXP/TARGET_LPC176X/device/LPC17xx.h \
+  mbed-os/cmsis/CMSIS_5/CMSIS/TARGET_CORTEX_M/Include/core_cm3.h \
+  mbed-os/targets/TARGET_NXP/TARGET_LPC176X/device/system_LPC17xx.h \
+  mbed-os/targets/TARGET_NXP/TARGET_LPC176X/device/cmsis_nvic.h \
   globals.hpp mbed-os/mbed.h \
   mbed-os/platform/include/platform/mbed_version.h \
   mbed-os/rtos/include/rtos/rtos.h \
@@ -12,11 +19,6 @@ BUILD/LPC1768/ARMC6/utilities/hardware/hardware.o: \
   mbed-os/platform/include/platform/internal/SysTimer.h \
   mbed-os/platform/include/platform/NonCopyable.h \
   mbed-os/platform/include/platform/mbed_atomic.h \
-  mbed-os/targets/TARGET_NXP/TARGET_LPC176X/device/cmsis.h \
-  mbed-os/targets/TARGET_NXP/TARGET_LPC176X/device/LPC17xx.h \
-  mbed-os/cmsis/CMSIS_5/CMSIS/TARGET_CORTEX_M/Include/core_cm3.h \
-  mbed-os/targets/TARGET_NXP/TARGET_LPC176X/device/system_LPC17xx.h \
-  mbed-os/targets/TARGET_NXP/TARGET_LPC176X/device/cmsis_nvic.h \
   mbed-os/platform/cxxsupport/mstd_type_traits \
   mbed-os/platform/cxxsupport/mstd_cstddef \
   mbed-os/platform/include/platform/internal/mbed_atomic_impl.h \
@@ -27,7 +29,6 @@ BUILD/LPC1768/ARMC6/utilities/hardware/hardware.o: \
   mbed-os/targets/TARGET_NXP/TARGET_LPC176X/objects.h \
   mbed-os/targets/TARGET_NXP/TARGET_LPC176X/PortNames.h \
   mbed-os/targets/TARGET_NXP/TARGET_LPC176X/PeripheralNames.h \
-  mbed-os/targets/TARGET_NXP/TARGET_LPC176X/TARGET_MBED_LPC1768/PinNames.h \
   mbed-os/targets/TARGET_NXP/TARGET_LPC176X/gpio_object.h \
   mbed-os/drivers/include/drivers/TickerDataClock.h \
   mbed-os/rtos/include/rtos/Thread.h \
@@ -50,7 +51,6 @@ BUILD/LPC1768/ARMC6/utilities/hardware/hardware.o: \
   mbed-os/rtos/include/rtos/ConditionVariable.h \
   mbed-os/storage/filesystem/include/filesystem/mbed_filesystem.h \
   mbed-os/platform/include/platform/platform.h \
-  mbed-os/hal/include/hal/PinNameAliases.h \
   mbed-os/storage/filesystem/include/filesystem/FileSystem.h \
   mbed-os/platform/include/platform/FileBase.h \
   mbed-os/platform/include/platform/SingletonPtr.h \
@@ -156,12 +156,12 @@ BUILD/LPC1768/ARMC6/utilities/hardware/hardware.o: \
   mbed-os/storage/filesystem/fat/ChaN/ff.h \
   mbed-os/storage/filesystem/fat/ChaN/ffconf.h \
   utilities/doublyLinkedList/doublyLinkedList.hpp \
-  game/characters/player/player.hpp game/healthBars/healthBar.hpp \
-  utilities/graphics/graphics.hpp game/gameLoops/game.hpp \
-  game/interfaces/menu/menu.hpp game/users/users.hpp \
+  game/interfaces/menu/menu.hpp utilities/graphics/graphics.hpp \
+  game/gameLoops/game.hpp game/users/users.hpp \
   game/interfaces/login/login.hpp assets/profileImg.hpp \
   assets/enemySprite.hpp assets/finalBossSprite.hpp \
-  assets/playerSprite.hpp \
+  assets/playerSprite.hpp game/characters/opponent/opponent.hpp \
+  game/healthBars/healthBar.hpp game/characters/player/player.hpp \
   utilities/asyncLibraries/MbedLibraryCollection/libraries/ulcd/uLCD.hpp \
   utilities/asyncLibraries/MbedLibraryCollection/libraries/asyncIO/serialAsync.hpp \
   utilities/asyncLibraries/MbedLibraryCollection/libraries/asyncIO/dma.h
