@@ -4,7 +4,6 @@
 #include "gameMusic.hpp"
 #include "uLCD_4DGL.hpp"
 #include <math.h>
-#include "Nav_Switch.hpp"
 #include "SDBlockDevice.h"
 #include "FATFileSystem.h"
 
@@ -125,7 +124,6 @@ typedef enum {
 
 // === [global object] ===
 extern uLCD_4DGL uLCD;
-extern class uLCD lcd;
 extern SDBlockDevice sd_block;
 extern FATFileSystem fs;
 

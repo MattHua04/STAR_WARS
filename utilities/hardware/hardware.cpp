@@ -8,7 +8,6 @@
 #include "player.hpp"
 #include "hardware.hpp"
 #include "game.hpp"
-#include "uLCD.hpp"
 
 uLCD_4DGL uLCD(p13, p14, p15); // Would be p9, p10, p11 for provided schematic
 

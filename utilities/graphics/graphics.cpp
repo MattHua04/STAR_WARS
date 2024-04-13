@@ -11,7 +11,6 @@
 #include "finalBoss.hpp"
 #include "game.hpp"
 #include "registration.hpp"
-#include "uLCD.hpp"
 #include "users.hpp"
 
 int getHexColor(char color, bool isOpponent) {
@@ -37,31 +36,18 @@ int getHexColor(char color, bool isOpponent) {
     }
 }
 
-void loadChunk(FILE *file, int *chunk, int startX, int startY, int width, int height) {
-    fseek(file, (startY * 128 + startX) * sizeof(char) * 9, SEEK_SET);
-    char buffer[9];
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            fread(buffer, sizeof(char), 9, file);
-            chunk[i * width + j] = strtol(buffer, NULL, 16);
-        }
-        fseek(file, (128 - width) * sizeof(char) * 9, SEEK_CUR);
-    }
-}
-
 void drawProfileImg(void) {
-    FILE *file = fopen("/sd/profileImg.txt", "r");
-    if (file == NULL) {
-        printf("Error opening file\n");
-        return;
-    }
     int chunkHeight = 32;
     for (int i = 0; i < 128; i += chunkHeight) {
         int chunk[128 * chunkHeight];
-        loadChunk(file, chunk, 0, i, 128, chunkHeight);
+        for (int j = 0; j < chunkHeight; j++) {
+            for (int k = 0; k < 128; k++) {
+                loadMusic();
+                chunk[j * 128 + k] = profileImg[i * 128 + j * 128 + k];
+            }
+        }
         uLCD.BLIT(0, i, 128, chunkHeight, chunk);
     }
-    fclose(file);
 }
 
 void drawGameBackground(bool redshift) {

@@ -147,7 +147,6 @@ BUILD/LPC1768/ARMC6/utilities/audio/gameMusic.o: \
   mbed-os/platform/include/platform/Stream.h \
   mbed-os/platform/include/platform/FileLike.h globals.hpp \
   utilities/4DGL-uLCD-SE/uLCD_4DGL.hpp \
-  utilities/Nav_Switch/Nav_Switch.hpp \
   mbed-os/storage/blockdevice/COMPONENT_SD/include/SD/SDBlockDevice.h \
   mbed-os/hal/include/hal/static_pinmap.h \
   mbed-os/hal/include/hal/qspi_api.h mbed-os/hal/include/hal/ospi_api.h \
@@ -158,7 +157,8 @@ BUILD/LPC1768/ARMC6/utilities/audio/gameMusic.o: \
   game/interfaces/menu/menu.hpp utilities/graphics/graphics.hpp \
   utilities/doublyLinkedList/doublyLinkedList.hpp game/users/users.hpp \
   game/interfaces/login/login.hpp assets/gameBackground.hpp \
-  assets/enemySprite.hpp assets/finalBossSprite.hpp \
-  assets/playerSprite.hpp assets/normalProjectileSound.hpp \
-  assets/laserSound.hpp assets/explosionSound.hpp assets/hit.hpp \
-  assets/button.hpp assets/win.hpp assets/lose.hpp assets/missile.hpp
+  assets/profileImg.hpp assets/enemySprite.hpp \
+  assets/finalBossSprite.hpp assets/playerSprite.hpp \
+  assets/normalProjectileSound.hpp assets/laserSound.hpp \
+  assets/explosionSound.hpp assets/hit.hpp assets/button.hpp \
+  assets/win.hpp assets/lose.hpp assets/missile.hpp

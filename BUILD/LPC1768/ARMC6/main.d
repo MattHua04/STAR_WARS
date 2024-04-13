@@ -148,7 +148,6 @@ BUILD/LPC1768/ARMC6/main.o: main.cpp BUILD/LPC1768/ARMC6/mbed_config.h \
   mbed-os/platform/include/platform/FileLike.h \
   utilities/audio/gameMusic.hpp utilities/hardware/hardware.hpp \
   utilities/4DGL-uLCD-SE/uLCD_4DGL.hpp \
-  utilities/Nav_Switch/Nav_Switch.hpp \
   mbed-os/storage/blockdevice/COMPONENT_SD/include/SD/SDBlockDevice.h \
   mbed-os/hal/include/hal/static_pinmap.h \
   mbed-os/hal/include/hal/qspi_api.h mbed-os/hal/include/hal/ospi_api.h \
@@ -159,7 +158,8 @@ BUILD/LPC1768/ARMC6/main.o: main.cpp BUILD/LPC1768/ARMC6/mbed_config.h \
   utilities/graphics/graphics.hpp game/gameLoops/game.hpp \
   game/interfaces/menu/menu.hpp game/users/users.hpp \
   game/interfaces/login/login.hpp assets/gameBackground.hpp \
-  assets/enemySprite.hpp assets/finalBossSprite.hpp \
-  assets/playerSprite.hpp game/characters/finalBoss/finalBoss.hpp \
+  assets/profileImg.hpp assets/enemySprite.hpp \
+  assets/finalBossSprite.hpp assets/playerSprite.hpp \
+  game/characters/finalBoss/finalBoss.hpp \
   game/characters/player/player.hpp game/projectiles/projectile.hpp \
   game/interfaces/registration/registration.hpp

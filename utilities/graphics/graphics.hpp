@@ -7,6 +7,7 @@
 #include "menu.hpp"
 #include "users.hpp"
 #include "gameBackground.hpp"
+#include "profileImg.hpp"
 #include "enemySprite.hpp"
 #include "finalBossSprite.hpp"
 #include "playerSprite.hpp"
@@ -18,11 +19,6 @@
  * Returns the hex equivalent of a char color
  */
 int getHexColor(char color, bool isOpponent);
-
-/**
- * Load a chunk of pixels from a .raw file
- */
-void loadChunk(const char *filename, int *chunk, int startX, int startY, int width, int height);
 
 /**
  * Draws github profile pic
