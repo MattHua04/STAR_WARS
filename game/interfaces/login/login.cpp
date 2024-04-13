@@ -1,4 +1,5 @@
 #include "gameMusic.hpp"
+#include "globals.hpp"
 #include "menu.hpp"
 #include "registration.hpp"
 #include "graphics.hpp"
@@ -164,7 +165,7 @@ void loginInit(void) {
     nine.boundingBox->topLeft.y = 127 - 100;
     nine.boundingBox->bottomRight.x = 101;
     nine.boundingBox->bottomRight.y = 127 - 75;
-    uLCD.cls();
+    drawGameBackground(false);
     drawLoginBackground();
     drawLoginButton(&loginUser);
     drawRegisterButton(&goToRegistration);
@@ -413,7 +414,7 @@ int loginUpdate(void) {
                     userInfo.password[i] = NULL;
                 }
                 // Draw all the buttons on the prev page
-                uLCD.cls();
+                drawGameBackground(false);
                 drawLoginBackground();
                 drawLoginButton(&loginUser);
                 drawRegisterButton(&goToRegistration);
@@ -463,7 +464,6 @@ int loginUpdate(void) {
                 userInfo.totalPlayTime = getSavedPlayTime(&userInfo);
                 // Draw all the buttons on the next page
                 while (!readInputs()->normalAttack) loadMusic();
-                uLCD.cls();
                 return 1;
             }
         } else if (deleteNum.buttonStatus == BUTTON_STATUS::SELECTED) {
@@ -497,7 +497,6 @@ int loginUpdate(void) {
                 }
                 drawPassword(userInfo.password);
                 while (!readInputs()->normalAttack) loadMusic();
-                
                 return 0;
             }
         }
@@ -961,5 +960,4 @@ void deleteLogin(void) {
     free(seven.boundingBox);
     free(eight.boundingBox);
     free(nine.boundingBox);
-    uLCD.cls();
 }

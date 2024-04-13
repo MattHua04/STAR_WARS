@@ -158,7 +158,7 @@ void registrationInit(void) {
     nineR.boundingBox->topLeft.y = 127 - 100;
     nineR.boundingBox->bottomRight.x = 101;
     nineR.boundingBox->bottomRight.y = 127 - 75;
-    uLCD.cls();
+    drawGameBackground(false);
     drawRegistrationBackground();
     drawUserBaseButton(&newUser, &usernameBaseSelectorR);
     drawUserNumButton(&newUser, &usernameNumSelectorR);
@@ -232,7 +232,6 @@ int registrationUpdate(void) {
                 }
                 newUser.defaultSkin = PLAYER_SKIN::ICE_BLUE;
                 while (!readInputs()->normalAttack) loadMusic();
-                uLCD.cls();
                 return -1;
             } else if (inputs->right) {
                 usernameBaseSelectorR.buttonStatus = BUTTON_STATUS::SELECTED;
@@ -409,7 +408,7 @@ int registrationUpdate(void) {
                 backStepR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 usernameBaseSelectorR.buttonStatus = BUTTON_STATUS::SELECTED;
                 // Draw all the buttons on the prev page
-                uLCD.cls();
+                drawGameBackground(false);
                 drawRegistrationBackground();
                 drawUserBaseButton(&newUser, &usernameBaseSelectorR);
                 drawUserNumButton(&newUser, &usernameNumSelectorR);
@@ -451,7 +450,7 @@ int registrationUpdate(void) {
                 nextStepR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
                 defaultSkinSelectorR.buttonStatus = BUTTON_STATUS::SELECTED;
                 // Draw all the buttons on the next page
-                uLCD.cls();
+                drawGameBackground(false);
                 drawRegistrationSkinSelectionBackground();
                 drawDefaultSkinButton(&newUser, &defaultSkinSelectorR);
                 drawBackButton(&backStepR);
@@ -1022,7 +1021,7 @@ int registrationUpdate(void) {
                 usernameBaseSelectorR.buttonStatus = BUTTON_STATUS::SELECTED;
                 // Go back to the login page
                 while (!readInputs()->normalAttack) loadMusic();
-                uLCD.cls();
+                drawGameBackground(false);
                 return -1;
             }
         }
@@ -1062,7 +1061,6 @@ void deleteRegistration(void) {
     free(sevenR.boundingBox);
     free(eightR.boundingBox);
     free(nineR.boundingBox);
-    uLCD.cls();
 }
 
 void registerNewUser(USER* newUser) {
@@ -1082,7 +1080,8 @@ void registerNewUser(USER* newUser) {
         printf("Error, could not open file.\n");
         return;
     }
-    // User data format: dSkin, hScore, eKilled, pDeaths, tPoints, tTime
-    fprintf(newUserFile, "%c, %d, %d, %d, %d, %d", newUser->defaultSkin, newUser->highScore, newUser->totalEnemiesKilled, newUser->totalPlayerDeaths, newUser->totalPoints, newUser->totalPlayTime);
+    // User data format: dSkin, hScore, eKilled, pDeaths, tPoints, tTime, updateCount
+    unsigned int updateCount = 0;
+    fprintf(newUserFile, "%c, %d, %d, %d, %d, %d, %d", newUser->defaultSkin, newUser->highScore, newUser->totalEnemiesKilled, newUser->totalPlayerDeaths, newUser->totalPoints, newUser->totalPlayTime, updateCount);
     fclose(newUserFile);
 }

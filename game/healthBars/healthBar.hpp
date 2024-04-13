@@ -21,9 +21,12 @@ typedef enum {
 typedef struct {
     int x;
     int y;
+    int px;
+    int py;
     BAR_TYPE barType;
     int numHearts;
     LLNode* barOwner;
+    BOUNDINGBOX* boundingBox;
 } BAR;
 
 /** Create a DLL for healthBars 

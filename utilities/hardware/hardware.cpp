@@ -1,5 +1,6 @@
 #include "PinNameAliases.h"
 #include "PinNames.h"
+#include "gameMusic.hpp"
 #include "globals.hpp"
 #include "doublyLinkedList.hpp"
 #include "menu.hpp"
@@ -11,7 +12,7 @@
 
 uLCD_4DGL uLCD(p13, p14, p15); // Would be p9, p10, p11 for provided schematic
 
-//Nav_Switch myNav(p26, p29, p28, p30, p30); // Don't need center so just saving a pin. Would be p12, p15, p14, p16, p16 for provided schematic
+// u, d, l, r
 // Using DI and DO for navswitch to have sustained signals between input reads
 DigitalIn readUp(p26);
 DigitalOut writeUp(p26);
@@ -31,7 +32,7 @@ DigitalOut writePauseResume(p24);
 DigitalIn quitGame(p25); // Would be p24 for provided schematic
 DigitalOut writeQuitGame(p25);
 
-//Nav_Switch opponentNav(p9, p10, p11, p12, p12); // Don't need center so just saving a pin. Would be p17, p19, p20, p25, p25 for provided schematic
+// u, d, l, r
 // Using DI for opponent navswitch since don't need to write anything
 DigitalIn readOpUp(p9);
 DigitalIn readOpDown(p10);
@@ -44,9 +45,10 @@ DigitalIn opponentPauseResume(p20); // Would be p28 for provided schematic
 DigitalIn opponentQuitGame(p21); // Would be p29 for provided schematic
 
 DigitalOut notifyInPvpMode(p16); // Also used for syncing devices. Would be p13 for provided schematic
-DigitalIn readSync(p16); // Would be p13 for provided schematic
 DigitalIn readInPvpMode(p27); // Would be p30 for provided schematic
-// u, d, l, r
+
+DigitalOut notifySDCardUsage(P0_29);
+DigitalIn readSDCardUsage(P0_30);
 
 SDBlockDevice sd_block(p5, p6, p7, p8);
 FATFileSystem fs("sd", &sd_block);
@@ -85,9 +87,12 @@ int hardware_init(void)
     opponentSuperAttackButton.mode(PullNone);
     opponentPauseResume.mode(PullNone);
     opponentQuitGame.mode(PullNone);
+    // Syncing pins
     notifyInPvpMode.write(0);
-    readSync.mode(PullNone);
     readInPvpMode.mode(PullNone);
+    // SD Card sharing pins
+    notifySDCardUsage.write(0);
+    readSDCardUsage.mode(PullNone);
     gameInputs = (GAME_INPUTS*)malloc(sizeof(GAME_INPUTS));
     fs.mount(&sd_block);
     return ERROR_NONE;
@@ -118,12 +123,6 @@ GAME_INPUTS* readInputs(void) {
     pollInputs.start();
     // Poll inputs for some time
     while (pollInputs.elapsed_time().count() < 1000) {
-        /**
-        ups += myNav.up();
-        downs += myNav.down();
-        lefts += myNav.left();
-        rights += myNav.right();
-        */
         ups += !readUp;
         downs += !readDown;
         lefts += !readLeft;
@@ -132,12 +131,7 @@ GAME_INPUTS* readInputs(void) {
         superAttacks += !superAttack;
         pauseResumes += !pauseResume;
         quitGames += !quitGame;
-        /**
-        opUps += opponentNav.up();
-        opDowns += opponentNav.down();
-        opLefts += opponentNav.left();
-        opRights += opponentNav.right();
-        */
+
         opUps += !readOpUp;
         opDowns += !readOpDown;
         opLefts += !readOpLeft;
@@ -181,12 +175,6 @@ GAME_INPUTS* readMyInputs(void) {
     pollInputs.start();
     // Poll inputs for some time
     while (pollInputs.elapsed_time().count() < 1000) {
-        /**
-        ups += myNav.up();
-        downs += myNav.down();
-        lefts += myNav.left();
-        rights += myNav.right();
-        */
         ups += !readUp;
         downs += !readDown;
         lefts += !readLeft;
@@ -213,12 +201,6 @@ GAME_INPUTS* readOpponentInputs(void) {
     pollInputs.start();
     // Poll inputs for some time
     while (pollInputs.elapsed_time().count() < 1000) {
-        /**
-        opUps += opponentNav.up();
-        opDowns += opponentNav.down();
-        opLefts += opponentNav.left();
-        opRights += opponentNav.right();
-        */
         opUps += !readOpUp;
         opDowns += !readOpDown;
         opLefts += !readOpLeft;
@@ -243,14 +225,29 @@ void notifyPvp(bool ready) {
     notifyInPvpMode.write((ready) ? 1 : 0);
 }
 
-int readPvp(void) {
-    return readInPvpMode.read() == 1;
-}
-
-void syncSignal(bool state) {
-    notifyInPvpMode.write((state) ? 1 : 0);
-}
-
 int readSyncState(void) {
-    return readSync.read() == 1;
+    return notifyInPvpMode.read();
+}
+
+int readPvp(void) {
+    return readInPvpMode.read();
+}
+
+void syncDevices(void) {
+    if (!readSyncState()) {
+        notifyPvp(true);
+        while (!readPvp() && getOpponent() != NULL && getOpponent()->playerDisplay != CHARACTER_DISPLAY::DESTROYED && getPlayer()->playerDisplay != CHARACTER_DISPLAY::DESTROYED);
+    } else {
+        notifyPvp(false);
+        while (readPvp() && getOpponent() != NULL && getOpponent()->playerDisplay != CHARACTER_DISPLAY::DESTROYED && getPlayer()->playerDisplay != CHARACTER_DISPLAY::DESTROYED);
+    }
+}
+
+void notifyUsingSD(bool inUse) {
+    notifySDCardUsage.write((inUse) ? 1 : 0);
+    while (notifySDCardUsage.read() != 1) loadMusic();
+}
+
+int readUsingSD(void) {
+    return readSDCardUsage.read();
 }

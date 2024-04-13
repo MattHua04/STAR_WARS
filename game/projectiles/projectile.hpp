@@ -19,6 +19,7 @@
 #define SHORT_RANGE_SPEED 2
 #define LONG_RANGE_SPEED 3
 #define MISSILE_SPEED 1
+#define PVP_SPEED 6
 
 // Projectile types and their damage
 typedef enum {
@@ -38,6 +39,8 @@ typedef struct {
 typedef struct {
     int x;
     int y;
+    int px;
+    int py;
     int projectileWidth;
     int projectileHeight;
     BOUNDINGBOX* boundingBox;

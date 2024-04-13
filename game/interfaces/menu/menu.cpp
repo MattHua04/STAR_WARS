@@ -19,6 +19,7 @@ MENU_SETTINGS* getMenuSettings() {
 }
 
 void menuInit(void) {
+    drawGameBackground(false);
     drawMenuBackground();
     if (menuSettings.playerSkin != NULL && menuSettings.gameMode != NULL && menuSettings.difficulty != NULL) {
         drawUserStatsButton(getUserInfo(), &userStats);
@@ -50,7 +51,7 @@ void menuInit(void) {
     // Play button
     play.buttonStatus = BUTTON_STATUS::SELECTED;
     play.boundingBox = (BOUNDINGBOX*)malloc(sizeof(BOUNDINGBOX));
-    play.boundingBox->topLeft.x = 36;
+    play.boundingBox->topLeft.x = 37;
     play.boundingBox->topLeft.y = 127 - 36;
     play.boundingBox->bottomRight.x = 90;
     play.boundingBox->bottomRight.y = 127;
@@ -61,9 +62,9 @@ void menuInit(void) {
     difficulty.sliderStatus = BUTTON_STATUS::NOT_SELECTED;
     difficulty.boundingBox = (BOUNDINGBOX*)malloc(sizeof(BOUNDINGBOX));
     difficulty.boundingBox->topLeft.x = 0;
-    difficulty.boundingBox->topLeft.y = 127 - 43;
+    difficulty.boundingBox->topLeft.y = 127 - 41;
     difficulty.boundingBox->bottomRight.x = (int)round(127 * (double)difficulty.value / difficulty.maxVal);
-    difficulty.boundingBox->bottomRight.y = 127 - 40;
+    difficulty.boundingBox->bottomRight.y = 127 - 38;
     // User stats button
     userStats.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
     userStats.boundingBox = (BOUNDINGBOX*)malloc(sizeof(BOUNDINGBOX));
@@ -143,21 +144,23 @@ int menuUpdate(void) {
                 } else {
                     notifyPvp(false);
                 }
-                if (getMenuSettings()->gameMode == GAME_MODE::PVP && readPvp()) {
-                    while ((inputs = readInputs()) && !inputs->normalAttack) {
-                        loadMusic();
-                        if (!inputs->opNormalAttack && readPvp()) {
-                            while ((inputs = readInputs()) && !inputs->normalAttack || !inputs->opNormalAttack) loadMusic();
-                            notifyPvp(false);
-                            return 1;
+                while (!readInputs()->normalAttack) {
+                    if (getMenuSettings()->gameMode == GAME_MODE::PVP && readPvp()) {
+                        while ((inputs = readInputs()) && !inputs->normalAttack) {
+                            loadMusic();
+                            if (!inputs->opNormalAttack && readPvp()) {
+                                while ((inputs = readInputs()) && !inputs->normalAttack || !inputs->opNormalAttack) loadMusic();
+                                notifyPvp(false);
+                                return 1;
+                            }
                         }
+                        notifyPvp(false);
+                        return 0;
+                    } else if (getMenuSettings()->gameMode != GAME_MODE::PVP) {
+                        while (!readInputs()->normalAttack) loadMusic();
+                        notifyPvp(false);
+                        return 1;
                     }
-                    notifyPvp(false);
-                    return 0;
-                } else if (getMenuSettings()->gameMode != GAME_MODE::PVP) {
-                    while (!readInputs()->normalAttack) loadMusic();
-                    notifyPvp(false);
-                    return 1;
                 }
                 notifyPvp(false);
                 return 0;
@@ -346,7 +349,7 @@ int menuUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 menuPage = MENU_PAGE::USER_STATS;
-                uLCD.cls();
+                drawGameBackground(false);
                 drawUserStatsBackground(getUserInfo());
                 drawUserStatsButton(getUserInfo(), &userStats);
                 drawDeleteUserButton(&deleteProfile);
@@ -360,7 +363,7 @@ int menuUpdate(void) {
             if (!inputs->normalAttack) {
                 buttonSound();
                 menuPage = MENU_PAGE::MENU_HOME;
-                uLCD.cls();
+                drawGameBackground(false);
                 drawMenuBackground();
                 drawUserStatsButton(getUserInfo(), &userStats);
                 drawDiffScale(&menuSettings, &difficulty);
@@ -390,7 +393,6 @@ int menuUpdate(void) {
                     }
                 }
                 if (deletingUser) {
-                    uLCD.cls();
                     deleteUser(getUserInfo());
                     return 999;
                 }

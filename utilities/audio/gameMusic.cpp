@@ -46,17 +46,21 @@ void musicInit(void) {
     int attempts = 0;
     currentSong = -1;
     FILE* tempFile;
-openFile: tempFile = fopen("/sd/bootupSound.wav", "rb");
-    if (tempFile == NULL) {
-        attempts++;
-        printf("Failed to open song file\n");
-        if (attempts < 10) {
-            goto openFile;
+    while (1) {
+        tempFile = fopen("/sd/bootupSound.wav", "rb");
+        if (tempFile == NULL) {
+            attempts++;
+            printf("Failed to open song file\n");
+            if (attempts < 10) {
+                continue;
+            } else {
+                return;
+            }
         } else {
-            return;
+            songFile = tempFile;
+            break;
         }
     }
-    songFile = tempFile;
     // Get file size to know when to loop back
     fread(&header, sizeof(header), 1, songFile);
     fileEnd = header.fileSize;

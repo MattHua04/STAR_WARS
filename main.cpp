@@ -33,7 +33,6 @@ int main() {
     Timer startup;
     startup.start();
     while (startup.elapsed_time().count() < 5000000) loadMusic();
-    //drawBox(0, 127, 127, 0, 'R');
     while (1) {
         loginInit();
         int loginOutput;
@@ -43,7 +42,7 @@ int main() {
         else if (loginOutput == REGISTER_USER) {
             registrationInit();
             int registrationOutput;
-            while ((registrationOutput = registrationUpdate()) == 0) loadMusic();;
+            while ((registrationOutput = registrationUpdate()) == 0) loadMusic();
             deleteRegistration();
             if (registrationOutput == EXIT_GAME) break;
             else if (registrationOutput == -1) continue; // Essentially returns to login page
@@ -66,6 +65,7 @@ int main() {
             } else if (getMenuSettings()->gameMode == GAME_MODE::PVP) {
                 generateGameLoop(6);
             }
+            resetGameLoop();
 
             // Update user data
             getUserInfo()->highScore = (getPlayer()->score > getUserInfo()->highScore) ? getPlayer()->score : getUserInfo()->highScore;

@@ -1,5 +1,9 @@
+#include "gameMusic.hpp"
+#include "hardware.hpp"
 #include "login.hpp"
 #include "users.hpp"
+
+char userFileName[100];
 
 char userNames[15][20] = {
     "STARFIRE",
@@ -23,9 +27,8 @@ char (*getUsernameList())[20] {
     return userNames;
 }
 
-PLAYER_SKIN getSavedSkin(USER* user) {
-    // File name format: uName_uNum_pWord.txt
-    char userFileName[100] = "/sd/Users/";
+void generateFileName(USER* user) {
+    strcpy(userFileName, "/sd/Users/");
     strcat(userFileName, user->username);
     strcat(userFileName, "_");
     char strUserNum[3];
@@ -34,149 +37,135 @@ PLAYER_SKIN getSavedSkin(USER* user) {
     strcat(userFileName, "_");
     strcat(userFileName, user->password);
     strcat(userFileName, ".txt");
+}
+
+PLAYER_SKIN getSavedSkin(USER* user) {
+    // File name format: uName_uNum_pWord.txt
+    generateFileName(user);
     FILE* userFile = fopen(userFileName, "r");
     PLAYER_SKIN defaultSkin;
-    int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime;
+    int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime, updateCount;
     if (userFile == NULL) {
         printf("Error opening the user file.\n");
+        fclose(userFile);
         return PLAYER_SKIN::ICE_BLUE;
     }
 
     // Read user data
-    fscanf(userFile, "%c, %d, %d, %d, %d, %d", &defaultSkin, &highScore, &enemiesKilled, &playerDeaths, &totalPoints, &totalPlayTime);
-
+    fscanf(userFile, "%c, %d, %d, %d, %d, %d, %d\n", &defaultSkin, &highScore, &enemiesKilled, &playerDeaths, &totalPoints, &totalPlayTime, &updateCount);
     fclose(userFile);
     return defaultSkin;
 }
 
 int getSavedHighScore(USER* user) {
     // File name format: uName_uNum_pWord.txt
-    char userFileName[100] = "/sd/Users/";
-    strcat(userFileName, user->username);
-    strcat(userFileName, "_");
-    char strUserNum[3];
-    sprintf(strUserNum, "%d", user->userNum);
-    strcat(userFileName, strUserNum);
-    strcat(userFileName, "_");
-    strcat(userFileName, user->password);
-    strcat(userFileName, ".txt");
+    generateFileName(user);
     FILE* userFile = fopen(userFileName, "r");
     PLAYER_SKIN defaultSkin;
-    int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime;
+    int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime, updateCount;
     if (userFile == NULL) {
         printf("Error opening the user file.\n");
+        fclose(userFile);
         return 0;
     }
 
     // Read user data
-    fscanf(userFile, "%c, %d, %d, %d, %d, %d", &defaultSkin, &highScore, &enemiesKilled, &playerDeaths, &totalPoints, &totalPlayTime);
-
+    fscanf(userFile, "%c, %d, %d, %d, %d, %d, %d\n", &defaultSkin, &highScore, &enemiesKilled, &playerDeaths, &totalPoints, &totalPlayTime, &updateCount);
     fclose(userFile);
     return highScore;
 }
 
 int getSavedEnemiesKilled(USER* user) {
     // File name format: uName_uNum_pWord.txt
-    char userFileName[100] = "/sd/Users/";
-    strcat(userFileName, user->username);
-    strcat(userFileName, "_");
-    char strUserNum[3];
-    sprintf(strUserNum, "%d", user->userNum);
-    strcat(userFileName, strUserNum);
-    strcat(userFileName, "_");
-    strcat(userFileName, user->password);
-    strcat(userFileName, ".txt");
+    generateFileName(user);
     FILE* userFile = fopen(userFileName, "r");
     PLAYER_SKIN defaultSkin;
-    int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime;
+    int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime, updateCount;
     if (userFile == NULL) {
         printf("Error opening the user file.\n");
+        fclose(userFile);
         return 0;
     }
 
     // Read user data
-    fscanf(userFile, "%c, %d, %d, %d, %d, %d", &defaultSkin, &highScore, &enemiesKilled, &playerDeaths, &totalPoints, &totalPlayTime);
-
+    fscanf(userFile, "%c, %d, %d, %d, %d, %d, %d\n", &defaultSkin, &highScore, &enemiesKilled, &playerDeaths, &totalPoints, &totalPlayTime, &updateCount);
     fclose(userFile);
     return enemiesKilled;
 }
 
 int getSavedPlayerDeaths(USER* user) {
     // File name format: uName_uNum_pWord.txt
-    char userFileName[100] = "/sd/Users/";
-    strcat(userFileName, user->username);
-    strcat(userFileName, "_");
-    char strUserNum[3];
-    sprintf(strUserNum, "%d", user->userNum);
-    strcat(userFileName, strUserNum);
-    strcat(userFileName, "_");
-    strcat(userFileName, user->password);
-    strcat(userFileName, ".txt");
+    generateFileName(user);
     FILE* userFile = fopen(userFileName, "r");
     PLAYER_SKIN defaultSkin;
-    int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime;
+    int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime, updateCount;
     if (userFile == NULL) {
         printf("Error opening the user file.\n");
+        fclose(userFile);
         return 0;
     }
 
     // Read user data
-    fscanf(userFile, "%c, %d, %d, %d, %d, %d", &defaultSkin, &highScore, &enemiesKilled, &playerDeaths, &totalPoints, &totalPlayTime);
-
+    fscanf(userFile, "%c, %d, %d, %d, %d, %d, %d\n", &defaultSkin, &highScore, &enemiesKilled, &playerDeaths, &totalPoints, &totalPlayTime, &updateCount);
     fclose(userFile);
     return playerDeaths;
 }
 
 int getSavedTotalPoints(USER* user) {
     // File name format: uName_uNum_pWord.txt
-    char userFileName[100] = "/sd/Users/";
-    strcat(userFileName, user->username);
-    strcat(userFileName, "_");
-    char strUserNum[3];
-    sprintf(strUserNum, "%d", user->userNum);
-    strcat(userFileName, strUserNum);
-    strcat(userFileName, "_");
-    strcat(userFileName, user->password);
-    strcat(userFileName, ".txt");
+    generateFileName(user);
     FILE* userFile = fopen(userFileName, "r");
     PLAYER_SKIN defaultSkin;
-    int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime;
+    int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime, updateCount;
     if (userFile == NULL) {
         printf("Error opening the user file.\n");
+        fclose(userFile);
         return 0;
     }
 
     // Read user data
-    fscanf(userFile, "%c, %d, %d, %d, %d, %d", &defaultSkin, &highScore, &enemiesKilled, &playerDeaths, &totalPoints, &totalPlayTime);
-
+    fscanf(userFile, "%c, %d, %d, %d, %d, %d, %d\n", &defaultSkin, &highScore, &enemiesKilled, &playerDeaths, &totalPoints, &totalPlayTime, &updateCount);
     fclose(userFile);
     return totalPoints;
 }
 
 int getSavedPlayTime(USER* user) {
     // File name format: uName_uNum_pWord.txt
-    char userFileName[100] = "/sd/Users/";
-    strcat(userFileName, user->username);
-    strcat(userFileName, "_");
-    char strUserNum[3];
-    sprintf(strUserNum, "%d", user->userNum);
-    strcat(userFileName, strUserNum);
-    strcat(userFileName, "_");
-    strcat(userFileName, user->password);
-    strcat(userFileName, ".txt");
+    generateFileName(user);
     FILE* userFile = fopen(userFileName, "r");
     PLAYER_SKIN defaultSkin;
-    int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime;
+    int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime, updateCount;
     if (userFile == NULL) {
         printf("Error opening the user file.\n");
+        fclose(userFile);
         return 0;
     }
 
     // Read user data
-    fscanf(userFile, "%c, %d, %d, %d, %d, %d", &defaultSkin, &highScore, &enemiesKilled, &playerDeaths, &totalPoints, &totalPlayTime);
-
+    fscanf(userFile, "%c, %d, %d, %d, %d, %d, %d\n", &defaultSkin, &highScore, &enemiesKilled, &playerDeaths, &totalPoints, &totalPlayTime, &updateCount);
     fclose(userFile);
     return totalPlayTime;
+}
+
+int getUpdateCount(USER* user) {
+    // File name format: uName_uNum_pWord.txt
+    generateFileName(user);
+    FILE* userFile = fopen(userFileName, "r");
+    PLAYER_SKIN defaultSkin;
+    int highScore, enemiesKilled, playerDeaths, totalPoints, totalPlayTime, updateCount;
+    if (userFile == NULL) {
+        printf("Error opening the user file.\n");
+        fclose(userFile);
+        return -1;
+    }
+    // Read user data
+    if (fscanf(userFile, "%c, %d, %d, %d, %d, %d, %d\n", &defaultSkin, &highScore, &enemiesKilled, &playerDeaths, &totalPoints, &totalPlayTime, &updateCount) != 7) {
+        printf("Error reading user data.\n");
+        fclose(userFile);
+        return -1;
+    }
+    fclose(userFile);
+    return updateCount;
 }
 
 // 0 if user exists, 1 if not
@@ -192,34 +181,16 @@ int userExists(char username[NAME_LENGTH], int userNum) {
     while ((entry = readdir(allUsersData)) != NULL) {
         char fileName[100];
         char fileUserName[20];
-        char fileUserNum[3];
-        char strUserNum[3];
-        sprintf(strUserNum, "%d", userNum);
-        char *token;
+        int fileUserNum;
         strcpy(fileName, entry->d_name);
-        token = strtok(fileName, "_");
-        strcpy(fileUserName, token);
-        token = strtok(NULL, "_");
-        strcpy(fileUserNum, token);
+        sscanf(fileName, "%19[^_]_%d", fileUserName, &fileUserNum);
+        // If user is deleted, file will be in the form USERNAME_USERNUM_PASSWORD_DELETED
+        if (strstr(fileName, "DELETED") != NULL) {
+            return 1;
+        }
         // Check if the fileUserName matches the passed in username
-        bool matchingName = true;
-        int i = 0;
-        while (username[i] && fileUserName[i]) {
-            if (username[i] != fileUserName[i]) {
-                matchingName = false;
-                break;
-            }
-            i++;
-        }
-        bool matchingNum = true;
-        i = 0;
-        while (strUserNum[i] && fileUserNum[i]) {
-            if (strUserNum[i] != fileUserNum[i]) {
-                matchingNum = false;
-                break;
-            }
-            i++;
-        }
+        bool matchingName = strcmp(username, fileUserName) == 0;
+        bool matchingNum = (userNum == fileUserNum);
         if (matchingName && matchingNum) {
             closedir(allUsersData);
             return 0;
@@ -253,54 +224,50 @@ int checkPassword(USER* user) {
         int i = 0;
         strcpy(fileName, entry->d_name);
         // Check if the fileUserName matches the passed in username
-        bool matchingFile = true;
-        i = 0;
-        while (searchFileName[i] && fileName[i]) {
-            if (searchFileName[i] != fileName[i]) {
-                matchingFile = false;
-                break;
-            }
-            i++;
+        bool matchingFile = strcmp(searchFileName, fileName) == 0;
+        if (matchingFile) {
+            closedir(allUsersData);
+            return 1;
         }
-        if (matchingFile) return 1;
     }
+    closedir(allUsersData);
     return 0;
 }
 
 void updateUser(USER* user) {
-    // Open user file using user credentials
-    char newUserFileName[100] = "/sd/Users/";
-    strcat(newUserFileName, user->username);
-    strcat(newUserFileName, "_");
-    char strUserNum[3];
-    sprintf(strUserNum, "%d", user->userNum);
-    strcat(newUserFileName, strUserNum);
-    strcat(newUserFileName, "_");
-    strcat(newUserFileName, user->password);
-    strcat(newUserFileName, ".txt");
-    FILE* userFile = fopen(newUserFileName, "w");
-    if (userFile == NULL) {
+    // File name format: uName_uNum_pWord.txt
+    generateFileName(user);
+    int updateCount = getUpdateCount(user) + 1;
+    // Check if failed to get updateCount
+    if (updateCount == 0) {
+        return;
+    }
+    FILE* writeUserFile = fopen(userFileName, "w");
+    if (writeUserFile == NULL) {
         printf("Error, could not open user file.\n");
+        fclose(writeUserFile);
         return;
     }
     // Overwrite old data
-    fprintf(userFile, "%c, %d, %d, %d, %d, %d\n", user->defaultSkin, user->highScore, user->totalEnemiesKilled, user->totalPlayerDeaths, user->totalPoints, user->totalPlayTime);
-    fclose(userFile);
+    fprintf(writeUserFile, "%c, %d, %d, %d, %d, %d, %d", user->defaultSkin, user->highScore, user->totalEnemiesKilled, user->totalPlayerDeaths, user->totalPoints, user->totalPlayTime, updateCount);
+    fclose(writeUserFile);
 }
 
-/** Delete a user
- */
 void deleteUser(USER* user) {
     // Open user file using user credentials
-    char userFileName[100] = "/sd/Users/";
-    strcat(userFileName, user->username);
-    strcat(userFileName, "_");
-    char strUserNum[3];
-    sprintf(strUserNum, "%d", user->userNum);
-    strcat(userFileName, strUserNum);
-    strcat(userFileName, "_");
-    strcat(userFileName, user->password);
-    strcat(userFileName, ".txt");
+    generateFileName(user);
     if (remove(userFileName)) printf("Unable to delete user.\n");
     else printf("User deleted.\n");
+    /**FILE* userFile = fopen(userFileName, "r");
+    char copyUserFileName[100];
+    strcpy(copyUserFileName, userFileName);
+    copyUserFileName[strlen(copyUserFileName) - 4] = '\0';
+    if (rename(userFileName, strcat(copyUserFileName, "_DELETED.txt")) != 0) {
+        printf("Unable to delete user.\n");
+        
+        fclose(userFile);
+        return;
+    }
+    fclose(userFile);
+    printf("User deleted.\n");*/
 }

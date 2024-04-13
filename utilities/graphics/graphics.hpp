@@ -6,7 +6,7 @@
 #include "doublyLinkedList.hpp"
 #include "menu.hpp"
 #include "users.hpp"
-#include "profileImg.hpp"
+#include "gameBackground.hpp"
 #include "enemySprite.hpp"
 #include "finalBossSprite.hpp"
 #include "playerSprite.hpp"
@@ -20,9 +20,19 @@
 int getHexColor(char color, bool isOpponent);
 
 /**
+ * Load a chunk of pixels from a .raw file
+ */
+void loadChunk(const char *filename, int *chunk, int startX, int startY, int width, int height);
+
+/**
  * Draws github profile pic
  */
 void drawProfileImg(void);
+
+/**
+ * Draws game background. Redshift for loss screen
+ */
+void drawGameBackground(bool redshift);
 
 /**
  * Draws an image in the form of a string of chars with specified dimensions at a cord on screen
@@ -38,6 +48,11 @@ void drawImgOpponent(const char* object, int x, int y, int width, int height);
  * Draws a box bounded by a top left and bottom right cord
  */
 void drawBox(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY, char color);
+
+/**
+ * Draws a box bounded by a top left and bottom right cord containing appropriate background pixels
+ */
+void drawBackgroundBox(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY);
 
 /**
  * Draws the player

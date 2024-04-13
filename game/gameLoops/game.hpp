@@ -63,4 +63,8 @@ void pvp(void);
  */
 void start(bool infinite, bool scoreCap, bool pvp);
 
+/** Get rid of gameloop data
+ */
+void resetGameLoop(void);
+
 #endif

@@ -1,4 +1,5 @@
 #include "graphics.hpp"
+#include "gameMusic.hpp"
 #include "globals.hpp"
 #include "doublyLinkedList.hpp"
 #include "login.hpp"
@@ -12,8 +13,6 @@
 #include "registration.hpp"
 #include "uLCD.hpp"
 #include "users.hpp"
-
-class uLCD lcd(p13, p14, p15, uLCD::B_1500000);
 
 int getHexColor(char color, bool isOpponent) {
     if (color == 'X' && isOpponent) color = 'R';
@@ -38,40 +37,111 @@ int getHexColor(char color, bool isOpponent) {
     }
 }
 
+void loadChunk(FILE *file, int *chunk, int startX, int startY, int width, int height) {
+    fseek(file, (startY * 128 + startX) * sizeof(char) * 9, SEEK_SET);
+    char buffer[9];
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            fread(buffer, sizeof(char), 9, file);
+            chunk[i * width + j] = strtol(buffer, NULL, 16);
+        }
+        fseek(file, (128 - width) * sizeof(char) * 9, SEEK_CUR);
+    }
+}
+
 void drawProfileImg(void) {
-    int chunckWidth = 32;
-    for (int i = 0; i < 128; i += chunckWidth) {
-        int chunk[128 * chunckWidth];
-        for (int j = 0; j < chunckWidth; j++) {
+    FILE *file = fopen("/sd/profileImg.txt", "r");
+    if (file == NULL) {
+        printf("Error opening file\n");
+        return;
+    }
+    int chunkHeight = 32;
+    for (int i = 0; i < 128; i += chunkHeight) {
+        int chunk[128 * chunkHeight];
+        loadChunk(file, chunk, 0, i, 128, chunkHeight);
+        uLCD.BLIT(0, i, 128, chunkHeight, chunk);
+    }
+    fclose(file);
+}
+
+void drawGameBackground(bool redshift) {
+    int chunkHeight = 32;
+    for (int i = 0; i < 128; i += chunkHeight) {
+        int chunk[128 * chunkHeight];
+        for (int j = 0; j < chunkHeight; j++) {
             for (int k = 0; k < 128; k++) {
-                chunk[j * 128 + k] = profileImg[i * 128 + j * 128 + k];
+                loadMusic();
+                chunk[j * 128 + k] = (redshift) ? gameBackground[i * 128 + j * 128 + k] & 0xFF0000 : gameBackground[i * 128 + j * 128 + k];
             }
         }
-        uLCD.BLIT(0, i, 128, chunckWidth, chunk);
+        uLCD.BLIT(0, i, 128, chunkHeight, chunk);
     }
 }
 
 void drawImg(int x, int y, int width, int height, const char* object) {
+    // Ensure coordinates are actually on the screen
+    x = max(0, min(x, 127));
+    y = max(0, min(y, 127));
+
     int img[width * height];
     for (int i = 0; i < width * height; i++) {
-        img[i] = (getHexColor(object[i], false)); //uLCD::get4DGLColor
+        int xPos = x + (i % width);
+        int yPos = y + (i / width);
+        xPos = max(0, min(xPos, 127));
+        yPos = max(0, min(yPos, 127));
+        if (object[i] == '0') {
+            if (getGameLoop() && getGameLoop()->gameStatus == GAMESTATUS::LOST) img[i] = gameBackground[yPos * 128 + xPos] & 0xFF0000;
+            else img[i] = gameBackground[yPos * 128 + xPos];
+        } else {
+            img[i] = getHexColor(object[i], false);
+        }
     }
     uLCD.BLIT(x, y, width, height, img);
-    //lcd.BLIT(x, y, width, height, img, false);
 }
+
 
 void drawImgOpponent(int x, int y, int width, int height, const char* object) {
+    // Ensure coordinates are actually on the screen
+    x = max(0, min(x, 127));
+    y = max(0, min(y, 127));
+
     int img[width * height];
     for (int i = width * height - 1; i >= 0; i--) {
-        img[width * height - 1 - i] = (getHexColor(object[i], true)); //uLCD::get4DGLColor
+        int xPos = x + ((width * height - 1 - i) % width);
+        int yPos = y + ((width * height - 1 - i) / width);
+        xPos = max(0, min(xPos, 127));
+        yPos = max(0, min(yPos, 127));
+        if (object[i] == '0') {
+            img[width * height - 1 - i] = gameBackground[yPos * 128 + xPos];
+        } else {
+            img[width * height - 1 - i] = getHexColor(object[i], true);
+        }
     }
     uLCD.BLIT(x, y, width, height, img);
-    //lcd.BLIT(x, y, width, height, img, false);
 }
 
+
 void drawBox(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY, char color) {
-    //lcd.drawRectangleFilled(topLeftX, topLeftY, bottomRightX, bottomRightY, uLCD::get4DGLColor(getHexColor(color)));
     uLCD.filled_rectangle(topLeftX, topLeftY, bottomRightX, bottomRightY, getHexColor(color, false));
+}
+
+void drawBackgroundBox(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY) {
+    // Ensure coordinates are actually on the screen
+    topLeftX = max(0, min(topLeftX, 127));
+    topLeftY = max(0, min(topLeftY, 127));
+    bottomRightX = max(0, min(bottomRightX, 127));
+    bottomRightY = max(0, min(bottomRightY, 127));
+    
+    int width = bottomRightX - topLeftX + 1;
+    int height = bottomRightY - topLeftY + 1;
+    int img[width * height];
+    int index = 0;
+    for (int y = topLeftY; y <= bottomRightY; y++) {
+        for (int x = topLeftX; x <= bottomRightX; x++) {
+            img[index++] = gameBackground[max(0, min(y, 127)) * 128 + max(0, min(x, 127))];
+        }
+    }
+    uLCD.BLIT(topLeftX, topLeftY, width, height, img);
 }
 
 void drawPlayer(LLNode* player) {
@@ -79,20 +149,20 @@ void drawPlayer(LLNode* player) {
     int pBottomRightX = ((PLAYER*)getData(player))->boundingBox->bottomRight.x - (((PLAYER*)getData(player))->x - ((PLAYER*)getData(player))->px);
     int pTopLeftY = 127 - (((PLAYER*)getData(player))->boundingBox->topLeft.y - (((PLAYER*)getData(player))->y - ((PLAYER*)getData(player))->py));
     int pBottomRightY = 127 - (((PLAYER*)getData(player))->boundingBox->bottomRight.y - (((PLAYER*)getData(player))->y - ((PLAYER*)getData(player))->py));
-    if (((PLAYER*)getData(player))->x > ((PLAYER*)getData(player))->px) { //Moved right
-        drawBox(pTopLeftX, pTopLeftY, pTopLeftX + (((PLAYER*)getData(player))->x - ((PLAYER*)getData(player))->px), pBottomRightY, '0');
-    } else if (((PLAYER*)getData(player))->x < ((PLAYER*)getData(player))->px) { //Moved left
-        drawBox(pBottomRightX - (((PLAYER*)getData(player))->px - ((PLAYER*)getData(player))->x), pTopLeftY, pBottomRightX, pBottomRightY, '0');
-    } else if (((PLAYER*)getData(player))->y > ((PLAYER*)getData(player))->py) { //Moved up
-        drawBox(pTopLeftX, pBottomRightY + (((PLAYER*)getData(player))->py - ((PLAYER*)getData(player))->y), pBottomRightX, pBottomRightY, '0');
-    } else if (((PLAYER*)getData(player))->y < ((PLAYER*)getData(player))->py) { //Moved down
-        drawBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((PLAYER*)getData(player))->y - ((PLAYER*)getData(player))->py), '0');
+    if (((PLAYER*)getData(player))->x > ((PLAYER*)getData(player))->px) { // Moved right
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pTopLeftX + (((PLAYER*)getData(player))->x - ((PLAYER*)getData(player))->px), pBottomRightY);
+    } else if (((PLAYER*)getData(player))->x < ((PLAYER*)getData(player))->px) { // Moved left
+        drawBackgroundBox(pBottomRightX - (((PLAYER*)getData(player))->px - ((PLAYER*)getData(player))->x), pTopLeftY, pBottomRightX, pBottomRightY);
+    } else if (((PLAYER*)getData(player))->y > ((PLAYER*)getData(player))->py) { // Moved up
+        drawBackgroundBox(pTopLeftX, pBottomRightY + (((PLAYER*)getData(player))->py - ((PLAYER*)getData(player))->y), pBottomRightX, pBottomRightY);
+    } else if (((PLAYER*)getData(player))->y < ((PLAYER*)getData(player))->py) { // Moved down
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((PLAYER*)getData(player))->y - ((PLAYER*)getData(player))->py));
     }
     drawImg(((PLAYER*)getData(player))->boundingBox->topLeft.x, 127 - ((PLAYER*)getData(player))->boundingBox->topLeft.y, 11, 11, PLAYER_IMGS[((PLAYER*)getData(player))->playerDisplay]);
 }
 
 void erasePlayer(LLNode* player) {
-    drawBox(((PLAYER*)getData(player))->boundingBox->topLeft.x, 127 - ((PLAYER*)getData(player))->boundingBox->topLeft.y, ((PLAYER*)getData(player))->boundingBox->bottomRight.x, 127 - ((PLAYER*)getData(player))->boundingBox->bottomRight.y, '0');
+    drawBackgroundBox(((PLAYER*)getData(player))->boundingBox->topLeft.x, 127 - ((PLAYER*)getData(player))->boundingBox->topLeft.y, ((PLAYER*)getData(player))->boundingBox->bottomRight.x, 127 - ((PLAYER*)getData(player))->boundingBox->bottomRight.y);
 }
 
 void drawOpponent(LLNode* opponent) {
@@ -100,20 +170,20 @@ void drawOpponent(LLNode* opponent) {
     int pBottomRightX = ((PLAYER*)getData(opponent))->boundingBox->bottomRight.x - (((PLAYER*)getData(opponent))->x - ((PLAYER*)getData(opponent))->px);
     int pTopLeftY = 127 - (((PLAYER*)getData(opponent))->boundingBox->topLeft.y - (((PLAYER*)getData(opponent))->y - ((PLAYER*)getData(opponent))->py));
     int pBottomRightY = 127 - (((PLAYER*)getData(opponent))->boundingBox->bottomRight.y - (((PLAYER*)getData(opponent))->y - ((PLAYER*)getData(opponent))->py));
-    if (((PLAYER*)getData(opponent))->x > ((PLAYER*)getData(opponent))->px) { //Moved right
-        drawBox(pTopLeftX, pTopLeftY, pTopLeftX + (((PLAYER*)getData(opponent))->x - ((PLAYER*)getData(opponent))->px), pBottomRightY, '0');
-    } else if (((PLAYER*)getData(opponent))->x < ((PLAYER*)getData(opponent))->px) { //Moved left
-        drawBox(pBottomRightX - (((PLAYER*)getData(opponent))->px - ((PLAYER*)getData(opponent))->x), pTopLeftY, pBottomRightX, pBottomRightY, '0');
-    } else if (((PLAYER*)getData(opponent))->y > ((PLAYER*)getData(opponent))->py) { //Moved up
-        drawBox(pTopLeftX, pBottomRightY + (((PLAYER*)getData(opponent))->py - ((PLAYER*)getData(opponent))->y), pBottomRightX, pBottomRightY, '0');
-    } else if (((PLAYER*)getData(opponent))->y < ((PLAYER*)getData(opponent))->py) { //Moved down
-        drawBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((PLAYER*)getData(opponent))->y - ((PLAYER*)getData(opponent))->py), '0');
+    if (((PLAYER*)getData(opponent))->x > ((PLAYER*)getData(opponent))->px) { // Moved right
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pTopLeftX + (((PLAYER*)getData(opponent))->x - ((PLAYER*)getData(opponent))->px), pBottomRightY);
+    } else if (((PLAYER*)getData(opponent))->x < ((PLAYER*)getData(opponent))->px) { // Moved left
+        drawBackgroundBox(pBottomRightX - (((PLAYER*)getData(opponent))->px - ((PLAYER*)getData(opponent))->x), pTopLeftY, pBottomRightX, pBottomRightY);
+    } else if (((PLAYER*)getData(opponent))->y > ((PLAYER*)getData(opponent))->py) { // Moved up
+        drawBackgroundBox(pTopLeftX, pBottomRightY + (((PLAYER*)getData(opponent))->py - ((PLAYER*)getData(opponent))->y), pBottomRightX, pBottomRightY);
+    } else if (((PLAYER*)getData(opponent))->y < ((PLAYER*)getData(opponent))->py) { // Moved down
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((PLAYER*)getData(opponent))->y - ((PLAYER*)getData(opponent))->py));
     }
     drawImgOpponent(((PLAYER*)getData(opponent))->boundingBox->topLeft.x, 127 - ((PLAYER*)getData(opponent))->boundingBox->topLeft.y, 11, 11, PLAYER_IMGS[((PLAYER*)getData(opponent))->playerDisplay]);
 }
 
 void eraseOpponent(LLNode* opponent) {
-    drawBox(((PLAYER*)getData(opponent))->boundingBox->topLeft.x, 127 - ((PLAYER*)getData(opponent))->boundingBox->topLeft.y, ((PLAYER*)getData(opponent))->boundingBox->bottomRight.x, 127 - ((PLAYER*)getData(opponent))->boundingBox->bottomRight.y, '0');
+    drawBackgroundBox(((PLAYER*)getData(opponent))->boundingBox->topLeft.x, 127 - ((PLAYER*)getData(opponent))->boundingBox->topLeft.y, ((PLAYER*)getData(opponent))->boundingBox->bottomRight.x, 127 - ((PLAYER*)getData(opponent))->boundingBox->bottomRight.y);
 }
 
 void drawEnemy(LLNode* enemy) {
@@ -121,14 +191,14 @@ void drawEnemy(LLNode* enemy) {
     int pBottomRightX = ((ENEMY*)getData(enemy))->boundingBox->bottomRight.x - (((ENEMY*)getData(enemy))->x - ((ENEMY*)getData(enemy))->px);
     int pTopLeftY = 127 - (((ENEMY*)getData(enemy))->boundingBox->topLeft.y - (((ENEMY*)getData(enemy))->y - ((ENEMY*)getData(enemy))->py));
     int pBottomRightY = 127 - (((ENEMY*)getData(enemy))->boundingBox->bottomRight.y - (((ENEMY*)getData(enemy))->y - ((ENEMY*)getData(enemy))->py));
-    if (((ENEMY*)getData(enemy))->x > ((ENEMY*)getData(enemy))->px) { //Moved right
-        drawBox(pTopLeftX - 1, pTopLeftY, pTopLeftX + (((ENEMY*)getData(enemy))->x - ((ENEMY*)getData(enemy))->px), pBottomRightY, '0');
-    } else if (((ENEMY*)getData(enemy))->x < ((ENEMY*)getData(enemy))->px) { //Moved left
-        drawBox(pBottomRightX - (((ENEMY*)getData(enemy))->px - ((ENEMY*)getData(enemy))->x), pTopLeftY, pBottomRightX + 1, pBottomRightY, '0');
-    } else if (((ENEMY*)getData(enemy))->y > ((ENEMY*)getData(enemy))->py) { //Moved up
-        drawBox(pTopLeftX, pBottomRightY + (((ENEMY*)getData(enemy))->py - ((ENEMY*)getData(enemy))->y), pBottomRightX, pBottomRightY, '0');
-    } else if (((ENEMY*)getData(enemy))->y < ((ENEMY*)getData(enemy))->py) { //Moved down
-        drawBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((ENEMY*)getData(enemy))->y - ((ENEMY*)getData(enemy))->py), '0');
+    if (((ENEMY*)getData(enemy))->x > ((ENEMY*)getData(enemy))->px) { // Moved right
+        drawBackgroundBox(pTopLeftX - 1, pTopLeftY, pTopLeftX + (((ENEMY*)getData(enemy))->x - ((ENEMY*)getData(enemy))->px), pBottomRightY);
+    } else if (((ENEMY*)getData(enemy))->x < ((ENEMY*)getData(enemy))->px) { // Moved left
+        drawBackgroundBox(pBottomRightX - (((ENEMY*)getData(enemy))->px - ((ENEMY*)getData(enemy))->x), pTopLeftY, pBottomRightX + 1, pBottomRightY);
+    } else if (((ENEMY*)getData(enemy))->y > ((ENEMY*)getData(enemy))->py) { // Moved up
+        drawBackgroundBox(pTopLeftX, pBottomRightY + (((ENEMY*)getData(enemy))->py - ((ENEMY*)getData(enemy))->y), pBottomRightX, pBottomRightY);
+    } else if (((ENEMY*)getData(enemy))->y < ((ENEMY*)getData(enemy))->py) { // Moved down
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((ENEMY*)getData(enemy))->y - ((ENEMY*)getData(enemy))->py));
     }
     if (((ENEMY*)getData(enemy))->enemyType == CHARACTER_TYPE::SHORT_RANGE_ENEMY || ((ENEMY*)getData(enemy))->enemyType == CHARACTER_TYPE::LONG_RANGE_ENEMY) {
         drawImg(((ENEMY*)getData(enemy))->boundingBox->topLeft.x, 127 - ((ENEMY*)getData(enemy))->boundingBox->topLeft.y, 11, 11, NORMAL_ENEMY_IMGS[((ENEMY*)getData(enemy))->enemyDisplay]);
@@ -138,7 +208,7 @@ void drawEnemy(LLNode* enemy) {
 }
 
 void eraseEnemy(LLNode* enemy) {
-    drawBox(((ENEMY*)getData(enemy))->boundingBox->topLeft.x, 127 - ((ENEMY*)getData(enemy))->boundingBox->topLeft.y, ((ENEMY*)getData(enemy))->boundingBox->bottomRight.x, 127 - ((ENEMY*)getData(enemy))->boundingBox->bottomRight.y, '0');
+    drawBackgroundBox(((ENEMY*)getData(enemy))->boundingBox->topLeft.x, 127 - ((ENEMY*)getData(enemy))->boundingBox->topLeft.y, ((ENEMY*)getData(enemy))->boundingBox->bottomRight.x, 127 - ((ENEMY*)getData(enemy))->boundingBox->bottomRight.y);
 }
 
 void drawBoss(LLNode* boss) {
@@ -146,23 +216,38 @@ void drawBoss(LLNode* boss) {
     int pBottomRightX = ((BOSS*)getData(boss))->boundingBox->bottomRight.x - (((BOSS*)getData(boss))->x - ((BOSS*)getData(boss))->px);
     int pTopLeftY = 127 - (((BOSS*)getData(boss))->boundingBox->topLeft.y - (((BOSS*)getData(boss))->y - ((BOSS*)getData(boss))->py));
     int pBottomRightY = 127 - (((BOSS*)getData(boss))->boundingBox->bottomRight.y - (((BOSS*)getData(boss))->y - ((BOSS*)getData(boss))->py));
-    if (((BOSS*)getData(boss))->x > ((BOSS*)getData(boss))->px) { //Moved right
-        drawBox(pTopLeftX - 2, pTopLeftY, pTopLeftX + (((BOSS*)getData(boss))->x - ((BOSS*)getData(boss))->px), pBottomRightY, '0');
-    } else if (((BOSS*)getData(boss))->x < ((BOSS*)getData(boss))->px) { //Moved left
-        drawBox(pBottomRightX - (((BOSS*)getData(boss))->px - ((BOSS*)getData(boss))->x), pTopLeftY, pBottomRightX + 2, pBottomRightY, '0');
-    } else if (((BOSS*)getData(boss))->y > ((BOSS*)getData(boss))->py) { //Moved up
-        drawBox(pTopLeftX, pBottomRightY + (((BOSS*)getData(boss))->py - ((BOSS*)getData(boss))->y), pBottomRightX, pBottomRightY, '0');
-    } else if (((BOSS*)getData(boss))->y < ((BOSS*)getData(boss))->py) { //Moved down
-        drawBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((BOSS*)getData(boss))->y - ((BOSS*)getData(boss))->py), '0');
+    if (((BOSS*)getData(boss))->x > ((BOSS*)getData(boss))->px) { // Moved right
+        drawBackgroundBox(pTopLeftX - 2, pTopLeftY, pTopLeftX + (((BOSS*)getData(boss))->x - ((BOSS*)getData(boss))->px), pBottomRightY);
+    } else if (((BOSS*)getData(boss))->x < ((BOSS*)getData(boss))->px) { // Moved left
+        drawBackgroundBox(pBottomRightX - (((BOSS*)getData(boss))->px - ((BOSS*)getData(boss))->x), pTopLeftY, pBottomRightX + 2, pBottomRightY);
+    } else if (((BOSS*)getData(boss))->y > ((BOSS*)getData(boss))->py) { // Moved up
+        drawBackgroundBox(pTopLeftX, pBottomRightY + (((BOSS*)getData(boss))->py - ((BOSS*)getData(boss))->y), pBottomRightX, pBottomRightY);
+    } else if (((BOSS*)getData(boss))->y < ((BOSS*)getData(boss))->py) { // Moved down
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((BOSS*)getData(boss))->y - ((BOSS*)getData(boss))->py));
     }
     drawImg(((BOSS*)getData(boss))->boundingBox->topLeft.x, 127 - ((BOSS*)getData(boss))->boundingBox->topLeft.y, 19, 19, BOSS_IMGS[((BOSS*)getData(boss))->bossDisplay]);
 }
 
 void eraseBoss(LLNode* boss) {
-    drawBox(((BOSS*)getData(boss))->boundingBox->topLeft.x, 127 - ((BOSS*)getData(boss))->boundingBox->topLeft.y, ((BOSS*)getData(boss))->boundingBox->bottomRight.x, 127 - ((BOSS*)getData(boss))->boundingBox->bottomRight.y, '0');
+    drawBackgroundBox(((BOSS*)getData(boss))->boundingBox->topLeft.x, 127 - ((BOSS*)getData(boss))->boundingBox->topLeft.y, ((BOSS*)getData(boss))->boundingBox->bottomRight.x, 127 - ((BOSS*)getData(boss))->boundingBox->bottomRight.y);
 }
 
 void drawPlayerProjectile(LLNode* projectile) {
+    // Revert old pixels to background
+    int pTopLeftX = ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x - (((PROJECTILE*)getData(projectile))->x - ((PROJECTILE*)getData(projectile))->px);
+    int pBottomRightX = ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x - (((PROJECTILE*)getData(projectile))->x - ((PROJECTILE*)getData(projectile))->px);
+    int pTopLeftY = 127 - (((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y - (((PROJECTILE*)getData(projectile))->y - ((PROJECTILE*)getData(projectile))->py));
+    int pBottomRightY = 127 - (((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y - (((PROJECTILE*)getData(projectile))->y - ((PROJECTILE*)getData(projectile))->py));
+    if (((PROJECTILE*)getData(projectile))->x > ((PROJECTILE*)getData(projectile))->px) { // Moved right
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pTopLeftX + (((PROJECTILE*)getData(projectile))->x - ((PROJECTILE*)getData(projectile))->px), pBottomRightY);
+    } else if (((PROJECTILE*)getData(projectile))->x < ((PROJECTILE*)getData(projectile))->px) { // Moved left
+        drawBackgroundBox(pBottomRightX - (((PROJECTILE*)getData(projectile))->px - ((PROJECTILE*)getData(projectile))->x), pTopLeftY, pBottomRightX, pBottomRightY);
+    } else if (((PROJECTILE*)getData(projectile))->y > ((PROJECTILE*)getData(projectile))->py) { // Moved up
+        drawBackgroundBox(pTopLeftX, pBottomRightY + (((PROJECTILE*)getData(projectile))->py - ((PROJECTILE*)getData(projectile))->y), pBottomRightX, pBottomRightY);
+    } else if (((PROJECTILE*)getData(projectile))->y < ((PROJECTILE*)getData(projectile))->py) { // Moved down
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((PROJECTILE*)getData(projectile))->y - ((PROJECTILE*)getData(projectile))->py));
+    }
+    // Draw the new projectile position
     if (getPlayer()->superActive) {
         drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, 'R');
     } else {
@@ -176,21 +261,57 @@ void drawPlayerProjectile(LLNode* projectile) {
 
 void erasePlayerProjectile(LLNode* projectile) {
     if (getPlayer()->superActive) {
-        drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, '0');
+        drawBackgroundBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y);
     } else {
-        drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, '0');
+        drawBackgroundBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y);
     }
 }
 
 void drawOpponentProjectile(LLNode* projectile) {
-    drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, 'R');
+    // Revert old pixels to background
+    int pTopLeftX = ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x - (((PROJECTILE*)getData(projectile))->x - ((PROJECTILE*)getData(projectile))->px);
+    int pBottomRightX = ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x - (((PROJECTILE*)getData(projectile))->x - ((PROJECTILE*)getData(projectile))->px);
+    int pTopLeftY = 127 - (((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y - (((PROJECTILE*)getData(projectile))->y - ((PROJECTILE*)getData(projectile))->py));
+    int pBottomRightY = 127 - (((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y - (((PROJECTILE*)getData(projectile))->y - ((PROJECTILE*)getData(projectile))->py));
+    if (((PROJECTILE*)getData(projectile))->x > ((PROJECTILE*)getData(projectile))->px) { // Moved right
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pTopLeftX + (((PROJECTILE*)getData(projectile))->x - ((PROJECTILE*)getData(projectile))->px), pBottomRightY);
+    } else if (((PROJECTILE*)getData(projectile))->x < ((PROJECTILE*)getData(projectile))->px) { // Moved left
+        drawBackgroundBox(pBottomRightX - (((PROJECTILE*)getData(projectile))->px - ((PROJECTILE*)getData(projectile))->x), pTopLeftY, pBottomRightX, pBottomRightY);
+    } else if (((PROJECTILE*)getData(projectile))->y > ((PROJECTILE*)getData(projectile))->py) { // Moved up
+        drawBackgroundBox(pTopLeftX, pBottomRightY + (((PROJECTILE*)getData(projectile))->py - ((PROJECTILE*)getData(projectile))->y), pBottomRightX, pBottomRightY);
+    } else if (((PROJECTILE*)getData(projectile))->y < ((PROJECTILE*)getData(projectile))->py) { // Moved down
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((PROJECTILE*)getData(projectile))->y - ((PROJECTILE*)getData(projectile))->py));
+    }
+    // Draw the new projectile position
+    if (getOpponent()->superActive) {
+        drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, 'R');
+    } else {
+        drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, 'R');
+    }
 }
 
 void eraseOpponentProjectile(LLNode* projectile) {
-    drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, '0');
+    drawBackgroundBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y);
 }
 
 void drawEnemyProjectile(LLNode* projectile) {
+    // Revert old pixels to background
+    int pTopLeftX = ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x - (((PROJECTILE*)getData(projectile))->x - ((PROJECTILE*)getData(projectile))->px);
+    int pBottomRightX = ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x - (((PROJECTILE*)getData(projectile))->x - ((PROJECTILE*)getData(projectile))->px);
+    int pTopLeftY = 127 - (((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y - (((PROJECTILE*)getData(projectile))->y - ((PROJECTILE*)getData(projectile))->py));
+    int pBottomRightY = 127 - (((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y - (((PROJECTILE*)getData(projectile))->y - ((PROJECTILE*)getData(projectile))->py));
+    if (((PROJECTILE*)getData(projectile))->projectileType == PROJECTILE_TYPE::MISSILE) {
+        if ((int)((PROJECTILE*)getData(projectile))->projectileDirection->pdx < 0 || (int)((PROJECTILE*)getData(projectile))->projectileDirection->dx < 0) { // Was or is going left
+            drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX + 3, pBottomRightY);
+        } else if ((int)((PROJECTILE*)getData(projectile))->projectileDirection->pdx > 0 || (int)((PROJECTILE*)getData(projectile))->projectileDirection->dx > 0) { // Was or is going right
+            drawBackgroundBox(pTopLeftX - 3, pTopLeftY, pBottomRightX, pBottomRightY);
+        } else { // Is going straight
+            drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX , pBottomRightY);
+        }
+    } else {
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX, pBottomRightY);
+    }
+    // Draw the new projectile position
     if (((PROJECTILE*)getData(projectile))->projectileType == PROJECTILE_TYPE::MISSILE) {
         if (((PROJECTILE*)getData(projectile))->projectileDirection->dx == 0) { //straight
             drawImg(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, 3, 7, "Y0YORO0R0RRRWRW5W5050");
@@ -207,18 +328,33 @@ void drawEnemyProjectile(LLNode* projectile) {
 void eraseEnemyProjectile(LLNode* projectile) {
     if (((PROJECTILE*)getData(projectile))->projectileType == PROJECTILE_TYPE::MISSILE) {
         if ((int)((PROJECTILE*)getData(projectile))->projectileDirection->pdx < 0 || (int)((PROJECTILE*)getData(projectile))->projectileDirection->dx < 0) { // Was or is going left
-            drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x + 3, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, '0');
+            drawBackgroundBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x + 3, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y);
         } else if ((int)((PROJECTILE*)getData(projectile))->projectileDirection->pdx > 0 || (int)((PROJECTILE*)getData(projectile))->projectileDirection->dx > 0) { // Was or is going right
-            drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x - 3, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, '0');
+            drawBackgroundBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x - 3, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y);
         } else { // Is going straight
-            drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x , 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, '0');
+            drawBackgroundBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x , 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y);
         }
     } else {
-        drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, '0');
+        drawBackgroundBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y);
     }
 }
 
 void drawBossProjectile(LLNode* projectile) {
+    // Revert old pixels to background
+    int pTopLeftX = ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x - (((PROJECTILE*)getData(projectile))->x - ((PROJECTILE*)getData(projectile))->px);
+    int pBottomRightX = ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x - (((PROJECTILE*)getData(projectile))->x - ((PROJECTILE*)getData(projectile))->px);
+    int pTopLeftY = 127 - (((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y - (((PROJECTILE*)getData(projectile))->y - ((PROJECTILE*)getData(projectile))->py));
+    int pBottomRightY = 127 - (((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y - (((PROJECTILE*)getData(projectile))->y - ((PROJECTILE*)getData(projectile))->py));
+    if (((PROJECTILE*)getData(projectile))->x > ((PROJECTILE*)getData(projectile))->px) { // Moved right
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pTopLeftX + (((PROJECTILE*)getData(projectile))->x - ((PROJECTILE*)getData(projectile))->px), pBottomRightY);
+    } else if (((PROJECTILE*)getData(projectile))->x < ((PROJECTILE*)getData(projectile))->px) { // Moved left
+        drawBackgroundBox(pBottomRightX - (((PROJECTILE*)getData(projectile))->px - ((PROJECTILE*)getData(projectile))->x), pTopLeftY, pBottomRightX, pBottomRightY);
+    } else if (((PROJECTILE*)getData(projectile))->y > ((PROJECTILE*)getData(projectile))->py) { // Moved up
+        drawBackgroundBox(pTopLeftX, pBottomRightY + (((PROJECTILE*)getData(projectile))->py - ((PROJECTILE*)getData(projectile))->y), pBottomRightX, pBottomRightY);
+    } else if (((PROJECTILE*)getData(projectile))->y < ((PROJECTILE*)getData(projectile))->py) { // Moved down
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((PROJECTILE*)getData(projectile))->y - ((PROJECTILE*)getData(projectile))->py));
+    }
+    // Draw the new projectile position
     if (((PROJECTILE*)getData(projectile))->projectileType == PROJECTILE_TYPE::MISSILE) {
         if (((PROJECTILE*)getData(projectile))->projectileDirection->dx == 0) { //straight
             drawImg(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, 3, 7, "Y0YORO0R0RRRWRW5W5050");
@@ -235,18 +371,33 @@ void drawBossProjectile(LLNode* projectile) {
 void eraseBossProjectile(LLNode* projectile) {
     if (((PROJECTILE*)getData(projectile))->projectileType == PROJECTILE_TYPE::MISSILE) {
         if ((int)((PROJECTILE*)getData(projectile))->projectileDirection->pdx < 0 || (int)((PROJECTILE*)getData(projectile))->projectileDirection->dx < 0) { // Was or is going left
-            drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x + 3, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, '0');
+            drawBackgroundBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x + 3, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y);
         } else if ((int)((PROJECTILE*)getData(projectile))->projectileDirection->pdx > 0 || (int)((PROJECTILE*)getData(projectile))->projectileDirection->dx > 0) { // Was or is going right
-            drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x - 3, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, '0');
+            drawBackgroundBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x - 3, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y);
         } else { // Is going straight
-            drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x , 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, '0');
+            drawBackgroundBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x , 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y);
         }
     } else {
-        drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, '0');
+        drawBackgroundBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y);
     }
 }
 
 void drawHealthBar(LLNode* healthBar) {
+    // Revert old pixels to background
+    int pTopLeftX = ((BAR*)getData(healthBar))->boundingBox->topLeft.x - (((BAR*)getData(healthBar))->x - ((BAR*)getData(healthBar))->px);
+    int pBottomRightX = ((BAR*)getData(healthBar))->boundingBox->bottomRight.x - (((BAR*)getData(healthBar))->x - ((BAR*)getData(healthBar))->px);
+    int pTopLeftY = 127 - (((BAR*)getData(healthBar))->boundingBox->topLeft.y - (((BAR*)getData(healthBar))->y - ((BAR*)getData(healthBar))->py));
+    int pBottomRightY = 127 - (((BAR*)getData(healthBar))->boundingBox->bottomRight.y - (((BAR*)getData(healthBar))->y - ((BAR*)getData(healthBar))->py));
+    if (((BAR*)getData(healthBar))->x > ((BAR*)getData(healthBar))->px) { // Moved right
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pTopLeftX + (((BAR*)getData(healthBar))->x - ((BAR*)getData(healthBar))->px), pBottomRightY);
+    } else if (((BAR*)getData(healthBar))->x < ((BAR*)getData(healthBar))->px) { // Moved left
+        drawBackgroundBox(pBottomRightX - (((BAR*)getData(healthBar))->px - ((BAR*)getData(healthBar))->x), pTopLeftY, pBottomRightX, pBottomRightY);
+    } else if (((BAR*)getData(healthBar))->y > ((BAR*)getData(healthBar))->py) { // Moved up
+        drawBackgroundBox(pTopLeftX, pBottomRightY + (((BAR*)getData(healthBar))->py - ((BAR*)getData(healthBar))->y), pBottomRightX, pBottomRightY - 2);
+    } else if (((BAR*)getData(healthBar))->y < ((BAR*)getData(healthBar))->py) { // Moved down
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((BAR*)getData(healthBar))->y - ((BAR*)getData(healthBar))->py));
+    }
+    // Draw the new healthbar position
     // Need to account for numHearts
     drawBox(((BAR*)getData(healthBar))->x - (BAR_WIDTH - 1) / 2, 127 - ((BAR*)getData(healthBar))->y, ((BAR*)getData(healthBar))->x - (BAR_WIDTH - 1) / 2 + (BAR_WIDTH - 1), 127 - ((BAR*)getData(healthBar))->y - 1, '4');
     if (((BAR*)getData(healthBar))->numHearts == 0) {
@@ -263,7 +414,7 @@ void drawHealthBar(LLNode* healthBar) {
 }
 
 void eraseHealthBar(LLNode* healthBar) {
-    drawBox(((BAR*)getData(healthBar))->x - (BAR_WIDTH - 1) / 2, 127 - ((BAR*)getData(healthBar))->y, ((BAR*)getData(healthBar))->x - (BAR_WIDTH - 1) / 2 + (BAR_WIDTH - 1), 127 - ((BAR*)getData(healthBar))->y - 1, '0');
+    drawBackgroundBox(((BAR*)getData(healthBar))->boundingBox->topLeft.x, 127 - ((BAR*)getData(healthBar))->boundingBox->topLeft.y, ((BAR*)getData(healthBar))->boundingBox->bottomRight.x, 127 - ((BAR*)getData(healthBar))->boundingBox->bottomRight.y);
 }
 
 void drawSuperAttackBar(LLNode* player) {
@@ -382,8 +533,8 @@ void drawPaused(void) {
 }
 
 void erasePaused(void) {
-    drawBox(64 - 10, 64 - 10, 64 - 5, 64 + 10, '0');
-    drawBox(64 + 5, 64 - 10, 64 + 10, 64 + 10, '0');
+    drawBackgroundBox(64 - 10, 64 - 10, 64 - 5, 64 + 10);
+    drawBackgroundBox(64 + 5, 64 - 10, 64 + 10, 64 + 10);
 }
 
 void drawResumed(void) {
@@ -393,9 +544,7 @@ void drawResumed(void) {
 }
 
 void eraseResumed(void) {
-    for (int i = 10; i >= 0; i--) {
-        uLCD.triangle(64 - i, 64 - i, 64 - i, 64 + i, 64 + i, 64, BLACK);
-    }
+    drawBackgroundBox(64 - 10, 64 - 10, 64 + 10, 64 + 10);
 }
 
 void drawPlayButton(MENU_SETTINGS* menuSettings, BUTTON* play) {
@@ -427,9 +576,9 @@ void drawPlayButton(MENU_SETTINGS* menuSettings, BUTTON* play) {
 }
 
 void drawDiffScale(MENU_SETTINGS* menuSettings, SLIDING_SCALE* difficulty) {
-    drawBox(0, 127 - 47, 127, 127 - 37, '0');
+    drawBackgroundBox(0, difficulty->boundingBox->topLeft.y - 1, 127, difficulty->boundingBox->bottomRight.y + 1);
     drawBox(0, difficulty->boundingBox->topLeft.y, 127, difficulty->boundingBox->bottomRight.y, '3');
-    drawBox(39 - 5, 127 - 116, 89 - 5 + 11, 127 - 76, '0');
+    drawBackgroundBox(39 - 5, 127 - 116, 89 - 5 + 11, 127 - 76);
     if (menuSettings->gameMode != GAME_MODE::PVP) {
         if (difficulty->value == difficulty->maxVal) {
             drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'R');
@@ -546,10 +695,11 @@ void drawLoginBackground(void) {
     // Sun
     uLCD.filled_circle(127, 0, 30, YELLOW);
     uLCD.circle(127, 0, 30, WHITE);
+    uLCD.circle(127, 0, 29, WHITE);
     uLCD.circle(127, 0, 28, WHITE);
     // Moon
     uLCD.filled_circle(0, 0, 15, LGREY);
-    uLCD.filled_circle(8, 12, 2, BLACK);
+    uLCD.filled_circle(8, 12, 1, DGREY);
     uLCD.filled_circle(0, 9, 3, MGREY);
     uLCD.filled_circle(-1, 5, 2, DGREY);
     uLCD.filled_circle(5, -1, 3, MGREY);
@@ -573,35 +723,47 @@ void drawLoginBackground(void) {
 }
 
 void drawRegistrationBackground(void) {
+    // Sun
+    uLCD.filled_circle(127, 20, 30, YELLOW);
+    uLCD.circle(127, 0, 30, WHITE);
+    uLCD.circle(127, 0, 29, WHITE);
+    uLCD.circle(127, 0, 28, WHITE);
+    // Moon
+    uLCD.filled_circle(0, 32, 15, LGREY);
+    uLCD.filled_circle(8, 44, 1, DGREY);
+    uLCD.filled_circle(0, 41, 3, MGREY);
+    uLCD.filled_circle(-1, 37, 2, DGREY);
+    uLCD.filled_circle(5, 31, 3, MGREY);
+    uLCD.filled_circle(9, 34, 2, DGREY);
     // Earth
-    uLCD.filled_circle(127, 70, 25, BLUE);
-    uLCD.filled_circle(120, 60, 9, GREEN);
-    uLCD.filled_circle(110, 70, 4, GREEN);
-    uLCD.filled_circle(112, 65, 3, GREEN);
-    uLCD.filled_circle(108, 65, 2, DGREEN);
-    uLCD.filled_circle(120, 57, 3, DGREEN);
-    uLCD.filled_circle(126, 63, 5, DGREEN);
+    uLCD.filled_circle(127, 115, 25, BLUE);
+    uLCD.filled_circle(120, 105, 9, GREEN);
+    uLCD.filled_circle(110, 115, 4, GREEN);
+    uLCD.filled_circle(112, 110, 3, GREEN);
+    uLCD.filled_circle(108, 110, 2, DGREEN);
+    uLCD.filled_circle(120, 102, 3, DGREEN);
+    uLCD.filled_circle(126, 108, 5, DGREEN);
     // Mars
-    uLCD.filled_circle(0, 70, 15, ORANGE);
-    uLCD.filled_circle(0, 60, 3, BROWN);
-    uLCD.filled_circle(-1, 64, 2, MGREY);
-    uLCD.filled_circle(7, 71, 4, BROWN);
-    uLCD.filled_circle(11, 67, 2, MGREY);
+    uLCD.filled_circle(0, 110, 15, ORANGE);
+    uLCD.filled_circle(0, 100, 3, BROWN);
+    uLCD.filled_circle(-1, 104, 2, MGREY);
+    uLCD.filled_circle(7, 111, 4, BROWN);
+    uLCD.filled_circle(11, 107, 2, MGREY);
     drawImg(64 - 9, 127 - 113, 19, 19, BOSS_IMGS[3]);
     drawImg(39 - 5, 127 - 98, 11, 11, NORMAL_ENEMY_IMGS[3]);
     drawImg(89 - 5, 127 - 98, 11, 11, NORMAL_ENEMY_IMGS[3]);
     drawImg(64 - 5, 127 - 80, 11, 11, PLAYER_IMGS[3]);
-    uLCD.filled_rectangle(0, 127 - 39, 127, 127, DGREY);
 }
 
 void drawRegistrationSkinSelectionBackground(void) {
     // Sun
     uLCD.filled_circle(127, 20, 30, YELLOW);
-    uLCD.circle(127, 20, 30, WHITE);
-    uLCD.circle(127, 20, 28, WHITE);
+    uLCD.circle(127, 0, 30, WHITE);
+    uLCD.circle(127, 0, 29, WHITE);
+    uLCD.circle(127, 0, 28, WHITE);
     // Moon
     uLCD.filled_circle(0, 32, 15, LGREY);
-    uLCD.filled_circle(8, 44, 2, BLACK);
+    uLCD.filled_circle(8, 44, 1, DGREY);
     uLCD.filled_circle(0, 41, 3, MGREY);
     uLCD.filled_circle(-1, 37, 2, DGREY);
     uLCD.filled_circle(5, 31, 3, MGREY);
@@ -626,10 +788,11 @@ void drawMenuBackground(void) {
     // Sun
     uLCD.filled_circle(127, 0, 30, YELLOW);
     uLCD.circle(127, 0, 30, WHITE);
+    uLCD.circle(127, 0, 29, WHITE);
     uLCD.circle(127, 0, 28, WHITE);
     // Moon
     uLCD.filled_circle(0, 7, 15, LGREY);
-    uLCD.filled_circle(8, 19, 2, BLACK);
+    uLCD.filled_circle(8, 19, 1, DGREY);
     uLCD.filled_circle(0, 16, 3, MGREY);
     uLCD.filled_circle(-1, 12, 2, DGREY);
     uLCD.filled_circle(5, 6, 3, MGREY);
@@ -654,10 +817,11 @@ void drawUserStatsBackground(USER* user) {
     // Sun
     uLCD.filled_circle(127, 0, 30, YELLOW);
     uLCD.circle(127, 0, 30, WHITE);
+    uLCD.circle(127, 0, 29, WHITE);
     uLCD.circle(127, 0, 28, WHITE);
     // Moon
     uLCD.filled_circle(0, 7, 15, LGREY);
-    uLCD.filled_circle(8, 19, 2, BLACK);
+    uLCD.filled_circle(8, 19, 1, DGREY);
     uLCD.filled_circle(0, 16, 3, MGREY);
     uLCD.filled_circle(-1, 12, 2, DGREY);
     uLCD.filled_circle(5, 6, 3, MGREY);
@@ -696,7 +860,8 @@ void drawUserStatsBackground(USER* user) {
         uLCD.set_font(FONT_8X8);
         uLCD.locate(2 + i, 3);
         uLCD.textbackground_color(BLACK);
-        uLCD.printf("%c", hScoreStat[i]);
+        if (hScoreStat[i] == ' ') uLCD.locate(uLCD.current_col + 1, uLCD.current_row);
+        else uLCD.printf("%c", hScoreStat[i]);
         i++;
     }
     // User enemies killed
@@ -718,7 +883,8 @@ void drawUserStatsBackground(USER* user) {
         uLCD.set_font(FONT_8X8);
         uLCD.locate(2 + i, 5);
         uLCD.textbackground_color(BLACK);
-        uLCD.printf("%c", eKilledStat[i]);
+        if (eKilledStat[i] == ' ') uLCD.locate(uLCD.current_col + 1, uLCD.current_row);
+        else uLCD.printf("%c", eKilledStat[i]);
         i++;
     }
     // User player deaths
@@ -740,7 +906,8 @@ void drawUserStatsBackground(USER* user) {
         uLCD.set_font(FONT_8X8);
         uLCD.locate(2 + i, 7);
         uLCD.textbackground_color(BLACK);
-        uLCD.printf("%c", pDeathsStat[i]);
+        if (pDeathsStat[i] == ' ') uLCD.locate(uLCD.current_col + 1, uLCD.current_row);
+        else uLCD.printf("%c", pDeathsStat[i]);
         i++;
     }
     // User total points
@@ -762,7 +929,8 @@ void drawUserStatsBackground(USER* user) {
         uLCD.set_font(FONT_8X8);
         uLCD.locate(2 + i, 9);
         uLCD.textbackground_color(BLACK);
-        uLCD.printf("%c", tPointsStat[i]);
+        if (tPointsStat[i] == ' ') uLCD.locate(uLCD.current_col + 1, uLCD.current_row);
+        else uLCD.printf("%c", tPointsStat[i]);
         i++;
     }
     // User total play time
@@ -786,7 +954,8 @@ void drawUserStatsBackground(USER* user) {
         uLCD.set_font(FONT_8X8);
         uLCD.locate(2 + i, 11);
         uLCD.textbackground_color(BLACK);
-        uLCD.printf("%c", tTimeStat[i]);
+        if (tTimeStat[i] == ' ') uLCD.locate(uLCD.current_col + 1, uLCD.current_row);
+        else uLCD.printf("%c", tTimeStat[i]);
         i++;
     }
 }
@@ -1495,14 +1664,15 @@ void drawGameWon(void) {
             i++;
         }
     } else {
-        uLCD.cls();
+        drawGameBackground(false);
         // Sun
         uLCD.filled_circle(127, 0, 30, YELLOW);
         uLCD.circle(127, 0, 30, WHITE);
+        uLCD.circle(127, 0, 29, WHITE);
         uLCD.circle(127, 0, 28, WHITE);
         // Moon
         uLCD.filled_circle(0, 7, 15, LGREY);
-        uLCD.filled_circle(8, 19, 2, BLACK);
+        uLCD.filled_circle(8, 19, 1, DGREY);
         uLCD.filled_circle(0, 16, 3, MGREY);
         uLCD.filled_circle(-1, 12, 2, DGREY);
         uLCD.filled_circle(5, 6, 3, MGREY);
@@ -1531,7 +1701,8 @@ void drawGameWon(void) {
             uLCD.set_font(FONT_8X8);
             uLCD.locate(5 + i, 5);
             uLCD.textbackground_color(BLACK);
-            uLCD.printf("%c", message[i]);
+            if (message[i] == ' ') uLCD.locate(uLCD.current_col + 1, uLCD.current_row);
+            else uLCD.printf("%c", message[i]);
             i++;
         }
         drawImg(64 - 7, 127 - 60, 11, 11, PLAYER_IMGS[3]);
@@ -1539,7 +1710,7 @@ void drawGameWon(void) {
 }
 
 void drawGameLost(void) {
-    uLCD.cls();
+    drawGameBackground(true);
     // Sun
     uLCD.filled_circle(127, 0, 30, RED);
     uLCD.circle(127, 0, 30, WHITE);
@@ -1547,7 +1718,7 @@ void drawGameLost(void) {
     uLCD.circle(127, 0, 28, WHITE);
     // Moon
     uLCD.filled_circle(0, 7, 15, RED);
-    uLCD.filled_circle(8, 19, 2, BLACK);
+    uLCD.filled_circle(8, 19, 1, DRED);
     uLCD.filled_circle(0, 16, 3, MRED);
     uLCD.filled_circle(-1, 12, 2, DRED);
     uLCD.filled_circle(5, 6, 3, MRED);

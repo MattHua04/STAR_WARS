@@ -11,6 +11,10 @@
  */
 char (*getUsernameList())[20];
 
+/** Convert user credentials to a file name
+ */
+void generateFileName(USER* user);
+
 /** Get currently saved player default skin
  */
 PLAYER_SKIN getSavedSkin(USER* user);
@@ -35,6 +39,10 @@ int getSavedTotalPoints(USER* user);
  */
 int getSavedPlayTime(USER* user);
 
+/** Get how many times user file has been updated
+ */
+int getUpdateCount(USER* user);
+
 /** Check if a username exists
  */
 int userExists(char username[NAME_LENGTH], int userNum);
@@ -48,7 +56,8 @@ int checkPassword(USER* user);
  */
 void updateUser(USER* user);
 
-/** Delete a user
+/** Marks a user file as deleted
+ * Actual file removal is handled by the RPi syncing local and external data
  */
 void deleteUser(USER* user);
 

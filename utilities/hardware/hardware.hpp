@@ -55,13 +55,18 @@ void notifyPvp(bool ready);
 int readPvp(void);
 
 /**
- * Send a signal to other device during syncing
+ * Sync devices for pvp mode
  */
-void syncSignal(bool state);
+void syncDevices(void);
 
 /**
- * Read the state of syncing pin
+ * Notify that sd card is in use or not
  */
-int readSyncState(void);
+void notifyUsingSD(bool inUse);
+
+/**
+ * See if sd card is in use
+ */
+int readUsingSD(void);
 
 #endif // HARDWARE_H

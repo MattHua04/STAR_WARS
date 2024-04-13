@@ -1,6 +1,7 @@
 #include "gameMusic.hpp"
 #include "globals.hpp"
 #include "graphics.hpp"
+#include "menu.hpp"
 #include "opponent.hpp"
 #include "player.hpp"
 #include "enemy.hpp"
@@ -28,6 +29,8 @@ void generateEnemyProjectile(LLNode* projectileOwner) {
     LLNode* projectileNode = getHead(enemyProjectileDLL);
     projectile->x = ((ENEMY*)getData(projectileOwner))->x;
     projectile->y = ((ENEMY*)getData(projectileOwner))->y - 8;
+    projectile->px = ((ENEMY*)getData(projectileOwner))->x;
+    projectile->py = ((ENEMY*)getData(projectileOwner))->y - 8;
     projectile->projectileOwner = projectileOwner;
     switch (((ENEMY*)getData(projectileOwner))->enemyType)
     {
@@ -97,14 +100,18 @@ void generatePlayerProjectile(LLNode* projectileOwner) {
     if (((PLAYER*)getData(projectileOwner))->superActive) {
         projectile->x = ((PLAYER*)getData(projectileOwner))->x;
         projectile->y = ((PLAYER*)getData(projectileOwner))->y + 65;
+        projectile->px = ((PLAYER*)getData(projectileOwner))->x;
+        projectile->py = ((PLAYER*)getData(projectileOwner))->y + 65;
         projectile->projectileType = PROJECTILE_TYPE::LASER;
         projectile->projectileWidth = LASER_WIDTH;
         projectile->projectileHeight = LASER_HEIGHT;
     } else {
         projectile->x = ((PLAYER*)getData(projectileOwner))->x;
         projectile->y = ((PLAYER*)getData(projectileOwner))->y + 8;
+        projectile->px = ((PLAYER*)getData(projectileOwner))->x;
+        projectile->py = ((PLAYER*)getData(projectileOwner))->y + 8;
         projectile->projectileType = PROJECTILE_TYPE::LONG;
-        projectile->projectileSpeed = LONG_RANGE_SPEED;
+        projectile->projectileSpeed = (getMenuSettings()->gameMode == GAME_MODE::PVP) ? PVP_SPEED : LONG_RANGE_SPEED;
         projectile->projectileWidth = PROJECTILE_WIDTH;
         projectile->projectileHeight = PROJECTILE_HEIGHT;
     }
@@ -133,14 +140,18 @@ void generateOpponentProjectile(LLNode* projectileOwner) {
     if (((PLAYER*)getData(projectileOwner))->superActive) {
         projectile->x = ((PLAYER*)getData(projectileOwner))->x;
         projectile->y = ((PLAYER*)getData(projectileOwner))->y - 65;
+        projectile->px = ((PLAYER*)getData(projectileOwner))->x;
+        projectile->py = ((PLAYER*)getData(projectileOwner))->y - 65;
         projectile->projectileType = PROJECTILE_TYPE::LASER;
         projectile->projectileWidth = LASER_WIDTH;
         projectile->projectileHeight = LASER_HEIGHT;
     } else {
         projectile->x = ((PLAYER*)getData(projectileOwner))->x;
         projectile->y = ((PLAYER*)getData(projectileOwner))->y - 8;
+        projectile->px = ((PLAYER*)getData(projectileOwner))->x;
+        projectile->py = ((PLAYER*)getData(projectileOwner))->y - 8;
         projectile->projectileType = PROJECTILE_TYPE::LONG;
-        projectile->projectileSpeed = LONG_RANGE_SPEED;
+        projectile->projectileSpeed = (getMenuSettings()->gameMode == GAME_MODE::PVP) ? PVP_SPEED : LONG_RANGE_SPEED;
         projectile->projectileWidth = PROJECTILE_WIDTH;
         projectile->projectileHeight = PROJECTILE_HEIGHT;
     }
@@ -168,6 +179,8 @@ void generateBossProjectile(LLNode* projectileOwner) {
         LLNode* projectileNode = getHead(bossProjectileDLL);
         projectile->x = ((BOSS*)getData(projectileOwner))->x + offset;
         projectile->y = ((BOSS*)getData(projectileOwner))->y - 11;
+        projectile->px = ((BOSS*)getData(projectileOwner))->x + offset;
+        projectile->py = ((BOSS*)getData(projectileOwner))->y - 11;
         projectile->projectileOwner = projectileOwner;
         if (((BOSS*)getData(projectileOwner))->specialAttacking) {
             projectile->projectileType = PROJECTILE_TYPE::MISSILE;
@@ -243,7 +256,7 @@ void updateEnemyProjectiles(void) {
     }
     LLNode* currentNode = getHead(enemyProjectileDLL);
     while (currentNode) {
-        eraseEnemyProjectile(currentNode);
+        //eraseEnemyProjectile(currentNode);
         // Check for projectile and player collision
         if (getPlayer()->playerStatus != CHARACTER_STATUS::DEAD && projectileHit(((PROJECTILE*)getData(currentNode))->boundingBox, getPlayer()->boundingBox)) {
             ((BAR*)getData(getPlayer()->healthBar))->numHearts -= ((PROJECTILE*)getData(currentNode))->projectileType;
@@ -272,6 +285,7 @@ void updateEnemyProjectiles(void) {
                     break;
                 }
             }
+            eraseEnemyProjectile(currentNode);
             LLNode* nextNode = currentNode->next;
             free(((PROJECTILE*)getData(currentNode))->boundingBox);
             deleteNode(enemyProjectileDLL, currentNode);
@@ -287,6 +301,8 @@ void updateEnemyProjectiles(void) {
             && ((PROJECTILE*)getData(currentNode))->y + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dy * ((PROJECTILE*)getData(currentNode))->projectileSpeed + (((PROJECTILE*)getData(currentNode))->projectileHeight - 1) / 2) <= 127
             && ((PROJECTILE*)getData(currentNode))->y + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dy * ((PROJECTILE*)getData(currentNode))->projectileSpeed - (((PROJECTILE*)getData(currentNode))->projectileHeight - 1) / 2) >= 0) {
             
+            ((PROJECTILE*)getData(currentNode))->px = ((PROJECTILE*)getData(currentNode))->x;
+            ((PROJECTILE*)getData(currentNode))->py = ((PROJECTILE*)getData(currentNode))->y;
             ((PROJECTILE*)getData(currentNode))->x += (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dx * ((PROJECTILE*)getData(currentNode))->projectileSpeed);
             ((PROJECTILE*)getData(currentNode))->y += (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dy * ((PROJECTILE*)getData(currentNode))->projectileSpeed);
             ((PROJECTILE*)getData(currentNode))->boundingBox->topLeft.x =  ((PROJECTILE*)getData(currentNode))->x - ( ((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2;
@@ -294,6 +310,7 @@ void updateEnemyProjectiles(void) {
             ((PROJECTILE*)getData(currentNode))->boundingBox->bottomRight.x =  ((PROJECTILE*)getData(currentNode))->x + ( ((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2;
             ((PROJECTILE*)getData(currentNode))->boundingBox->bottomRight.y =  ((PROJECTILE*)getData(currentNode))->y - ( ((PROJECTILE*)getData(currentNode))->projectileHeight - 1) / 2;
         } else {
+            eraseEnemyProjectile(currentNode);
             LLNode* nextNode = currentNode->next;
             free(((PROJECTILE*)getData(currentNode))->boundingBox);
             deleteNode(enemyProjectileDLL, currentNode);
@@ -337,10 +354,8 @@ void updatePlayerProjectiles(void) {
     }
     LLNode* currentNode = getHead(playerProjectileDLL);
     while (currentNode) {
-        erasePlayerProjectile(currentNode);
+        //erasePlayerProjectile(currentNode);
         bool projectileRemoved = false;
-        /** Check for projectile and character collision
-         */
         // Check for projectile and opponent collision
         if (getOpponent()->playerStatus != CHARACTER_STATUS::DEAD && projectileHit(((PROJECTILE*)getData(currentNode))->boundingBox, getOpponent()->boundingBox)) {
             ((BAR*)getData(getOpponent()->healthBar))->numHearts -= ((PROJECTILE*)getData(currentNode))->projectileType;
@@ -350,6 +365,7 @@ void updatePlayerProjectiles(void) {
                 ((BAR*)getData(getOpponent()->healthBar))->numHearts = 0;
                 getOpponent()->playerStatus = CHARACTER_STATUS::DEAD;
                 getOpponent()->playerDisplay = CHARACTER_DISPLAY::DESTROYED;
+                getPlayer()->sessionKills++;
                 // If player is using super attack, add one to superChargeStatus only on kills
                 if (((PROJECTILE*)getData(currentNode))->projectileType == PROJECTILE_TYPE::LASER) {
                     if (getPlayer()->superChargeStatus < MAX_SUPER_CHARGE) {
@@ -380,6 +396,7 @@ void updatePlayerProjectiles(void) {
                 if (getPlayer()->superChargeStatus < MAX_SUPER_CHARGE) {
                     (getPlayer()->superChargeStatus + 2 > MAX_SUPER_CHARGE) ? getPlayer()->superChargeStatus = MAX_SUPER_CHARGE : getPlayer()->superChargeStatus += MAX_SUPER_CHARGE / 5;
                 }
+                erasePlayerProjectile(currentNode);
                 LLNode* nextNode = currentNode->next;
                 free(((PROJECTILE*)getData(currentNode))->boundingBox);
                 deleteNode(playerProjectileDLL, currentNode);
@@ -432,7 +449,7 @@ void updatePlayerProjectiles(void) {
                         if (getPlayer()->superChargeStatus < MAX_SUPER_CHARGE) {
                             (getPlayer()->superChargeStatus + 2 > MAX_SUPER_CHARGE) ? getPlayer()->superChargeStatus = MAX_SUPER_CHARGE : getPlayer()->superChargeStatus += MAX_SUPER_CHARGE / 5;
                         }
-                        // Need a function to erase projectile from screen
+                        erasePlayerProjectile(currentNode);
                         LLNode* nextNode = currentNode->next;
                         free(((PROJECTILE*)getData(currentNode))->boundingBox);
                         deleteNode(playerProjectileDLL, currentNode);
@@ -491,6 +508,7 @@ void updatePlayerProjectiles(void) {
                     if (getPlayer()->superChargeStatus < MAX_SUPER_CHARGE) {
                         (getPlayer()->superChargeStatus + 2 > MAX_SUPER_CHARGE) ? getPlayer()->superChargeStatus = MAX_SUPER_CHARGE : getPlayer()->superChargeStatus += MAX_SUPER_CHARGE / 5;
                     }
+                    erasePlayerProjectile(currentNode);
                     LLNode* nextNode = currentNode->next;
                     free(((PROJECTILE*)getData(currentNode))->boundingBox);
                     deleteNode(playerProjectileDLL, currentNode);
@@ -516,6 +534,8 @@ void updatePlayerProjectiles(void) {
                 && ((PROJECTILE*)getData(currentNode))->y + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dy * ((PROJECTILE*)getData(currentNode))->projectileSpeed + (((PROJECTILE*)getData(currentNode))->projectileHeight - 1) / 2) <= 127
                 && ((PROJECTILE*)getData(currentNode))->y + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dy * ((PROJECTILE*)getData(currentNode))->projectileSpeed - (((PROJECTILE*)getData(currentNode))->projectileHeight - 1) / 2) >= 0) {
                 
+                ((PROJECTILE*)getData(currentNode))->px = ((PROJECTILE*)getData(currentNode))->x;
+                ((PROJECTILE*)getData(currentNode))->py = ((PROJECTILE*)getData(currentNode))->y;
                 ((PROJECTILE*)getData(currentNode))->x += (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dx * ((PROJECTILE*)getData(currentNode))->projectileSpeed);
                 ((PROJECTILE*)getData(currentNode))->y += (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dy * ((PROJECTILE*)getData(currentNode))->projectileSpeed);
                 ((PROJECTILE*)getData(currentNode))->boundingBox->topLeft.x =  ((PROJECTILE*)getData(currentNode))->x - ( ((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2;
@@ -523,6 +543,7 @@ void updatePlayerProjectiles(void) {
                 ((PROJECTILE*)getData(currentNode))->boundingBox->bottomRight.x =  ((PROJECTILE*)getData(currentNode))->x + ( ((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2;
                 ((PROJECTILE*)getData(currentNode))->boundingBox->bottomRight.y =  ((PROJECTILE*)getData(currentNode))->y - ( ((PROJECTILE*)getData(currentNode))->projectileHeight - 1) / 2;
             } else {
+                erasePlayerProjectile(currentNode);
                 LLNode* nextNode = currentNode->next;
                 free(((PROJECTILE*)getData(currentNode))->boundingBox);
                 deleteNode(playerProjectileDLL, currentNode);
@@ -533,6 +554,7 @@ void updatePlayerProjectiles(void) {
         } else {
             // Update laser
             if (((PROJECTILE*)getData(currentNode))->projectileTick >= 60) { // one game tick is 0.05s so 60 ticks is 3s
+                erasePlayerProjectile(currentNode);
                 getPlayer()->superActive = false;
                 LLNode* nextNode = currentNode->next;
                 free(((PROJECTILE*)getData(currentNode))->boundingBox);
@@ -543,6 +565,8 @@ void updatePlayerProjectiles(void) {
             } else {
                 ((PROJECTILE*)getData(currentNode))->projectileTick++;
                 // Move the laser with the player
+                ((PROJECTILE*)getData(currentNode))->px = ((PROJECTILE*)getData(currentNode))->x;
+                ((PROJECTILE*)getData(currentNode))->py = ((PROJECTILE*)getData(currentNode))->y;
                 ((PROJECTILE*)getData(currentNode))->x = getPlayer()->x;
                 ((PROJECTILE*)getData(currentNode))->y = getPlayer()->y + 65;
                 ((PROJECTILE*)getData(currentNode))->boundingBox->topLeft.x =  ((PROJECTILE*)getData(currentNode))->x - ( ((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2;
@@ -562,10 +586,8 @@ void updateOpponentProjectiles(void) {
     }
     LLNode* currentNode = getHead(opponentProjectileDLL);
     while (currentNode) {
-        eraseOpponentProjectile(currentNode);
+        //eraseOpponentProjectile(currentNode);
         bool projectileRemoved = false;
-        /** Check for projectile and character collision
-         */
         // Check for projectile and player collision
         if (getPlayer()->playerStatus != CHARACTER_STATUS::DEAD && projectileHit(((PROJECTILE*)getData(currentNode))->boundingBox, getPlayer()->boundingBox)) {
             ((BAR*)getData(getPlayer()->healthBar))->numHearts -= ((PROJECTILE*)getData(currentNode))->projectileType;
@@ -606,6 +628,7 @@ void updateOpponentProjectiles(void) {
                 if (getOpponent()->superChargeStatus < MAX_SUPER_CHARGE) {
                     (getOpponent()->superChargeStatus + 2 > MAX_SUPER_CHARGE) ? getOpponent()->superChargeStatus = MAX_SUPER_CHARGE : getOpponent()->superChargeStatus += MAX_SUPER_CHARGE / 5;
                 }
+                eraseOpponentProjectile(currentNode);
                 LLNode* nextNode = currentNode->next;
                 free(((PROJECTILE*)getData(currentNode))->boundingBox);
                 deleteNode(opponentProjectileDLL, currentNode);
@@ -657,7 +680,7 @@ void updateOpponentProjectiles(void) {
                         if (getOpponent()->superChargeStatus < MAX_SUPER_CHARGE) {
                             (getOpponent()->superChargeStatus + 2 > MAX_SUPER_CHARGE) ? getOpponent()->superChargeStatus = MAX_SUPER_CHARGE : getOpponent()->superChargeStatus += MAX_SUPER_CHARGE / 5;
                         }
-                        // Need a function to erase projectile from screen
+                        eraseOpponentProjectile(currentNode);
                         LLNode* nextNode = currentNode->next;
                         free(((PROJECTILE*)getData(currentNode))->boundingBox);
                         deleteNode(opponentProjectileDLL, currentNode);
@@ -715,6 +738,7 @@ void updateOpponentProjectiles(void) {
                     if (getOpponent()->superChargeStatus < MAX_SUPER_CHARGE) {
                         (getOpponent()->superChargeStatus + 2 > MAX_SUPER_CHARGE) ? getOpponent()->superChargeStatus = MAX_SUPER_CHARGE : getOpponent()->superChargeStatus += MAX_SUPER_CHARGE / 5;
                     }
+                    eraseOpponentProjectile(currentNode);
                     LLNode* nextNode = currentNode->next;
                     free(((PROJECTILE*)getData(currentNode))->boundingBox);
                     deleteNode(opponentProjectileDLL, currentNode);
@@ -740,6 +764,8 @@ void updateOpponentProjectiles(void) {
                 && ((PROJECTILE*)getData(currentNode))->y + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dy * ((PROJECTILE*)getData(currentNode))->projectileSpeed + (((PROJECTILE*)getData(currentNode))->projectileHeight - 1) / 2) <= 127
                 && ((PROJECTILE*)getData(currentNode))->y + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dy * ((PROJECTILE*)getData(currentNode))->projectileSpeed - (((PROJECTILE*)getData(currentNode))->projectileHeight - 1) / 2) >= 0) {
                 
+                ((PROJECTILE*)getData(currentNode))->px = ((PROJECTILE*)getData(currentNode))->x;
+                ((PROJECTILE*)getData(currentNode))->py = ((PROJECTILE*)getData(currentNode))->y;
                 ((PROJECTILE*)getData(currentNode))->x += (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dx * ((PROJECTILE*)getData(currentNode))->projectileSpeed);
                 ((PROJECTILE*)getData(currentNode))->y += (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dy * ((PROJECTILE*)getData(currentNode))->projectileSpeed);
                 ((PROJECTILE*)getData(currentNode))->boundingBox->topLeft.x =  ((PROJECTILE*)getData(currentNode))->x - ( ((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2;
@@ -747,6 +773,7 @@ void updateOpponentProjectiles(void) {
                 ((PROJECTILE*)getData(currentNode))->boundingBox->bottomRight.x =  ((PROJECTILE*)getData(currentNode))->x + ( ((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2;
                 ((PROJECTILE*)getData(currentNode))->boundingBox->bottomRight.y =  ((PROJECTILE*)getData(currentNode))->y - ( ((PROJECTILE*)getData(currentNode))->projectileHeight - 1) / 2;
             } else {
+                eraseOpponentProjectile(currentNode);
                 LLNode* nextNode = currentNode->next;
                 free(((PROJECTILE*)getData(currentNode))->boundingBox);
                 deleteNode(opponentProjectileDLL, currentNode);
@@ -757,6 +784,7 @@ void updateOpponentProjectiles(void) {
         } else {
             // Update laser
             if (((PROJECTILE*)getData(currentNode))->projectileTick >= 60) { // one game tick is 0.05s so 60 ticks is 3s
+                eraseOpponentProjectile(currentNode);
                 getOpponent()->superActive = false;
                 LLNode* nextNode = currentNode->next;
                 free(((PROJECTILE*)getData(currentNode))->boundingBox);
@@ -767,6 +795,8 @@ void updateOpponentProjectiles(void) {
             } else {
                 ((PROJECTILE*)getData(currentNode))->projectileTick++;
                 // Move the laser with the player
+                ((PROJECTILE*)getData(currentNode))->px = ((PROJECTILE*)getData(currentNode))->x;
+                ((PROJECTILE*)getData(currentNode))->py = ((PROJECTILE*)getData(currentNode))->y;
                 ((PROJECTILE*)getData(currentNode))->x = getOpponent()->x;
                 ((PROJECTILE*)getData(currentNode))->y = getOpponent()->y - 65;
                 ((PROJECTILE*)getData(currentNode))->boundingBox->topLeft.x =  ((PROJECTILE*)getData(currentNode))->x - ( ((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2;
@@ -786,7 +816,7 @@ void updateBossProjectiles(void) {
     }
     LLNode* currentNode = getHead(bossProjectileDLL);
     while (currentNode) {
-        eraseBossProjectile(currentNode);
+        //eraseBossProjectile(currentNode);
         bool projectileRemoved = false;
         // Check for projectile and player collision
         if (getPlayer()->playerStatus != CHARACTER_STATUS::DEAD && projectileHit(((PROJECTILE*)getData(currentNode))->boundingBox, getPlayer()->boundingBox)) {
@@ -816,6 +846,7 @@ void updateBossProjectiles(void) {
                     break;
                 }
             }
+            eraseBossProjectile(currentNode);
             LLNode* nextNode = currentNode->next;
             free(((PROJECTILE*)getData(currentNode))->boundingBox);
             deleteNode(bossProjectileDLL, currentNode);
@@ -831,6 +862,8 @@ void updateBossProjectiles(void) {
             && ((PROJECTILE*)getData(currentNode))->y + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dy * ((PROJECTILE*)getData(currentNode))->projectileSpeed + (((PROJECTILE*)getData(currentNode))->projectileHeight - 1) / 2) <= 127
             && ((PROJECTILE*)getData(currentNode))->y + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dy * ((PROJECTILE*)getData(currentNode))->projectileSpeed - (((PROJECTILE*)getData(currentNode))->projectileHeight - 1) / 2) >= 0) {
             
+            ((PROJECTILE*)getData(currentNode))->px = ((PROJECTILE*)getData(currentNode))->x;
+            ((PROJECTILE*)getData(currentNode))->py = ((PROJECTILE*)getData(currentNode))->y;
             ((PROJECTILE*)getData(currentNode))->x += (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dx * ((PROJECTILE*)getData(currentNode))->projectileSpeed);
             ((PROJECTILE*)getData(currentNode))->y += (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dy * ((PROJECTILE*)getData(currentNode))->projectileSpeed);
             ((PROJECTILE*)getData(currentNode))->boundingBox->topLeft.x =  ((PROJECTILE*)getData(currentNode))->x - ( ((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2;
@@ -838,6 +871,7 @@ void updateBossProjectiles(void) {
             ((PROJECTILE*)getData(currentNode))->boundingBox->bottomRight.x =  ((PROJECTILE*)getData(currentNode))->x + ( ((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2;
             ((PROJECTILE*)getData(currentNode))->boundingBox->bottomRight.y =  ((PROJECTILE*)getData(currentNode))->y - ( ((PROJECTILE*)getData(currentNode))->projectileHeight - 1) / 2;
         } else {
+            eraseBossProjectile(currentNode);
             LLNode* nextNode = currentNode->next;
             free(((PROJECTILE*)getData(currentNode))->boundingBox);
             deleteNode(bossProjectileDLL, currentNode);
