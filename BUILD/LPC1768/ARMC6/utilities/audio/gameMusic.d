@@ -158,7 +158,7 @@ BUILD/LPC1768/ARMC6/utilities/audio/gameMusic.o: \
   utilities/doublyLinkedList/doublyLinkedList.hpp game/users/users.hpp \
   game/interfaces/login/login.hpp assets/gameBackground.hpp \
   assets/profileImg.hpp assets/enemySprite.hpp \
-  assets/finalBossSprite.hpp assets/playerSprite.hpp \
+  assets/finalBossSprite.hpp assets/playerSprite.hpp assets/font.hpp \
   assets/normalProjectileSound.hpp assets/laserSound.hpp \
   assets/explosionSound.hpp assets/hit.hpp assets/button.hpp \
   assets/win.hpp assets/lose.hpp assets/missile.hpp

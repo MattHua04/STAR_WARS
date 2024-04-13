@@ -11,6 +11,7 @@
 #include "enemySprite.hpp"
 #include "finalBossSprite.hpp"
 #include "playerSprite.hpp"
+#include "font.hpp"
 
 #define WIDTH 128
 #define HEIGHT 128
@@ -21,6 +22,17 @@
 int getHexColor(char color, bool isOpponent);
 
 /**
+ * Concatenates text character arrays
+ */
+void concatText(const char* message, char* textArr);
+
+/**
+ * Prints a message with specified color and background color
+ * Default background color is transparent
+ */
+void drawText(const char* message, int x, int y, int textColor, int backgroundColor = -1, double brightness = 1, bool redshift = false) ;
+
+/**
  * Draws github profile pic
  */
 void drawProfileImg(void);
@@ -28,17 +40,17 @@ void drawProfileImg(void);
 /**
  * Draws game background. Redshift for loss screen
  */
-void drawGameBackground(bool redshift);
+void drawGameBackground(bool redshift, double brightness = 1);
 
 /**
  * Draws an image in the form of a string of chars with specified dimensions at a cord on screen
  */
-void drawImg(const char* object, int x, int y, int width, int height);
+void drawImg(int x, int y, int width, int height, const char* object, double brightness = 1);
 
 /**
  * Specifically meant to draw opponent player since player image needs to be mirrored
  */
-void drawImgOpponent(const char* object, int x, int y, int width, int height);
+void drawImgOpponent(int x, int y, int width, const char* object, int height);
 
 /**
  * Draws a box bounded by a top left and bottom right cord

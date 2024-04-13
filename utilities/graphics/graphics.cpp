@@ -36,6 +36,135 @@ int getHexColor(char color, bool isOpponent) {
     }
 }
 
+void concatText(const char* message, char* textArr) {
+    int overallWidth = 7 * strlen(message);
+    int width = 7;
+    int height = 8;
+    for (int i = 0; i < strlen(message); i++) {
+        char character[57]; // The corresponding character from font array
+        switch(message[i]) {
+        case '!': strcpy(character, font[0]); break;
+        case '.': strcpy(character, font[1]); break;
+        case ':': strcpy(character, font[2]); break;
+        case '<': strcpy(character, font[3]); break;
+        case '>': strcpy(character, font[4]); break;
+        case '_': strcpy(character, font[5]); break;
+        case '0': strcpy(character, font[6]); break;
+        case '1': strcpy(character, font[7]); break;
+        case '2': strcpy(character, font[8]); break;
+        case '3': strcpy(character, font[9]); break;
+        case '4': strcpy(character, font[10]); break;
+        case '5': strcpy(character, font[11]); break;
+        case '6': strcpy(character, font[12]); break;
+        case '7': strcpy(character, font[13]); break;
+        case '8': strcpy(character, font[14]); break;
+        case '9': strcpy(character, font[15]); break;
+        case 'A': strcpy(character, font[16]); break;
+        case 'B': strcpy(character, font[17]); break;
+        case 'C': strcpy(character, font[18]); break;
+        case 'D': strcpy(character, font[19]); break;
+        case 'E': strcpy(character, font[20]); break;
+        case 'F': strcpy(character, font[21]); break;
+        case 'G': strcpy(character, font[22]); break;
+        case 'H': strcpy(character, font[23]); break;
+        case 'I': strcpy(character, font[24]); break;
+        case 'J': strcpy(character, font[25]); break;
+        case 'K': strcpy(character, font[26]); break;
+        case 'L': strcpy(character, font[27]); break;
+        case 'M': strcpy(character, font[28]); break;
+        case 'N': strcpy(character, font[29]); break;
+        case 'O': strcpy(character, font[30]); break;
+        case 'P': strcpy(character, font[31]); break;
+        case 'Q': strcpy(character, font[32]); break;
+        case 'R': strcpy(character, font[33]); break;
+        case 'S': strcpy(character, font[34]); break;
+        case 'T': strcpy(character, font[35]); break;
+        case 'U': strcpy(character, font[36]); break;
+        case 'V': strcpy(character, font[37]); break;
+        case 'W': strcpy(character, font[38]); break;
+        case 'X': strcpy(character, font[39]); break;
+        case 'Y': strcpy(character, font[40]); break;
+        case 'Z': strcpy(character, font[41]); break;
+        case 'a': strcpy(character, font[42]); break;
+        case 'b': strcpy(character, font[43]); break;
+        case 'c': strcpy(character, font[44]); break;
+        case 'd': strcpy(character, font[45]); break;
+        case 'e': strcpy(character, font[46]); break;
+        case 'f': strcpy(character, font[47]); break;
+        case 'g': strcpy(character, font[48]); break;
+        case 'h': strcpy(character, font[49]); break;
+        case 'i': strcpy(character, font[50]); break;
+        case 'j': strcpy(character, font[51]); break;
+        case 'k': strcpy(character, font[52]); break;
+        case 'l': strcpy(character, font[53]); break;
+        case 'm': strcpy(character, font[54]); break;
+        case 'n': strcpy(character, font[55]); break;
+        case 'o': strcpy(character, font[56]); break;
+        case 'p': strcpy(character, font[57]); break;
+        case 'q': strcpy(character, font[58]); break;
+        case 'r': strcpy(character, font[59]); break;
+        case 's': strcpy(character, font[60]); break;
+        case 't': strcpy(character, font[61]); break;
+        case 'u': strcpy(character, font[62]); break;
+        case 'v': strcpy(character, font[63]); break;
+        case 'w': strcpy(character, font[64]); break;
+        case 'x': strcpy(character, font[65]); break;
+        case 'y': strcpy(character, font[66]); break;
+        case 'z': strcpy(character, font[67]); break;
+        default:
+            // If the requested character doesn't exist then just do a space
+            strcpy(character, "00000000000000000000000000000000000000000000000000000000");
+            break;
+        }
+        for (int j = 0; j < height; j++) {
+            for (int k = 0; k < width; k++) {
+                textArr[j * overallWidth + i * width + k] = character[j * width + k];
+            }
+        }
+    }
+}
+
+void drawText(const char* message, int x, int y, int textColor, int backgroundColor, double brightness, bool redshift) {
+    int msgWidth = 7 * strlen(message);
+    int textHeight = 8;
+    char text[msgWidth * textHeight];
+    concatText(message, text);
+
+    // Ensure coordinates are actually on the screen
+    x = max(0, min(x, 127));
+    y = max(0, min(y, 127));
+
+    int textImg[msgWidth * textHeight];
+    for (int i = 0; i < msgWidth * textHeight; i++) {
+        loadMusic();
+        int xPos = x + (i % msgWidth);
+        int yPos = y + (i / msgWidth);
+        xPos = max(0, min(xPos, 127));
+        yPos = max(0, min(yPos, 127));
+        int pixel = gameBackground[yPos * 128 + xPos];
+        // Apply brightness to original background color if not 1
+        if (brightness != 1) {
+            int red = (pixel >> 16) & 0xFF;
+            int green = (pixel >> 8) & 0xFF;
+            int blue = pixel & 0xFF;
+            red = (double) red * brightness;
+            green = (double) green * brightness;
+            blue = (double) blue * brightness;
+            pixel = (red << 16) | (green << 8) | blue;
+        }
+        // Redshift if needed
+        pixel = (redshift) ? pixel & 0xFF0000 : pixel;
+        if (text[i] == '0' && backgroundColor == -1) {
+            textImg[i] = pixel;
+        } else if (text[i] == '0' && backgroundColor >= 0) {
+            textImg[i] = backgroundColor;
+        } else {
+            textImg[i] = textColor;
+        }
+    }
+    uLCD.BLIT(x, y, msgWidth, textHeight, textImg);
+}
+
 void drawProfileImg(void) {
     int chunkHeight = 32;
     for (int i = 0; i < 128; i += chunkHeight) {
@@ -50,34 +179,59 @@ void drawProfileImg(void) {
     }
 }
 
-void drawGameBackground(bool redshift) {
+void drawGameBackground(bool redshift, double brightness) {
     int chunkHeight = 32;
     for (int i = 0; i < 128; i += chunkHeight) {
         int chunk[128 * chunkHeight];
         for (int j = 0; j < chunkHeight; j++) {
             for (int k = 0; k < 128; k++) {
                 loadMusic();
-                chunk[j * 128 + k] = (redshift) ? gameBackground[i * 128 + j * 128 + k] & 0xFF0000 : gameBackground[i * 128 + j * 128 + k];
+                int pixel = gameBackground[i * 128 + j * 128 + k];
+                // Apply brightness to original background if not 1
+                if (brightness != 1) {
+                    int red = (pixel >> 16) & 0xFF;
+                    int green = (pixel >> 8) & 0xFF;
+                    int blue = pixel & 0xFF;
+                    red = (double) red * brightness;
+                    green = (double) green * brightness;
+                    blue = (double) blue * brightness;
+                    pixel = (red << 16) | (green << 8) | blue;
+                }
+                // Redshift if needed
+                chunk[j * 128 + k] = (redshift) ? pixel & 0xFF0000 : pixel;
             }
         }
         uLCD.BLIT(0, i, 128, chunkHeight, chunk);
     }
 }
 
-void drawImg(int x, int y, int width, int height, const char* object) {
+void drawImg(int x, int y, int width, int height, const char* object, double brightness) {
     // Ensure coordinates are actually on the screen
     x = max(0, min(x, 127));
     y = max(0, min(y, 127));
 
     int img[width * height];
     for (int i = 0; i < width * height; i++) {
+        loadMusic();
         int xPos = x + (i % width);
         int yPos = y + (i / width);
         xPos = max(0, min(xPos, 127));
         yPos = max(0, min(yPos, 127));
         if (object[i] == '0') {
-            if (getGameLoop() && getGameLoop()->gameStatus == GAMESTATUS::LOST) img[i] = gameBackground[yPos * 128 + xPos] & 0xFF0000;
-            else img[i] = gameBackground[yPos * 128 + xPos];
+            int pixel = gameBackground[yPos * 128 + xPos];
+            // Apply brightness to original background color if not 1
+            if (brightness != 1) {
+                int red = (pixel >> 16) & 0xFF;
+                int green = (pixel >> 8) & 0xFF;
+                int blue = pixel & 0xFF;
+                red = (double) red * brightness;
+                green = (double) green * brightness;
+                blue = (double) blue * brightness;
+                pixel = (red << 16) | (green << 8) | blue;
+            }
+            // Redshift if needed
+            if (getGameLoop() && getGameLoop()->gameStatus == GAMESTATUS::LOST) img[i] = pixel & 0xFF0000;
+            else img[i] = pixel;
         } else {
             img[i] = getHexColor(object[i], false);
         }
@@ -93,6 +247,7 @@ void drawImgOpponent(int x, int y, int width, int height, const char* object) {
 
     int img[width * height];
     for (int i = width * height - 1; i >= 0; i--) {
+        loadMusic();
         int xPos = x + ((width * height - 1 - i) % width);
         int yPos = y + ((width * height - 1 - i) / width);
         xPos = max(0, min(xPos, 127));
@@ -124,6 +279,7 @@ void drawBackgroundBox(int topLeftX, int topLeftY, int bottomRightX, int bottomR
     int index = 0;
     for (int y = topLeftY; y <= bottomRightY; y++) {
         for (int x = topLeftX; x <= bottomRightX; x++) {
+            loadMusic();
             img[index++] = gameBackground[max(0, min(y, 127)) * 128 + max(0, min(x, 127))];
         }
     }
@@ -331,23 +487,25 @@ void drawBossProjectile(LLNode* projectile) {
     int pBottomRightX = ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x - (((PROJECTILE*)getData(projectile))->x - ((PROJECTILE*)getData(projectile))->px);
     int pTopLeftY = 127 - (((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y - (((PROJECTILE*)getData(projectile))->y - ((PROJECTILE*)getData(projectile))->py));
     int pBottomRightY = 127 - (((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y - (((PROJECTILE*)getData(projectile))->y - ((PROJECTILE*)getData(projectile))->py));
-    if (((PROJECTILE*)getData(projectile))->x > ((PROJECTILE*)getData(projectile))->px) { // Moved right
-        drawBackgroundBox(pTopLeftX, pTopLeftY, pTopLeftX + (((PROJECTILE*)getData(projectile))->x - ((PROJECTILE*)getData(projectile))->px), pBottomRightY);
-    } else if (((PROJECTILE*)getData(projectile))->x < ((PROJECTILE*)getData(projectile))->px) { // Moved left
-        drawBackgroundBox(pBottomRightX - (((PROJECTILE*)getData(projectile))->px - ((PROJECTILE*)getData(projectile))->x), pTopLeftY, pBottomRightX, pBottomRightY);
-    } else if (((PROJECTILE*)getData(projectile))->y > ((PROJECTILE*)getData(projectile))->py) { // Moved up
-        drawBackgroundBox(pTopLeftX, pBottomRightY + (((PROJECTILE*)getData(projectile))->py - ((PROJECTILE*)getData(projectile))->y), pBottomRightX, pBottomRightY);
-    } else if (((PROJECTILE*)getData(projectile))->y < ((PROJECTILE*)getData(projectile))->py) { // Moved down
-        drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((PROJECTILE*)getData(projectile))->y - ((PROJECTILE*)getData(projectile))->py));
+    if (((PROJECTILE*)getData(projectile))->projectileType == PROJECTILE_TYPE::MISSILE) {
+        if ((int)((PROJECTILE*)getData(projectile))->projectileDirection->pdx < 0 || (int)((PROJECTILE*)getData(projectile))->projectileDirection->dx < 0) { // Was or is going left
+            drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX + 3, pBottomRightY);
+        } else if ((int)((PROJECTILE*)getData(projectile))->projectileDirection->pdx > 0 || (int)((PROJECTILE*)getData(projectile))->projectileDirection->dx > 0) { // Was or is going right
+            drawBackgroundBox(pTopLeftX - 3, pTopLeftY, pBottomRightX, pBottomRightY);
+        } else { // Is going straight
+            drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX , pBottomRightY);
+        }
+    } else {
+        drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX, pBottomRightY);
     }
     // Draw the new projectile position
     if (((PROJECTILE*)getData(projectile))->projectileType == PROJECTILE_TYPE::MISSILE) {
         if (((PROJECTILE*)getData(projectile))->projectileDirection->dx == 0) { //straight
             drawImg(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, 3, 7, "Y0YORO0R0RRRWRW5W5050");
         } else if (((PROJECTILE*)getData(projectile))->projectileDirection->dx < 0) { // left
-            drawImg(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, 6, 7, "0000000000Y0000O0Y00RRO00WRR005WW000550000");
+            drawImg(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, 6, 7, "0000000000Y0000O0Y000RO00WR0005WW000550000");
         } else if (((PROJECTILE*)getData(projectile))->projectileDirection->dx > 0) { // right
-            drawImg(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x - 3, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, 6, 7, "0000000Y0000Y0O0000ORR00000RW0000WW5000055");
+            drawImg(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x - 3, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, 6, 7, "0000000Y0000Y0O0000OR000000RW0000WW5000055");
         }
     } else {
         drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, 'R');
@@ -453,63 +611,16 @@ void drawMSButton(MENU_SETTINGS* menuSettings, BUTTON* modeSelector) {
         textBackground = DGREY;
     }
     if (menuSettings->gameMode == GAME_MODE::INFINITE) {
-        char message[] = "INF";
-        int i = 0;
-        while (message[i]) {
-            loadMusic();
-            uLCD.text_bold(ON);
-            uLCD.set_font(FONT_7X8);
-            uLCD.locate(14 + i, 13);
-            uLCD.color(color);
-            uLCD.textbackground_color(textBackground);
-            uLCD.printf("%c", message[i]);
-            i++;
-        }
+        drawText("INF", 109 - 11, 104, color, textBackground);
     } else if (menuSettings->gameMode == GAME_MODE::LEVELS) {
-        char message[] = "123";
-        int i = 0;
-        while (message[i]) {
-            loadMusic();
-            uLCD.text_bold(ON);
-            uLCD.set_font(FONT_7X8);
-            uLCD.locate(14 + i, 13);
-            uLCD.color(color);
-            uLCD.textbackground_color(textBackground);
-            uLCD.printf("%c", message[i]);
-            i++;
-        }
+        drawText("123", 109 - 11, 104, color, textBackground);
     } else if (menuSettings->gameMode == GAME_MODE::SCORECAP) {
-        uLCD.set_font(FONT_7X8);
-        uLCD.locate(14, 12);
-        uLCD.color(color);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("___");
+        drawText("___", 109 - 11, 104 - 8, color, textBackground);
         char message[5];
         sprintf(message, "%03d", menuSettings->scoreCap);
-        int i = 0;
-        while (message[i]) {
-            loadMusic();
-            uLCD.text_bold(ON);
-            uLCD.set_font(FONT_7X8);
-            uLCD.locate(14 + i, 13);
-            uLCD.color(color);
-            uLCD.textbackground_color(textBackground);
-            uLCD.printf("%c", message[i]);
-            i++;
-        }
+        drawText(message, 109 - 11, 104, color, textBackground);
     } else if (menuSettings->gameMode == GAME_MODE::PVP) {
-        char message[] = "PVP";
-        int i = 0;
-        while (message[i]) {
-            loadMusic();
-            uLCD.text_bold(ON);
-            uLCD.set_font(FONT_7X8);
-            uLCD.locate(14 + i, 13);
-            uLCD.color(color);
-            uLCD.textbackground_color(textBackground);
-            uLCD.printf("%c", message[i]);
-            i++;
-        }
+        drawText("PVP", 109 - 11, 104, color, textBackground);
     }
 }
 
@@ -547,18 +658,7 @@ void drawPlayButton(MENU_SETTINGS* menuSettings, BUTTON* play) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "PLAY";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(7 + i, 13);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("PLAY", 64 - 14, 109 - 4, color, textBackground);
 }
 
 void drawDiffScale(MENU_SETTINGS* menuSettings, SLIDING_SCALE* difficulty) {
@@ -632,21 +732,8 @@ void drawUserStatsButton(USER* user, BUTTON* userStats) {
     char strUserNum[3];
     sprintf(strUserNum, "%d", user->userNum);
     strcat(message, strUserNum);
-    int nameLength = 0;
-    int i = 0;
-    while (message[nameLength]) {
-        nameLength++;
-    }
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate((9 - (int)round((double)nameLength / 2)) + i, 0);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    int nameLength = strlen(message);
+    drawText(message, 63 - (int)round(7 * (double)nameLength / 2), 2, color, textBackground);
 }
 
 void drawDeleteUserButton(BUTTON* deleteProfile) {
@@ -664,17 +751,8 @@ void drawDeleteUserButton(BUTTON* deleteProfile) {
         textBackground = DGREY;
     }
     char message[20] = "DELETE PROFILE";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(2 + i, 14);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    int msgLength = strlen(message);
+    drawText("DELETE PROFILE", 63 - (int)round(7 * (double) msgLength / 2), 115 - 3, color, textBackground);
 }
 
 void drawLoginBackground(void) {
@@ -685,7 +763,7 @@ void drawLoginBackground(void) {
     uLCD.circle(127, 0, 28, WHITE);
     // Moon
     uLCD.filled_circle(0, 0, 15, LGREY);
-    uLCD.filled_circle(8, 12, 1, DGREY);
+    uLCD.filled_circle(8, 10, 2, DGREY);
     uLCD.filled_circle(0, 9, 3, MGREY);
     uLCD.filled_circle(-1, 5, 2, DGREY);
     uLCD.filled_circle(5, -1, 3, MGREY);
@@ -694,29 +772,18 @@ void drawLoginBackground(void) {
     drawImg(39 - 5, 127 - 98, 11, 11, NORMAL_ENEMY_IMGS[3]);
     drawImg(89 - 5, 127 - 98, 11, 11, NORMAL_ENEMY_IMGS[3]);
     drawImg(64 - 5, 127 - 80, 11, 11, PLAYER_IMGS[3]);
-    char message[30] = "STAR WARS";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(WHITE);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(4 + i, 0);
-        uLCD.textbackground_color(BLACK);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("STAR WARS", 31, 1, WHITE);
 }
 
 void drawRegistrationBackground(void) {
     // Sun
     uLCD.filled_circle(127, 20, 30, YELLOW);
-    uLCD.circle(127, 0, 30, WHITE);
-    uLCD.circle(127, 0, 29, WHITE);
-    uLCD.circle(127, 0, 28, WHITE);
+    uLCD.circle(127, 20, 30, WHITE);
+    uLCD.circle(127, 20, 29, WHITE);
+    uLCD.circle(127, 20, 28, WHITE);
     // Moon
     uLCD.filled_circle(0, 32, 15, LGREY);
-    uLCD.filled_circle(8, 44, 1, DGREY);
+    uLCD.filled_circle(8, 42, 2, DGREY);
     uLCD.filled_circle(0, 41, 3, MGREY);
     uLCD.filled_circle(-1, 37, 2, DGREY);
     uLCD.filled_circle(5, 31, 3, MGREY);
@@ -744,12 +811,12 @@ void drawRegistrationBackground(void) {
 void drawRegistrationSkinSelectionBackground(void) {
     // Sun
     uLCD.filled_circle(127, 20, 30, YELLOW);
-    uLCD.circle(127, 0, 30, WHITE);
-    uLCD.circle(127, 0, 29, WHITE);
-    uLCD.circle(127, 0, 28, WHITE);
+    uLCD.circle(127, 20, 30, WHITE);
+    uLCD.circle(127, 20, 29, WHITE);
+    uLCD.circle(127, 20, 28, WHITE);
     // Moon
     uLCD.filled_circle(0, 32, 15, LGREY);
-    uLCD.filled_circle(8, 44, 1, DGREY);
+    uLCD.filled_circle(8, 42, 2, DGREY);
     uLCD.filled_circle(0, 41, 3, MGREY);
     uLCD.filled_circle(-1, 37, 2, DGREY);
     uLCD.filled_circle(5, 31, 3, MGREY);
@@ -778,7 +845,7 @@ void drawMenuBackground(void) {
     uLCD.circle(127, 0, 28, WHITE);
     // Moon
     uLCD.filled_circle(0, 7, 15, LGREY);
-    uLCD.filled_circle(8, 19, 1, DGREY);
+    uLCD.filled_circle(8, 17, 2, DGREY);
     uLCD.filled_circle(0, 16, 3, MGREY);
     uLCD.filled_circle(-1, 12, 2, DGREY);
     uLCD.filled_circle(5, 6, 3, MGREY);
@@ -800,6 +867,8 @@ void drawMenuBackground(void) {
 }
 
 void drawUserStatsBackground(USER* user) {
+    double brightness = 0.5;
+    drawGameBackground(false, brightness);
     // Sun
     uLCD.filled_circle(127, 0, 30, YELLOW);
     uLCD.circle(127, 0, 30, WHITE);
@@ -807,7 +876,7 @@ void drawUserStatsBackground(USER* user) {
     uLCD.circle(127, 0, 28, WHITE);
     // Moon
     uLCD.filled_circle(0, 7, 15, LGREY);
-    uLCD.filled_circle(8, 19, 1, DGREY);
+    uLCD.filled_circle(8, 17, 2, DGREY);
     uLCD.filled_circle(0, 16, 3, MGREY);
     uLCD.filled_circle(-1, 12, 2, DGREY);
     uLCD.filled_circle(5, 6, 3, MGREY);
@@ -838,18 +907,7 @@ void drawUserStatsBackground(USER* user) {
         sprintf(strHighScore, "%d", (int)highScore);
     }
     strcat(hScoreStat, strHighScore);
-    int i = 0;
-    while (hScoreStat[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(WHITE);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(2 + i, 3);
-        uLCD.textbackground_color(BLACK);
-        if (hScoreStat[i] == ' ') uLCD.locate(uLCD.current_col + 1, uLCD.current_row);
-        else uLCD.printf("%c", hScoreStat[i]);
-        i++;
-    }
+    drawText(hScoreStat, 14, 21, WHITE, -1, brightness);
     // User enemies killed
     char eKilledStat[30] = "KILLS: ";
     char strEnemiesKilled[10];
@@ -861,18 +919,7 @@ void drawUserStatsBackground(USER* user) {
         sprintf(strEnemiesKilled, "%d", (int)totalKills);
     }
     strcat(eKilledStat, strEnemiesKilled);
-    i = 0;
-    while (eKilledStat[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(WHITE);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(2 + i, 5);
-        uLCD.textbackground_color(BLACK);
-        if (eKilledStat[i] == ' ') uLCD.locate(uLCD.current_col + 1, uLCD.current_row);
-        else uLCD.printf("%c", eKilledStat[i]);
-        i++;
-    }
+    drawText(eKilledStat, 14, 37, WHITE, -1, brightness);
     // User player deaths
     char pDeathsStat[30] = "DEATHS: ";
     char strPlayerDeaths[10];
@@ -884,18 +931,7 @@ void drawUserStatsBackground(USER* user) {
         sprintf(strPlayerDeaths, "%d", (int)totalDeaths);
     }
     strcat(pDeathsStat, strPlayerDeaths);
-    i = 0;
-    while (pDeathsStat[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(WHITE);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(2 + i, 7);
-        uLCD.textbackground_color(BLACK);
-        if (pDeathsStat[i] == ' ') uLCD.locate(uLCD.current_col + 1, uLCD.current_row);
-        else uLCD.printf("%c", pDeathsStat[i]);
-        i++;
-    }
+    drawText(pDeathsStat, 14, 52, WHITE, -1, brightness);
     // User total points
     char tPointsStat[30] = "TOT PTS: ";
     char strTotalPoints[10];
@@ -907,18 +943,7 @@ void drawUserStatsBackground(USER* user) {
         sprintf(strTotalPoints, "%d", (int)totalPoints);
     }
     strcat(tPointsStat, strTotalPoints);
-    i = 0;
-    while (tPointsStat[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(WHITE);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(2 + i, 9);
-        uLCD.textbackground_color(BLACK);
-        if (tPointsStat[i] == ' ') uLCD.locate(uLCD.current_col + 1, uLCD.current_row);
-        else uLCD.printf("%c", tPointsStat[i]);
-        i++;
-    }
+    drawText(tPointsStat, 14, 68, WHITE, -1, brightness);
     // User total play time
     char tTimeStat[30] = "PLY TME: ";
     char strHours[10];
@@ -932,18 +957,7 @@ void drawUserStatsBackground(USER* user) {
     sprintf(strMins, "%dM", minutes);
     strcat(tTimeStat, strHours);
     strcat(tTimeStat, strMins);
-    i = 0;
-    while (tTimeStat[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(WHITE);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(2 + i, 11);
-        uLCD.textbackground_color(BLACK);
-        if (tTimeStat[i] == ' ') uLCD.locate(uLCD.current_col + 1, uLCD.current_row);
-        else uLCD.printf("%c", tTimeStat[i]);
-        i++;
-    }
+    drawText(tTimeStat, 14, 84, WHITE, -1, brightness);
 }
 
 /**
@@ -963,18 +977,7 @@ void drawLoginButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "LOGIN";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(6 + i, 12);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("LOGIN", 64 - 17, 98 - 3, color, textBackground);
 }
 
 void drawInvalidLoginButton(BUTTON* button) {
@@ -1022,18 +1025,7 @@ void drawRegisterButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "REGISTER";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(5 + i, 14);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("REGISTER", 64 - 28, 115 - 3, color, textBackground);
 }
 
 /**
@@ -1053,21 +1045,8 @@ void drawUserBaseButton(USER* userInfo, BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    int nameLength = 0;
-    int i = 0;
-    while (userInfo->username[nameLength]) {
-        nameLength++;
-    }
-    while (userInfo->username[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate((7 - (int)round((double)nameLength / 2)) + i, 10);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", userInfo->username[i]);
-        i++;
-    }
+    int nameLength = strlen(userInfo->username);
+    drawText(userInfo->username, 93 / 2 - (int)round(7 * (double)nameLength / 2), 81 - 3, color, textBackground);
 }
 
 /**
@@ -1089,17 +1068,7 @@ void drawUserNumButton(USER* userInfo, BUTTON* button) {
     }
     char strNum[3];
     snprintf(strNum, 3, "%02d", userInfo->userNum);
-    int i = 0;
-    while (strNum[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        if (strNum[1]) uLCD.locate(15 + i, 10);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", strNum[i]);
-        i++;
-    }
+    drawText(strNum, 110 - 7, 81 - 3, color, textBackground);
 }
 
 /**
@@ -1119,18 +1088,7 @@ void drawBackButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "<";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(1 + i, 1);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("<", 12 - 4, 12 - 3, color, textBackground);
 }
 
 /**
@@ -1150,18 +1108,7 @@ void drawNextButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = ">";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(16 + i, 1);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText(">", 114 - 2, 12 - 3, color, textBackground);
 }
 
 /**
@@ -1181,18 +1128,7 @@ void drawInvalidNextButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = ">";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(16 + i, 1);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText(">", 114 - 2, 12 - 3, color, textBackground);
 }
 
 /**
@@ -1212,18 +1148,7 @@ void drawDeleteButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "X";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_7X8);
-        uLCD.locate(12 + i, 14);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("X", 88 - 3, 114 - 3, color, textBackground);
 }
 
 /**
@@ -1243,18 +1168,7 @@ void drawZeroButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "0";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(8 + i, 14);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("0", 63 - 3, 114 - 3, color, textBackground);
 }
 
 /**
@@ -1274,18 +1188,7 @@ void drawOneButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "1";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(5 + i, 11);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("1", 38 - 3, 89 - 3, color, textBackground);
 }
 
 /**
@@ -1305,18 +1208,7 @@ void drawTwoButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "2";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(8 + i, 11);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("2", 63 - 3, 89 - 3, color, textBackground);
 }
 
 /**
@@ -1336,18 +1228,7 @@ void drawThreeButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "3";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(12 + i, 11);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("3", 88 - 3, 89 - 3, color, textBackground);
 }
 
 /**
@@ -1367,18 +1248,7 @@ void drawFourButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "4";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(5 + i, 8);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("4", 38 - 3, 64 - 3, color, textBackground);
 }
 
 /**
@@ -1398,18 +1268,7 @@ void drawFiveButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "5";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(8 + i, 8);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("5", 63 - 3, 64 - 3, color, textBackground);
 }
 
 /**
@@ -1429,18 +1288,7 @@ void drawSixButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "6";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(12 + i, 8);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("6", 88 - 3, 64 - 3, color, textBackground);
 }
 
 /**
@@ -1460,18 +1308,7 @@ void drawSevenButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "7";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(5 + i, 5);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("7", 38 - 3, 39 - 3, color, textBackground);
 }
 
 /**
@@ -1491,18 +1328,7 @@ void drawEightButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "8";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(8 + i, 5);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("8", 63 - 3, 39 - 3, color, textBackground);
 }
 
 /**
@@ -1522,18 +1348,7 @@ void drawNineButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "9";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(12 + i, 5);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("9", 88 - 3, 39 - 3, color, textBackground);
 }
 
 /**
@@ -1566,21 +1381,8 @@ void drawDefaultSkinButton(USER* userInfo, BUTTON* button) {
         color = MGREY;
     }
 
-    int skinTypeNameLength = 0;
-    while (skinType[skinTypeNameLength]) {
-        skinTypeNameLength++;
-    }
-    int i = 0;
-    while (skinType[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(9 + i - (int)round((double)skinTypeNameLength / 2), 10);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", skinType[i]);
-        i++;
-    }
+    int skinTypeNameLength = strlen(skinType);
+    drawText(skinType, 64 - (int)round(7 * (double) skinTypeNameLength / 2), 81 - 3, color, textBackground);
     drawImg(64 - 5, 127 - 80, 11, 11, PLAYER_IMGS[3]);
 }
 
@@ -1590,20 +1392,10 @@ void drawDefaultSkinButton(USER* userInfo, BUTTON* button) {
 void drawPassword(char password[5]) {
     uLCD.filled_rectangle(26, 0, 127 - 26, 0 + 25, BLACK);
     int pwLength = 0;
-    while (password[pwLength]) {
+    while (password[pwLength] != ' ' && password[pwLength]) {
         pwLength++;
     }
-    int i = 0;
-    while (password[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.textbackground_color(BLACK);
-        uLCD.color(GREEN);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(9 + i - (int)round((double)pwLength / 2), 1);
-        uLCD.printf("%c", password[i]);
-        i++;
-    }
+    drawText(password, 63 - (int)round(7 * (double) pwLength / 2), 12 - 3, GREEN, BLACK);
 }
 
 /**
@@ -1612,19 +1404,10 @@ void drawPassword(char password[5]) {
 void drawInvalidPassword(char password[5]) {
     uLCD.filled_rectangle(26, 0, 127 - 26, 0 + 25, BLACK);
     int pwLength = 0;
-    while (password[pwLength]) {
+    while (password[pwLength] != ' ' && password[pwLength]) {
         pwLength++;
     }
-    int i = 0;
-    while (password[i]) {
-        uLCD.text_bold(ON);
-        uLCD.textbackground_color(BLACK);
-        uLCD.color(RED);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(9 + i - (int)round((double)pwLength / 2), 1);
-        uLCD.printf("%c", password[i]);
-        i++;
-    }
+    drawText(password, 63 - (int)round(7 * (double) pwLength / 2), 12 - 3, RED, BLACK);
 }
 
 void drawGameWon(void) {
@@ -1634,21 +1417,8 @@ void drawGameWon(void) {
         char strLevel[10];
         sprintf(strLevel, "%d PASSED", getGameLoop()->level);
         strcat(message, strLevel);
-        int msgLength = 0;
-        while (message[msgLength]) {
-            msgLength++;
-        }
-        int i = 0;
-        while (message[i]) {
-            loadMusic();
-            uLCD.text_bold(ON);
-            uLCD.color(WHITE);
-            uLCD.set_font(FONT_8X8);
-            uLCD.locate(9 + i - (int)round((double)msgLength / 2), 5);
-            uLCD.textbackground_color(BLACK);
-            uLCD.printf("%c", message[i]);
-            i++;
-        }
+        int msgLength = strlen(message);
+        drawText(message, 63 - (int)round(7 * (double) msgLength / 2), 40, WHITE, BLACK);
     } else {
         drawGameBackground(false);
         // Sun
@@ -1658,7 +1428,7 @@ void drawGameWon(void) {
         uLCD.circle(127, 0, 28, WHITE);
         // Moon
         uLCD.filled_circle(0, 7, 15, LGREY);
-        uLCD.filled_circle(8, 19, 1, DGREY);
+        uLCD.filled_circle(8, 17, 2, DGREY);
         uLCD.filled_circle(0, 16, 3, MGREY);
         uLCD.filled_circle(-1, 12, 2, DGREY);
         uLCD.filled_circle(5, 6, 3, MGREY);
@@ -1679,32 +1449,23 @@ void drawGameWon(void) {
         uLCD.filled_circle(11, 112, 2, MGREY);
 
         char message[30] = "YOU WON!";
-        int i = 0;
-        while (message[i]) {
-            loadMusic();
-            uLCD.text_bold(ON);
-            uLCD.color(WHITE);
-            uLCD.set_font(FONT_8X8);
-            uLCD.locate(5 + i, 5);
-            uLCD.textbackground_color(BLACK);
-            if (message[i] == ' ') uLCD.locate(uLCD.current_col + 1, uLCD.current_row);
-            else uLCD.printf("%c", message[i]);
-            i++;
-        }
+        int msgLength = strlen(message);
+        drawText(message, 63 - (int)round(7 * (double) msgLength / 2), 40, WHITE);
         drawImg(64 - 7, 127 - 60, 11, 11, PLAYER_IMGS[3]);
     }
 }
 
 void drawGameLost(void) {
-    drawGameBackground(true);
+    double brightness = 0.5;
+    drawGameBackground(true, brightness);
     // Sun
     uLCD.filled_circle(127, 0, 30, RED);
-    uLCD.circle(127, 0, 30, WHITE);
-    uLCD.circle(127, 0, 29, WHITE);
-    uLCD.circle(127, 0, 28, WHITE);
+    uLCD.circle(127, 0, 30, MRED);
+    uLCD.circle(127, 0, 29, MRED);
+    uLCD.circle(127, 0, 28, MRED);
     // Moon
     uLCD.filled_circle(0, 7, 15, RED);
-    uLCD.filled_circle(8, 19, 1, DRED);
+    uLCD.filled_circle(8, 17, 2, DRED);
     uLCD.filled_circle(0, 16, 3, MRED);
     uLCD.filled_circle(-1, 12, 2, DRED);
     uLCD.filled_circle(5, 6, 3, MRED);
@@ -1724,32 +1485,10 @@ void drawGameLost(void) {
     uLCD.filled_circle(7, 106, 4, DRED);
     uLCD.filled_circle(11, 112, 2, MRED);
 
-    drawImg(64 - 9, 127 - 105, 19, 19, BOSS_IMGS[3]);
-    drawImg(39 - 5, 127 - 85, 11, 11, MISSILE_ENEMY_IMGS[3]);
-    drawImg(89 - 5, 127 - 85, 11, 11, MISSILE_ENEMY_IMGS[3]);
-    drawImg(64 - 5, 127 - 68, 11, 11, NORMAL_ENEMY_IMGS[3]);
-    char game[30] = "GAME";
-    int i = 0;
-    while (game[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(RED);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(3 + i, 8);
-        uLCD.textbackground_color(BLACK);
-        uLCD.printf("%c", game[i]);
-        i++;
-    }
-    char over[30] = "OVER";
-    i = 0;
-    while (game[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(RED);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(11 + i, 8);
-        uLCD.textbackground_color(BLACK);
-        uLCD.printf("%c", over[i]);
-        i++;
-    }
+    drawImg(64 - 9, 127 - 105, 19, 19, BOSS_IMGS[3], brightness);
+    drawImg(39 - 5, 127 - 85, 11, 11, MISSILE_ENEMY_IMGS[3], brightness);
+    drawImg(89 - 5, 127 - 85, 11, 11, MISSILE_ENEMY_IMGS[3], brightness);
+    drawImg(64 - 5, 127 - 68, 11, 11, NORMAL_ENEMY_IMGS[3], brightness);
+    drawText("GAME", 21, 56, RED, -1, brightness, true);
+    drawText("OVER", 77, 56, RED, -1, brightness, true);
 }

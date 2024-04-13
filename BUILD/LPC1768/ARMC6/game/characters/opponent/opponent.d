@@ -159,6 +159,6 @@ BUILD/LPC1768/ARMC6/game/characters/opponent/opponent.o: \
   game/interfaces/menu/menu.hpp game/users/users.hpp \
   game/interfaces/login/login.hpp assets/gameBackground.hpp \
   assets/profileImg.hpp assets/enemySprite.hpp \
-  assets/finalBossSprite.hpp assets/playerSprite.hpp \
+  assets/finalBossSprite.hpp assets/playerSprite.hpp assets/font.hpp \
   game/characters/opponent/opponent.hpp game/healthBars/healthBar.hpp \
   game/characters/player/player.hpp game/projectiles/projectile.hpp

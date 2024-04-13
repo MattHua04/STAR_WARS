@@ -334,25 +334,9 @@ void start(bool infinite, bool scoreCap, bool pvp) {
                 buttonSound();
                 sprintf(message, "%d", i);
             }
-            int msgLength = 0;
-            while (message[msgLength]) {
-                msgLength++;
-            }
-            int j = 0;
-            while (message[j]) {
-                loadMusic();
-                uLCD.text_width(2);
-                uLCD.text_height(2);
-                uLCD.text_bold(ON);
-                uLCD.locate(5 - (int)round((double)msgLength / 2) + j, 3);
-                uLCD.color(getHexColor(countDownColors[i], false));
-                uLCD.textbackground_color(BLACK);
-                uLCD.printf("%c", message[j]);
-                j++;
-            }
-            // Reset text size
-            uLCD.text_width(1);
-            uLCD.text_height(1);
+            int msgLength = strlen(message);
+            int color = getHexColor(countDownColors[i], false);
+            drawText(message, 64 + 1 - (int) round(7 * (double) msgLength / 2), 64 - 4, color);
             while (t.elapsed_time().count() < 1000000) loadMusic();
             // Sync countdown with opponent
             syncDevices();
@@ -384,59 +368,53 @@ void start(bool infinite, bool scoreCap, bool pvp) {
         // Print game info
         uLCD.max_col = 18;
         if (getMenuSettings()->gameMode != GAME_MODE::PVP) {
-            uLCD.color(WHITE);
-            uLCD.locate(0, 0);
-            uLCD.textbackground_color(BLACK);
+            int color = WHITE;
+            char message[20];
             if (getPlayer()->score >= 1000) {
-                uLCD.printf("SCORE:%.1fK\r", (double) getPlayer()->score / 1000);
+                sprintf(message, "SCORE:%.1fK", (double) getPlayer()->score / 1000);
+                drawText(message, 0, 1, color);
             } else {
-                uLCD.printf("SCORE:%d\r", getPlayer()->score);
+                sprintf(message, "SCORE:%d", getPlayer()->score);
+                drawText(message, 0, 1, color);
             }
             if (getMenuSettings()->gameMode == GAME_MODE::INFINITE) {
-                uLCD.locate(uLCD.max_col - 8, 0);
-                uLCD.printf("INFINITE\r");
+                strcpy(message, "INFINITE");
+                drawText(message, 127 - 1 - 7 * strlen(message), 1, color);
             } else if (getMenuSettings()->gameMode == GAME_MODE::LEVELS) {
-                uLCD.locate(uLCD.max_col - 7, 0);
-                uLCD.printf("LEVEL:%d\r", gameLoop->level);
+                sprintf(message, "LEVEL:%d", gameLoop->level);
+                drawText(message, 127 - 7 * strlen(message), 1, color);
             } else if (getMenuSettings()->gameMode == GAME_MODE::SCORECAP) {
                 if (getMenuSettings()->scoreCap == 100) {
-                    uLCD.locate(uLCD.max_col - 8, 0);
-                    uLCD.printf("GOAL:100\r");
-                } else if (getMenuSettings()->scoreCap >= 10) {
-                    uLCD.locate(uLCD.max_col - 7, 0);
-                    uLCD.printf("GOAL:%d\r", getMenuSettings()->scoreCap);
+                    strcpy(message, "GOAL:100");
+                    drawText(message, 127 - 7 * strlen(message), 1, color);
                 } else {
-                    uLCD.locate(uLCD.max_col - 6, 0);
-                    uLCD.printf("GOAL:%d\r", getMenuSettings()->scoreCap);
+                    sprintf(message, "GOAL:%d", getMenuSettings()->scoreCap);
+                    drawText(message, 127 - 7 * strlen(message), 1, color);
                 }
             }
         } else if (getOpponent() != NULL) { // If gamemode is pvp then display score ratio
+            int color;
+            char message[10];
             if (getPlayer()->score > getOpponent()->score) {
-                uLCD.color(GREEN);
+                color = GREEN;
             } else if (getPlayer()->score < getOpponent()->score){
-                uLCD.color(RED);
+                color = RED;
             } else {
-                uLCD.color(WHITE);
+                color = WHITE;
             }
-            uLCD.textbackground_color(BLACK);
             if (getPlayer()->score >= 1000) {
-                uLCD.locate(6, 0);
-                uLCD.printf("%dK\r", getPlayer()->score / 1000);
-            } else if (getPlayer()->score >= 100) {
-                uLCD.locate(5, 0);
-                uLCD.printf("%d\r", getPlayer()->score);
-            } else if (getPlayer()->score >= 10) {
-                uLCD.locate(6, 0);
-                uLCD.printf("%d\r", getPlayer()->score);
+                sprintf(message, "%dK", getPlayer()->score / 1000);
+                drawText(message, 64 - 7 - 7 * strlen(message), 1, color);
             } else {
-                uLCD.locate(7, 0);
-                uLCD.printf("%d\r", getPlayer()->score);
+                sprintf(message, "%d", getPlayer()->score);
+                drawText(message, 64 - 7 - 7 * strlen(message), 1, color);
             }
-            uLCD.locate(10, 0);
             if (getOpponent()->score >= 1000) {
-                uLCD.printf("%dK\r", getOpponent()->score / 1000);
+                sprintf(message, "%dK", getOpponent()->score / 1000);
+                drawText(message, 64 + 7, 1, color);
             } else {
-                uLCD.printf("%d\r", getOpponent()->score);
+                sprintf(message, "%d", getOpponent()->score);
+                drawText(message, 64 + 7, 1, color);
             }
         }
         if (pvp) syncDevices(); // For pvp, need to sync game ticks for both devices

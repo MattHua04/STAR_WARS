@@ -35,7 +35,7 @@ void registrationInit(void) {
     strcpy(newUser.username, getUsernameList()[0]);
     newUser.userNum = 0;
     for (int i = 0; i < 4; i++) {
-        newUser.password[i] = NULL;
+        newUser.password[i] = ' ';
     }
     newUser.password[4] = '\0';
     newUser.defaultSkin = PLAYER_SKIN::ICE_BLUE;
@@ -228,7 +228,7 @@ int registrationUpdate(void) {
                 strcpy(newUser.username, getUsernameList()[0]);
                 newUser.userNum = 0;
                 for (int i = 0; i < 4; i++) {
-                    newUser.password[i] = NULL;
+                    newUser.password[i] = ' ';
                 }
                 newUser.defaultSkin = PLAYER_SKIN::ICE_BLUE;
                 while (!readInputs()->normalAttack) loadMusic();
@@ -482,8 +482,8 @@ int registrationUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 4 - 1; i >= 0; i--) {
-                    if (newUser.password[i] != NULL) {
-                        newUser.password[i] = NULL;
+                    if (newUser.password[i] != ' ') {
+                        newUser.password[i] = ' ';
                         break;
                     }
                 }
@@ -525,7 +525,7 @@ int registrationUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (newUser.password[i] == NULL) {
+                    if (newUser.password[i] == ' ') {
                         newUser.password[i] = '0';
                         break;
                     }
@@ -565,7 +565,7 @@ int registrationUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (newUser.password[i] == NULL) {
+                    if (newUser.password[i] == ' ') {
                         newUser.password[i] = '1';
                         break;
                     }
@@ -611,7 +611,7 @@ int registrationUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (newUser.password[i] == NULL) {
+                    if (newUser.password[i] == ' ') {
                         newUser.password[i] = '2';
                         break;
                     }
@@ -651,7 +651,7 @@ int registrationUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (newUser.password[i] == NULL) {
+                    if (newUser.password[i] == ' ') {
                         newUser.password[i] = '3';
                         break;
                     }
@@ -691,7 +691,7 @@ int registrationUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (newUser.password[i] == NULL) {
+                    if (newUser.password[i] == ' ') {
                         newUser.password[i] = '4';
                         break;
                     }
@@ -737,7 +737,7 @@ int registrationUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (newUser.password[i] == NULL) {
+                    if (newUser.password[i] == ' ') {
                         newUser.password[i] = '5';
                         break;
                     }
@@ -777,7 +777,7 @@ int registrationUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (newUser.password[i] == NULL) {
+                    if (newUser.password[i] == ' ') {
                         newUser.password[i] = '6';
                         break;
                     }
@@ -823,7 +823,7 @@ int registrationUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (newUser.password[i] == NULL) {
+                    if (newUser.password[i] == ' ') {
                         newUser.password[i] = '7';
                         break;
                     }
@@ -863,7 +863,7 @@ int registrationUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (newUser.password[i] == NULL) {
+                    if (newUser.password[i] == ' ') {
                         newUser.password[i] = '8';
                         break;
                     }
@@ -909,7 +909,7 @@ int registrationUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (newUser.password[i] == NULL) {
+                    if (newUser.password[i] == ' ') {
                         newUser.password[i] = '9';
                         break;
                     }
@@ -1036,7 +1036,7 @@ void deleteRegistration(void) {
     strcpy(newUser.username, getUsernameList()[0]);
     newUser.userNum = 0;
     for (int i = 0; i < 4; i++) {
-        newUser.password[i] = NULL;
+        newUser.password[i] = ' ';
     }
     newUser.password[4] = '\0';
     newUser.defaultSkin = PLAYER_SKIN::ICE_BLUE;

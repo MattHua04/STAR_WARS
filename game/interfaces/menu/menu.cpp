@@ -349,7 +349,6 @@ int menuUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 menuPage = MENU_PAGE::USER_STATS;
-                drawGameBackground(false);
                 drawUserStatsBackground(getUserInfo());
                 drawUserStatsButton(getUserInfo(), &userStats);
                 drawDeleteUserButton(&deleteProfile);

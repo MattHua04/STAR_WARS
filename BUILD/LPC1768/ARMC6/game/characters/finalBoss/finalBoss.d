@@ -160,6 +160,6 @@ BUILD/LPC1768/ARMC6/game/characters/finalBoss/finalBoss.o: \
   game/interfaces/menu/menu.hpp game/users/users.hpp \
   game/interfaces/login/login.hpp assets/gameBackground.hpp \
   assets/profileImg.hpp assets/enemySprite.hpp \
-  assets/finalBossSprite.hpp assets/playerSprite.hpp \
+  assets/finalBossSprite.hpp assets/playerSprite.hpp assets/font.hpp \
   game/characters/finalBoss/finalBoss.hpp \
   game/projectiles/projectile.hpp game/characters/player/player.hpp

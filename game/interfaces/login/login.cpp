@@ -40,7 +40,7 @@ void loginInit(void) {
     strcpy(userInfo.username, getUsernameList()[0]);
     userInfo.userNum = 0;
     for (int i = 0; i < 4; i++) {
-        userInfo.password[i] = NULL;
+        userInfo.password[i] = ' ';
     }
     userInfo.password[4] = '\0';
     userInfo.defaultSkin = PLAYER_SKIN::ICE_BLUE;
@@ -411,7 +411,7 @@ int loginUpdate(void) {
                 usernameBaseSelector.buttonStatus = BUTTON_STATUS::SELECTED;
                 // Reset password data for privacy
                 for (int i = 0; i < 4; i++) {
-                    userInfo.password[i] = NULL;
+                    userInfo.password[i] = ' ';
                 }
                 // Draw all the buttons on the prev page
                 drawGameBackground(false);
@@ -490,8 +490,8 @@ int loginUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 4 - 1; i >= 0; i--) {
-                    if (userInfo.password[i] != NULL) {
-                        userInfo.password[i] = NULL;
+                    if (userInfo.password[i] != ' ') {
+                        userInfo.password[i] = ' ';
                         break;
                     }
                 }
@@ -532,7 +532,7 @@ int loginUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (userInfo.password[i] == NULL) {
+                    if (userInfo.password[i] == ' ') {
                         userInfo.password[i] = '0';
                         break;
                     }
@@ -573,7 +573,7 @@ int loginUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (userInfo.password[i] == NULL) {
+                    if (userInfo.password[i] == ' ') {
                         userInfo.password[i] = '1';
                         break;
                     }
@@ -620,7 +620,7 @@ int loginUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (userInfo.password[i] == NULL) {
+                    if (userInfo.password[i] == ' ') {
                         userInfo.password[i] = '2';
                         break;
                     }
@@ -661,7 +661,7 @@ int loginUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (userInfo.password[i] == NULL) {
+                    if (userInfo.password[i] == ' ') {
                         userInfo.password[i] = '3';
                         break;
                     }
@@ -702,7 +702,7 @@ int loginUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (userInfo.password[i] == NULL) {
+                    if (userInfo.password[i] == ' ') {
                         userInfo.password[i] = '4';
                         break;
                     }
@@ -749,7 +749,7 @@ int loginUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (userInfo.password[i] == NULL) {
+                    if (userInfo.password[i] == ' ') {
                         userInfo.password[i] = '5';
                         break;
                     }
@@ -790,7 +790,7 @@ int loginUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (userInfo.password[i] == NULL) {
+                    if (userInfo.password[i] == ' ') {
                         userInfo.password[i] = '6';
                         break;
                     }
@@ -837,7 +837,7 @@ int loginUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (userInfo.password[i] == NULL) {
+                    if (userInfo.password[i] == ' ') {
                         userInfo.password[i] = '7';
                         break;
                     }
@@ -878,7 +878,7 @@ int loginUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (userInfo.password[i] == NULL) {
+                    if (userInfo.password[i] == ' ') {
                         userInfo.password[i] = '8';
                         break;
                     }
@@ -925,7 +925,7 @@ int loginUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 for (int i = 0; i < 4; i++) {
-                    if (userInfo.password[i] == NULL) {
+                    if (userInfo.password[i] == ' ') {
                         userInfo.password[i] = '9';
                         break;
                     }

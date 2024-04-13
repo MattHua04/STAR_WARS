@@ -158,4 +158,4 @@ BUILD/LPC1768/ARMC6/game/users/users.o: game/users/users.cpp \
   utilities/doublyLinkedList/doublyLinkedList.hpp \
   game/interfaces/menu/menu.hpp assets/gameBackground.hpp \
   assets/profileImg.hpp assets/enemySprite.hpp \
-  assets/finalBossSprite.hpp assets/playerSprite.hpp
+  assets/finalBossSprite.hpp assets/playerSprite.hpp assets/font.hpp
