@@ -2,6 +2,7 @@
 #include "gameMusic.hpp"
 #include "globals.hpp"
 #include "doublyLinkedList.hpp"
+#include "hardware.hpp"
 #include "login.hpp"
 #include "menu.hpp"
 #include "projectile.hpp"
@@ -36,11 +37,12 @@ int getHexColor(char color, bool isOpponent) {
     }
 }
 
-void concatText(const char* message, char* textArr) {
-    int overallWidth = 7 * strlen(message);
+void concatText(const char* message, char* textArr, int scale) {
+    int msgLength = strlen(message);
+    int overallWidth = 7 * msgLength;
     int width = 7;
     int height = 8;
-    for (int i = 0; i < strlen(message); i++) {
+    for (int i = 0; i < msgLength; i++) {
         char character[57]; // The corresponding character from font array
         switch(message[i]) {
         case '!': strcpy(character, font[0]); break;
@@ -117,44 +119,48 @@ void concatText(const char* message, char* textArr) {
             break;
         }
         for (int j = 0; j < height; j++) {
-            for (int k = 0; k < width; k++) {
-                textArr[j * overallWidth + i * width + k] = character[j * width + k];
+            for (int m = 0; m < scale; m++) {
+                for (int k = 0; k < width; k++) {
+                    for (int l = 0; l < scale; l++) {
+                        textArr[(j * scale + m) * (overallWidth * scale) + i * (scale * width) + (k * scale + l)] = character[j * width + k];
+                    }
+                }
             }
         }
     }
 }
 
-void drawText(const char* message, int x, int y, int textColor, int backgroundColor, double brightness, bool redshift) {
+void drawText(const char* message, int x, int y, int textColor, int backgroundColor, double brightness, bool redshift, int scale) {
     int msgWidth = 7 * strlen(message);
     int textHeight = 8;
-    char text[msgWidth * textHeight];
-    concatText(message, text);
+    char text[scale * msgWidth * scale * textHeight];
+    concatText(message, text, scale);
 
     // Ensure coordinates are actually on the screen
     x = max(0, min(x, 127));
     y = max(0, min(y, 127));
 
-    int textImg[msgWidth * textHeight];
-    for (int i = 0; i < msgWidth * textHeight; i++) {
+    int textImg[scale * msgWidth * scale * textHeight];
+    for (int i = 0; i < scale * msgWidth * scale * textHeight; i++) {
         loadMusic();
-        int xPos = x + (i % msgWidth);
-        int yPos = y + (i / msgWidth);
-        xPos = max(0, min(xPos, 127));
-        yPos = max(0, min(yPos, 127));
-        int pixel = gameBackground[yPos * 128 + xPos];
-        // Apply brightness to original background color if not 1
-        if (brightness != 1) {
-            int red = (pixel >> 16) & 0xFF;
-            int green = (pixel >> 8) & 0xFF;
-            int blue = pixel & 0xFF;
-            red = (double) red * brightness;
-            green = (double) green * brightness;
-            blue = (double) blue * brightness;
-            pixel = (red << 16) | (green << 8) | blue;
-        }
-        // Redshift if needed
-        pixel = (redshift) ? pixel & 0xFF0000 : pixel;
         if (text[i] == '0' && backgroundColor == -1) {
+            int xPos = x + (i % (scale * msgWidth));
+            int yPos = y + (i / (scale * msgWidth));
+            xPos = max(0, min(xPos, 127));
+            yPos = max(0, min(yPos, 127));
+            int pixel = gameBackground[yPos * 128 + xPos];
+            // Apply brightness to original background color if not 1
+            if (brightness != 1) {
+                int red = (pixel >> 16) & 0xFF;
+                int green = (pixel >> 8) & 0xFF;
+                int blue = pixel & 0xFF;
+                red = (double) red * brightness;
+                green = (double) green * brightness;
+                blue = (double) blue * brightness;
+                pixel = (red << 16) | (green << 8) | blue;
+            }
+            // Redshift if needed
+            pixel = (redshift) ? pixel & 0xFF0000 : pixel;
             textImg[i] = pixel;
         } else if (text[i] == '0' && backgroundColor >= 0) {
             textImg[i] = backgroundColor;
@@ -162,7 +168,7 @@ void drawText(const char* message, int x, int y, int textColor, int backgroundCo
             textImg[i] = textColor;
         }
     }
-    uLCD.BLIT(x, y, msgWidth, textHeight, textImg);
+    uLCD.BLIT(x, y, scale * msgWidth, scale * textHeight, textImg);
 }
 
 void drawProfileImg(void) {
@@ -562,16 +568,35 @@ void eraseHealthBar(LLNode* healthBar) {
 }
 
 void drawSuperAttackBar(LLNode* player) {
+    int color = YELLOW;
+    double brightness = 0.5;
+    if (((PLAYER*)getData(player))->superChargeStatus == MAX_SUPER_CHARGE) {
+        // Creates pulsing effect for superCharge bar
+        brightness = 0.25 * sin((double) ((PLAYER*)getData(player))->tick * 3.14 / 10) + 0.75;
+    }
+    int r = (color >> 16) & 0xFF;
+    int g = (color >> 8) & 0xFF;
+    int b = color & 0xFF;
+    r = r * brightness;
+    g = g * brightness;
+    b = b * brightness;
+    color = ((r << 16) | (g << 8) | b);
     if (((PLAYER*)getData(player))->superChargeStatus == 0) {
-        drawBox(0, 127 - 5, 127, 127 - 3, '4');
+        uLCD.filled_rectangle(1, 127 - 5, 126, 127 - 3, MGREY);
+        uLCD.pixel(0, 127 - 4, MGREY);
+        uLCD.pixel(127, 127 - 4, MGREY);
     } else {
-        drawBox(0, 127 - 5, 127, 127 - 3, '4');
-        drawBox(0, 127 - 5, (int)round(127 * (double)((PLAYER*)getData(player))->superChargeStatus / MAX_SUPER_CHARGE), 127 - 3, 'Y');
+        if (((PLAYER*)getData(player))->superChargeStatus < MAX_SUPER_CHARGE) {
+            uLCD.filled_rectangle((int)round(125 * (double)((PLAYER*)getData(player))->superChargeStatus / MAX_SUPER_CHARGE) + 1, 127 - 5, 126, 127 - 3, MGREY);
+        }
+        uLCD.pixel(0, 127 - 4, color);
+        uLCD.filled_rectangle(1, 127 - 5, (int)round(126 * (double)((PLAYER*)getData(player))->superChargeStatus / MAX_SUPER_CHARGE), 127 - 3, color);
+        uLCD.pixel((int)round(126 * (double)((PLAYER*)getData(player))->superChargeStatus / MAX_SUPER_CHARGE) + 1, 127 - 4, color);
     }
 }
 
 void eraseSuperAttackBar(LLNode* player) {
-    drawBox(0, 127 - 7, 127, 127 - 3, '0');
+    drawBackgroundBox(0, 127 - 7, 127, 127 - 3);
 }
 
 void drawSSButton(MENU_SETTINGS* menuSettings, BUTTON* skinSelector) {
@@ -663,26 +688,31 @@ void drawPlayButton(MENU_SETTINGS* menuSettings, BUTTON* play) {
 
 void drawDiffScale(MENU_SETTINGS* menuSettings, SLIDING_SCALE* difficulty) {
     drawBackgroundBox(0, difficulty->boundingBox->topLeft.y - 1, 127, difficulty->boundingBox->bottomRight.y + 1);
-    drawBox(0, difficulty->boundingBox->topLeft.y, 127, difficulty->boundingBox->bottomRight.y, '3');
+    uLCD.filled_rectangle(127, difficulty->boundingBox->topLeft.y + 1, 127, difficulty->boundingBox->topLeft.y + 2, DGREY);
+    drawBox(1, difficulty->boundingBox->topLeft.y, 126, difficulty->boundingBox->bottomRight.y, '3');
     drawBackgroundBox(39 - 5, 127 - 116, 89 - 5 + 11, 127 - 76);
     if (menuSettings->gameMode != GAME_MODE::PVP) {
         if (difficulty->value == difficulty->maxVal) {
-            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'R');
+            uLCD.filled_rectangle(0, difficulty->boundingBox->topLeft.y + 1, 0, difficulty->boundingBox->topLeft.y + 2, RED);
+            drawBox(difficulty->boundingBox->topLeft.x + 1, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x - 1, difficulty->boundingBox->bottomRight.y, 'R');
             drawImg(64 - 9, 127 - 116, 19, 19, BOSS_IMGS[3]);
             drawImg(39 - 5, 127 - 101, 11, 11, MISSILE_ENEMY_IMGS[3]);
             drawImg(89 - 5, 127 - 101, 11, 11, MISSILE_ENEMY_IMGS[3]);
             drawImg(64 - 5, 127 - 88, 11, 11, NORMAL_ENEMY_IMGS[3]);
         } else if ((double)difficulty->value / difficulty->maxVal >= 0.75) {
-            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'O');
+            uLCD.filled_rectangle(0, difficulty->boundingBox->topLeft.y + 1, 0, difficulty->boundingBox->topLeft.y + 2, ORANGE);
+            drawBox(difficulty->boundingBox->topLeft.x + 1, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x - 1, difficulty->boundingBox->bottomRight.y, 'O');
             drawImg(39 - 5, 127 - 101, 11, 11, MISSILE_ENEMY_IMGS[3]);
             drawImg(89 - 5, 127 - 101, 11, 11, MISSILE_ENEMY_IMGS[3]);
             drawImg(64 - 5, 127 - 88, 11, 11, NORMAL_ENEMY_IMGS[3]);
         } else if ((double)difficulty->value / difficulty->maxVal >= 0.50) {
-            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'Y');
+            uLCD.filled_rectangle(0, difficulty->boundingBox->topLeft.y + 1, 0, difficulty->boundingBox->topLeft.y + 2, YELLOW);
+            drawBox(difficulty->boundingBox->topLeft.x + 1, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x - 1, difficulty->boundingBox->bottomRight.y, 'Y');
             drawImg(46 - 5, 127 - 98, 11, 11, NORMAL_ENEMY_IMGS[3]);
             drawImg(82 - 5, 127 - 98, 11, 11, NORMAL_ENEMY_IMGS[3]);
         } else if ((double)difficulty->value / difficulty->maxVal >= 0.25) {
-            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'G');
+            uLCD.filled_rectangle(0, difficulty->boundingBox->topLeft.y + 1, 0, difficulty->boundingBox->topLeft.y + 2, GREEN);
+            drawBox(difficulty->boundingBox->topLeft.x + 1, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x - 1, difficulty->boundingBox->bottomRight.y, 'G');
             drawImg(64 - 5, 127 - 98, 11, 11, NORMAL_ENEMY_IMGS[3]);
         }
         if (difficulty->sliderStatus == BUTTON_STATUS::SELECTED) {
@@ -694,13 +724,17 @@ void drawDiffScale(MENU_SETTINGS* menuSettings, SLIDING_SCALE* difficulty) {
         }
     } else { // Draw the opponent if the gamemode is pvp
         if (difficulty->value == difficulty->maxVal) {
-            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'R');
+            uLCD.filled_rectangle(0, difficulty->boundingBox->topLeft.y + 1, 0, difficulty->boundingBox->topLeft.y + 2, RED);
+            drawBox(difficulty->boundingBox->topLeft.x + 1, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x - 1, difficulty->boundingBox->bottomRight.y, 'R');
         } else if ((double)difficulty->value / difficulty->maxVal >= 0.75) {
-            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'O');
+            uLCD.filled_rectangle(0, difficulty->boundingBox->topLeft.y + 1, 0, difficulty->boundingBox->topLeft.y + 2, ORANGE);
+            drawBox(difficulty->boundingBox->topLeft.x + 1, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x - 1, difficulty->boundingBox->bottomRight.y, 'O');
         } else if ((double)difficulty->value / difficulty->maxVal >= 0.50) {
-            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'Y');
+            uLCD.filled_rectangle(0, difficulty->boundingBox->topLeft.y + 1, 0, difficulty->boundingBox->topLeft.y + 2, YELLOW);
+            drawBox(difficulty->boundingBox->topLeft.x + 1, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x - 1, difficulty->boundingBox->bottomRight.y, 'Y');
         } else if ((double)difficulty->value / difficulty->maxVal >= 0.25) {
-            drawBox(difficulty->boundingBox->topLeft.x, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y, 'G');
+            uLCD.filled_rectangle(0, difficulty->boundingBox->topLeft.y + 1, 0, difficulty->boundingBox->topLeft.y + 2, GREEN);
+            drawBox(difficulty->boundingBox->topLeft.x + 1, difficulty->boundingBox->topLeft.y, difficulty->boundingBox->bottomRight.x - 1, difficulty->boundingBox->bottomRight.y, 'G');
         }
         if (difficulty->sliderStatus == BUTTON_STATUS::SELECTED) {
             uLCD.filled_circle(difficulty->boundingBox->bottomRight.x, difficulty->boundingBox->bottomRight.y - 2, 3, LGREY);

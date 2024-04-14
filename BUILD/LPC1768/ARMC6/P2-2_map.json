@@ -13,7 +13,7 @@
     {
         "module": "[lib]/fz_ws.l",
         "size": {
-            ".text": 4506,
+            ".text": 4762,
             ".data": 0,
             ".bss": 0,
             ".text-delta": 0,
@@ -35,7 +35,7 @@
     {
         "module": "[lib]/m_ws.l",
         "size": {
-            ".text": 388,
+            ".text": 2436,
             ".data": 0,
             ".bss": 0,
             ".text-delta": 0,
@@ -68,7 +68,7 @@
     {
         "module": "game/gameLoops",
         "size": {
-            ".text": 3673,
+            ".text": 3685,
             ".data": 0,
             ".bss": 32,
             ".text-delta": 0,
@@ -90,7 +90,7 @@
     {
         "module": "game/interfaces",
         "size": {
-            ".text": 14786,
+            ".text": 14784,
             ".data": 14,
             ".bss": 472,
             ".text-delta": 0,
@@ -200,7 +200,7 @@
     {
         "module": "utilities/4DGL-uLCD-SE",
         "size": {
-            ".text": 2224,
+            ".text": 2288,
             ".data": 0,
             ".bss": 0,
             ".text-delta": 0,
@@ -233,10 +233,10 @@
     {
         "module": "utilities/graphics",
         "size": {
-            ".text": 157122,
+            ".text": 157728,
             ".data": 0,
             ".bss": 0,
-            ".text-delta": 74,
+            ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -244,9 +244,9 @@
     {
         "module": "utilities/hardware",
         "size": {
-            ".text": 2522,
+            ".text": 2484,
             ".data": 0,
-            ".bss": 1696,
+            ".bss": 1648,
             ".text-delta": 0,
             ".data-delta": 0,
             ".bss-delta": 0
@@ -254,10 +254,10 @@
     },
     {
         "summary": {
-            "static_ram": 8335,
+            "static_ram": 8287,
             "static_ram_delta": 0,
-            "total_flash": 475070,
-            "total_flash_delta": 74
+            "total_flash": 478016,
+            "total_flash_delta": 0
         }
     }
 ]

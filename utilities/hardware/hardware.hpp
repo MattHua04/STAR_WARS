@@ -59,14 +59,4 @@ int readPvp(void);
  */
 void syncDevices(void);
 
-/**
- * Notify that sd card is in use or not
- */
-void notifyUsingSD(bool inUse);
-
-/**
- * See if sd card is in use
- */
-int readUsingSD(void);
-
 #endif // HARDWARE_H

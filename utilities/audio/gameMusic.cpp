@@ -117,7 +117,7 @@ openFile: tempFile = fopen(fileName, "rb");
 }
 
 void loadMusic(void) {
-    if (!bufferReady) {
+    if (!bufferReady && songFile) {
         unsigned short *addr;
         if (bufferInUse == 0) {
             addr = bufferOne;

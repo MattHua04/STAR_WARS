@@ -23,14 +23,18 @@ int getHexColor(char color, bool isOpponent);
 
 /**
  * Concatenates text character arrays
+ * Defaults to no text scale
  */
-void concatText(const char* message, char* textArr);
+void concatText(const char* message, char* textArr, int scale = 1);
 
 /**
- * Prints a message with specified color and background color
- * Default background color is transparent
+ * Prints a message with specified color and background color, redshift, and scale
+ * Defaults background color to transparent
+ * Defaults background brightness to max
+ * Defaults to no redshift
+ * Defaults to no scale
  */
-void drawText(const char* message, int x, int y, int textColor, int backgroundColor = -1, double brightness = 1, bool redshift = false) ;
+void drawText(const char* message, int x, int y, int textColor, int backgroundColor = -1, double brightness = 1, bool redshift = false, int scale = 1) ;
 
 /**
  * Draws github profile pic

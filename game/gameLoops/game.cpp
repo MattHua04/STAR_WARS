@@ -310,15 +310,15 @@ void start(bool infinite, bool scoreCap, bool pvp) {
     Timer t;
     // Count down for pvp
     if (getMenuSettings()->gameMode == GAME_MODE::PVP) {
-        updatePlayerProjectiles();
-        updateOpponentProjectiles();
-        updateBossProjectiles();
-        updateEnemyProjectiles();
         playerUpdate();
         opponentUpdate();
         bossUpdate();
         enemiesUpdate();
         updateBars();
+        updatePlayerProjectiles();
+        updateOpponentProjectiles();
+        updateBossProjectiles();
+        updateEnemyProjectiles();
         t.start();
         while (t.elapsed_time().count() < 1000000) loadMusic();
         // Sync countdown with opponent
@@ -336,7 +336,8 @@ void start(bool infinite, bool scoreCap, bool pvp) {
             }
             int msgLength = strlen(message);
             int color = getHexColor(countDownColors[i], false);
-            drawText(message, 64 + 1 - (int) round(7 * (double) msgLength / 2), 64 - 4, color);
+            int scale = 2;
+            drawText(message, 64 + 1 - (int) round(7 * scale * (double) msgLength / 2), 64 - 4 * scale, color, -1, 1, false, scale);
             while (t.elapsed_time().count() < 1000000) loadMusic();
             // Sync countdown with opponent
             syncDevices();
@@ -356,15 +357,15 @@ void start(bool infinite, bool scoreCap, bool pvp) {
             gameInputs = readOpponentInputs();
         }
         // Update everything
-        updatePlayerProjectiles();
-        updateOpponentProjectiles();
-        updateBossProjectiles();
-        updateEnemyProjectiles();
         playerUpdate();
         opponentUpdate();
         bossUpdate();
         enemiesUpdate();
         updateBars();
+        updatePlayerProjectiles();
+        updateOpponentProjectiles();
+        updateBossProjectiles();
+        updateEnemyProjectiles();
         // Print game info
         uLCD.max_col = 18;
         if (getMenuSettings()->gameMode != GAME_MODE::PVP) {

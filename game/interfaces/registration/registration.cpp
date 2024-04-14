@@ -160,8 +160,8 @@ void registrationInit(void) {
     nineR.boundingBox->bottomRight.y = 127 - 75;
     drawGameBackground(false);
     drawRegistrationBackground();
-    drawUserBaseButton(&newUser, &usernameBaseSelectorR);
     drawUserNumButton(&newUser, &usernameNumSelectorR);
+    drawUserBaseButton(&newUser, &usernameBaseSelectorR);
     drawBackButton(&backStepR);
     drawNextButton(&nextStepR);
 }
@@ -323,8 +323,8 @@ int registrationUpdate(void) {
             } else if (inputs->left) {
                 usernameBaseSelectorR.buttonStatus = BUTTON_STATUS::SELECTED;
                 usernameNumSelectorR.buttonStatus = BUTTON_STATUS::NOT_SELECTED;
-                drawUserBaseButton(&newUser, &usernameBaseSelectorR);
                 drawUserNumButton(&newUser, &usernameNumSelectorR);
+                drawUserBaseButton(&newUser, &usernameBaseSelectorR);
                 while (readInputs()->left) loadMusic();
                 return 0;
             } else if (inputs->right) {
@@ -410,8 +410,8 @@ int registrationUpdate(void) {
                 // Draw all the buttons on the prev page
                 drawGameBackground(false);
                 drawRegistrationBackground();
-                drawUserBaseButton(&newUser, &usernameBaseSelectorR);
                 drawUserNumButton(&newUser, &usernameNumSelectorR);
+                drawUserBaseButton(&newUser, &usernameBaseSelectorR);
                 drawBackButton(&backStepR);
                 drawNextButton(&nextStepR);
                 while (!readInputs()->normalAttack) loadMusic();
@@ -440,7 +440,7 @@ int registrationUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 // Need to check whether password is 4 numbers long before going to next page
-                if (!newUser.password[3]) {
+                if (newUser.password[3] == ' ') {
                     drawInvalidNextButton(&nextStepR);
                     drawInvalidPassword(newUser.password);
                     while (!readInputs()->normalAttack) loadMusic();

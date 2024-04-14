@@ -446,7 +446,7 @@ int loginUpdate(void) {
             } else if (!inputs->normalAttack) {
                 buttonSound();
                 // Need to check whether password is 4 numbers long and correct
-                if (!userInfo.password[3] || !checkPassword(&userInfo)) {
+                if (userInfo.password[3] == ' ' || !checkPassword(&userInfo)) {
                     drawInvalidNextButton(&nextStep);
                     drawInvalidPassword(userInfo.password);
                     while (!readInputs()->normalAttack) loadMusic();

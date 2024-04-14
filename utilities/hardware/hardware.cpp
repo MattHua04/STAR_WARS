@@ -12,7 +12,7 @@
 uLCD_4DGL uLCD(p13, p14, p15); // Would be p9, p10, p11 for provided schematic
 
 // u, d, l, r
-// Using DI and DO for navswitch to have sustained signals between input reads
+// Using DI and DO for controls to have sustained signals between input reads
 DigitalIn readUp(p26);
 DigitalOut writeUp(p26);
 DigitalIn readDown(p29);
@@ -32,7 +32,7 @@ DigitalIn quitGame(p25); // Would be p24 for provided schematic
 DigitalOut writeQuitGame(p25);
 
 // u, d, l, r
-// Using DI for opponent navswitch since don't need to write anything
+// Only using DI for opponent controls since don't need to write anything
 DigitalIn readOpUp(p9);
 DigitalIn readOpDown(p10);
 DigitalIn readOpLeft(p11);
@@ -46,9 +46,6 @@ DigitalIn opponentQuitGame(p21); // Would be p29 for provided schematic
 DigitalOut notifyInPvpMode(p16); // Also used for syncing devices. Would be p13 for provided schematic
 DigitalIn readInPvpMode(p27); // Would be p30 for provided schematic
 
-DigitalOut notifySDCardUsage(P0_29);
-DigitalIn readSDCardUsage(P0_30);
-
 SDBlockDevice sd_block(p5, p6, p7, p8);
 FATFileSystem fs("sd", &sd_block);
 AnalogOut DACout(p18);
@@ -58,7 +55,7 @@ GAME_INPUTS* gameInputs;
 int hardware_init(void)
 {
     uLCD.baudrate(1500000);
-    // Player NavSwitch
+    // Player controls
     readUp.mode(PullUp);
     writeUp.write(1);
     readDown.mode(PullUp);
@@ -67,7 +64,7 @@ int hardware_init(void)
     writeLeft.write(1);
     readRight.mode(PullUp);
     writeRight.write(1);
-    // Opponent NavSwitch
+    // Opponent controls
     readOpUp.mode(PullNone);
     readOpDown.mode(PullNone);
     readOpLeft.mode(PullNone);
@@ -89,9 +86,7 @@ int hardware_init(void)
     // Syncing pins
     notifyInPvpMode.write(0);
     readInPvpMode.mode(PullNone);
-    // SD Card sharing pins
-    notifySDCardUsage.write(0);
-    readSDCardUsage.mode(PullNone);
+
     gameInputs = (GAME_INPUTS*)malloc(sizeof(GAME_INPUTS));
     fs.mount(&sd_block);
     return ERROR_NONE;
@@ -240,13 +235,4 @@ void syncDevices(void) {
         notifyPvp(false);
         while (readPvp() && getOpponent() != NULL && getOpponent()->playerDisplay != CHARACTER_DISPLAY::DESTROYED && getPlayer()->playerDisplay != CHARACTER_DISPLAY::DESTROYED);
     }
-}
-
-void notifyUsingSD(bool inUse) {
-    notifySDCardUsage.write((inUse) ? 1 : 0);
-    while (notifySDCardUsage.read() != 1) loadMusic();
-}
-
-int readUsingSD(void) {
-    return readSDCardUsage.read();
 }
