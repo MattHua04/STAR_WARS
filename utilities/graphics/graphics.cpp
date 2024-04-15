@@ -491,9 +491,9 @@ void drawEnemyProjectile(LLNode* projectile) {
         if (((PROJECTILE*)getData(projectile))->projectileDirection->dx == 0) { //straight
             drawImg(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, 3, 7, "Y0YORO0R0RRRWRW5W5050");
         } else if (((PROJECTILE*)getData(projectile))->projectileDirection->dx < 0) { // left
-            drawImg(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, 6, 7, "0000000000Y0000O0Y00RRO00WRR005WW000550000");
+            drawImg(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, 6, 7, "0000000000Y0000O0Y000RO00WR0005WW000550000");
         } else if (((PROJECTILE*)getData(projectile))->projectileDirection->dx > 0) { // right
-            drawImg(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x - 3, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, 6, 7, "0000000Y0000Y0O0000ORR00000RW0000WW5000055");
+            drawImg(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x - 3, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, 6, 7, "0000000Y0000Y0O0000OR000000RW0000WW5000055");
         }
     } else {
         drawBox(((PROJECTILE*)getData(projectile))->boundingBox->topLeft.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->topLeft.y, ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.x, 127 - ((PROJECTILE*)getData(projectile))->boundingBox->bottomRight.y, 'R');
