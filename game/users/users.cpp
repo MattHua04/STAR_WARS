@@ -5,6 +5,7 @@
 
 char userFileName[100];
 
+// Default username bases
 char userNames[15][20] = {
     "STARFIRE",
     "SHADOWBLADE",
@@ -254,20 +255,8 @@ void updateUser(USER* user) {
 }
 
 void deleteUser(USER* user) {
-    // Open user file using user credentials
+    // Delete file that matches user credentials
     generateFileName(user);
     if (remove(userFileName)) printf("Unable to delete user.\n");
     else printf("User deleted.\n");
-    /**FILE* userFile = fopen(userFileName, "r");
-    char copyUserFileName[100];
-    strcpy(copyUserFileName, userFileName);
-    copyUserFileName[strlen(copyUserFileName) - 4] = '\0';
-    if (rename(userFileName, strcat(copyUserFileName, "_DELETED.txt")) != 0) {
-        printf("Unable to delete user.\n");
-        
-        fclose(userFile);
-        return;
-    }
-    fclose(userFile);
-    printf("User deleted.\n");*/
 }

@@ -8,8 +8,7 @@
 #include "FATFileSystem.h"
 
 #define NAME_LENGTH 20
-#define PASSWORD_LENGTH 4 + 1
-
+#define PASSWORD_LENGTH 4 + 1 // For null character
 #define YELLOW 0xFFFF00
 #define GREEN 0x00FF00
 #define DGREEN 0x008f26
@@ -18,7 +17,6 @@
 #define BROWN  0xD2691E
 #define VIOLET 0xa600ff
 #define PINK 0xff00fb
-#define DIRT   BROWN
 #define RED    0xFF0000
 #define MRED 0x750000
 #define DRED 0x420000
@@ -26,6 +24,7 @@
 #define ORANGE 0xFFA500
 #define MGREY 0x8f8f8f
 
+// Character animation states
 typedef enum {
     DEFAULT=0,
     LEFT=1,
@@ -38,6 +37,7 @@ typedef enum {
     DESTROYED=8,
 } CHARACTER_DISPLAY;
 
+// Types of characters
 typedef enum {
     PLAYER_CHARACTER,
     OPPONENT_CHARACTER,
@@ -47,31 +47,37 @@ typedef enum {
     BOSS_CHARACTER,
 } CHARACTER_TYPE;
 
+// Character existence
 typedef enum {
     ACTIVE,
     DEAD,
 } CHARACTER_STATUS;
 
+// Point cords
 typedef struct {
     int x;
     int y;
 } point;
 
+// Display element bounds
 typedef struct {
     point topLeft;
     point bottomRight;
 } BOUNDINGBOX;
 
+// Button status
 typedef enum {
     SELECTED,
     NOT_SELECTED,
 } BUTTON_STATUS;
 
+// Button struct
 typedef struct {
     BUTTON_STATUS buttonStatus;
     BOUNDINGBOX* boundingBox;
 } BUTTON;
 
+// Player skin types
 typedef enum {
     FIRE_RED = 'R',
     BOLD_ORANGE = 'O',
@@ -83,6 +89,7 @@ typedef enum {
     NONE = NULL,
 } PLAYER_SKIN;
 
+// User info
 typedef struct {
     char username[NAME_LENGTH];
     int userNum;
@@ -95,6 +102,7 @@ typedef struct {
     int highScore;
 } USER;
 
+// Game mode types
 typedef enum {
     LEVELS = 1,
     SCORECAP = 2,
@@ -102,6 +110,7 @@ typedef enum {
     PVP = 4,
 } GAME_MODE;
 
+// Sliding scale struct
 typedef struct {
     int value;
     int maxVal;
@@ -109,6 +118,7 @@ typedef struct {
     BUTTON_STATUS sliderStatus;
 } SLIDING_SCALE;
 
+// Menu settings
 typedef struct {
     PLAYER_SKIN playerSkin;
     GAME_MODE gameMode;
@@ -117,30 +127,15 @@ typedef struct {
     double volume;
 } MENU_SETTINGS;
 
+// Menu pages
 typedef enum {
     MENU_HOME,
     USER_STATS,
 } MENU_PAGE;
 
-// === [global object] ===
+// === [global objects] ===
 extern uLCD_4DGL uLCD;
 extern SDBlockDevice sd_block;
 extern FATFileSystem fs;
-
-// === [global settings] ===
-#define BACKGROUND_COLOR 0x000000 //black
-
-// === [define the macro of error handle function] ===
-// when the condition (c) is not true, assert the program and show error code
-#define ASSERT_P(c,e) do { \
-    if(!(c)){ \
-        uLCD.printf("\nERROR:%d\n",e); \
-        printf("\nERROR:%d\n",e); \
-        while(1); \
-    } \
-} while (0)
-
-// === [error code] ===
-#define ERROR_NONE 0 // All good in the hood
 
 #endif //GLOBAL_H

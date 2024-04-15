@@ -20,7 +20,6 @@ void updateBars(void) {
     // Update enemy bars
     LLNode* currentNode = getHead(enemyHealthBarDLL);
     while (currentNode) {
-        //eraseHealthBar(currentNode);
         ((BAR*)getData(currentNode))->px = ((BAR*)getData(currentNode))->x;
         ((BAR*)getData(currentNode))->py = ((BAR*)getData(currentNode))->y;
         ((BAR*)getData(currentNode))->x = ((ENEMY*)getData(((BAR*)getData(currentNode))->barOwner))->x;
@@ -40,7 +39,6 @@ void updateBars(void) {
     }
     // Update player bar
     if (playerHealthBarNode) {
-        //eraseHealthBar(playerHealthBarNode);
         ((BAR*)getData(playerHealthBarNode))->px = ((BAR*)getData(playerHealthBarNode))->x;
         ((BAR*)getData(playerHealthBarNode))->py = ((BAR*)getData(playerHealthBarNode))->y;
         ((BAR*)getData(playerHealthBarNode))->x = getPlayer()->x;
@@ -57,7 +55,6 @@ void updateBars(void) {
     }
     // Update opponent player bar
     if (opponentHealthBarNode) {
-        //eraseHealthBar(opponentHealthBarNode);
         ((BAR*)getData(opponentHealthBarNode))->px = ((BAR*)getData(opponentHealthBarNode))->x;
         ((BAR*)getData(opponentHealthBarNode))->py = ((BAR*)getData(opponentHealthBarNode))->y;
         ((BAR*)getData(opponentHealthBarNode))->x = getOpponent()->x;
@@ -74,7 +71,6 @@ void updateBars(void) {
     }
     // Update boss bar
     if (bossHealthBarNode) {
-        //eraseHealthBar(bossHealthBarNode);
         ((BAR*)getData(bossHealthBarNode))->px = ((BAR*)getData(bossHealthBarNode))->x;
         ((BAR*)getData(bossHealthBarNode))->py = ((BAR*)getData(bossHealthBarNode))->y;
         ((BAR*)getData(bossHealthBarNode))->x = getBoss()->x;

@@ -4,8 +4,7 @@
 #define SYNC_TIME 10000
 
 /**
- * Structure that represents all the inputs to the game.
- * If additional hardware is added, new elements should be added to this struct.
+ * Game state
  */
 typedef enum {
     PAUSED,
@@ -14,6 +13,9 @@ typedef enum {
     LOST,
 } GAMESTATUS;
 
+/**
+ * Game loop
+ */
 typedef struct {
     GAMESTATUS gameStatus;
     int level;

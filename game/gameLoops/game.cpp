@@ -14,7 +14,6 @@
 #include <cstdio>
 
 Timer randNumSeed;
-int inGame = 0;
 
 GAMELOOP* gameLoop = NULL;
 

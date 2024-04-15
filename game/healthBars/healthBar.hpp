@@ -6,10 +6,8 @@
 #include "globals.hpp"
 #include "graphics.hpp"
 
-//==== [private settings] ====
 #define BAR_HEIGHT 3
 #define BAR_WIDTH 11
-#define BAR_COLOR 0xFF0000 //red
 
 // HealthBar types and their health values
 typedef enum {
@@ -18,6 +16,9 @@ typedef enum {
     TEN_HEARTS=10,
 } BAR_TYPE;
 
+/**
+ * Healthbar struct
+ */
 typedef struct {
     int x;
     int y;

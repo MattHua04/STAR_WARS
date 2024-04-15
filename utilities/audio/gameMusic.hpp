@@ -5,6 +5,7 @@
 #include "globals.hpp"
 #include "hardware.hpp"
 
+// Wav file info
 typedef struct {
     char     riff[4];
     uint32_t fileSize;
@@ -24,17 +25,17 @@ double* getVolume(void);
 void musicInit(void);
 
 /**
- * Plays background music
+ * Starts playing background music
  */
 void playMusic(void);
 
 /**
- * Plays next song track
+ * Starts playing next song track
  */
 void playNextTrack(void);
 
 /**
- * Plays prev song track
+ * Starts playing prev song track
  */
 void playPrevTrack(void);
 
@@ -44,42 +45,42 @@ void playPrevTrack(void);
 void loadMusic(void);
 
 /**
- * Plays normal projectile sound effect
+ * Starts playing normal projectile sound effect
  */
 void projectileSound(void);
 
 /**
- * Plays laser projectile sound effect
+ * Starts playing laser projectile sound effect
  */
 void laserSound(void);
 
 /**
- * Plays missile projectile sound effect
+ * Starts playing missile projectile sound effect
  */
 void missileSound(void);
 
 /**
- * Plays explosion sound effect
+ * Starts playing explosion sound effect
  */
 void explosionSound(void);
 
 /**
- * Plays projectile hit sound effect
+ * Starts playing projectile hit sound effect
  */
 void hitSound(void);
 
 /**
- * Plays button press sound effect
+ * Starts playing button press sound effect
  */
 void buttonSound(void);
 
 /**
- * Plays winning sound effect
+ * Starts playing winning sound effect
  */
 void winSound(void);
 
 /**
- * Plays losing sound effect
+ * Starts playing losing sound effect
  */
 void loseSound(void);
 

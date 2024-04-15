@@ -2,10 +2,10 @@
     {
         "module": "[lib]/c_w.l",
         "size": {
-            ".text": 14343,
+            ".text": 14319,
             ".data": 12,
             ".bss": 552,
-            ".text-delta": 0,
+            ".text-delta": -24,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -123,10 +123,10 @@
     {
         "module": "main.o",
         "size": {
-            ".text": 505,
+            ".text": 472,
             ".data": 0,
             ".bss": 0,
-            ".text-delta": 0,
+            ".text-delta": -33,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -256,8 +256,8 @@
         "summary": {
             "static_ram": 8287,
             "static_ram_delta": 0,
-            "total_flash": 478016,
-            "total_flash_delta": 0
+            "total_flash": 477959,
+            "total_flash_delta": -57
         }
     }
 ]

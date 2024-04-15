@@ -548,7 +548,7 @@ void drawHealthBar(LLNode* healthBar) {
         drawBackgroundBox(pTopLeftX, pTopLeftY, pBottomRightX, pTopLeftY - (((BAR*)getData(healthBar))->y - ((BAR*)getData(healthBar))->py));
     }
     // Draw the new healthbar position
-    // Need to account for numHearts
+    // Account for numHearts
     drawBox(((BAR*)getData(healthBar))->x - (BAR_WIDTH - 1) / 2, 127 - ((BAR*)getData(healthBar))->y, ((BAR*)getData(healthBar))->x - (BAR_WIDTH - 1) / 2 + (BAR_WIDTH - 1), 127 - ((BAR*)getData(healthBar))->y - 1, '4');
     if (((BAR*)getData(healthBar))->numHearts == 0) {
         eraseHealthBar(healthBar);
@@ -1042,9 +1042,6 @@ void drawInvalidLoginButton(BUTTON* button) {
     }
 }
 
-/**
- * Draws register button
- */
 void drawRegisterButton(BUTTON* button) {
     int color;
     int textBackground;
@@ -1062,9 +1059,6 @@ void drawRegisterButton(BUTTON* button) {
     drawText("REGISTER", 64 - 28, 115 - 3, color, textBackground);
 }
 
-/**
- * Draws username base button
- */
 void drawUserBaseButton(USER* userInfo, BUTTON* button) {
     int color;
     int textBackground;
@@ -1083,9 +1077,6 @@ void drawUserBaseButton(USER* userInfo, BUTTON* button) {
     drawText(userInfo->username, 93 / 2 - (int)round(7 * (double)nameLength / 2), 81 - 3, color, textBackground);
 }
 
-/**
- * Draws username number button
- */
 void drawUserNumButton(USER* userInfo, BUTTON* button) {
     int color;
     int textBackground;
@@ -1105,9 +1096,6 @@ void drawUserNumButton(USER* userInfo, BUTTON* button) {
     drawText(strNum, 110 - 7, 81 - 3, color, textBackground);
 }
 
-/**
- * Draws back button
- */
 void drawBackButton(BUTTON* button) {
     int color;
     int textBackground;
@@ -1125,9 +1113,6 @@ void drawBackButton(BUTTON* button) {
     drawText("<", 12 - 4, 12 - 3, color, textBackground);
 }
 
-/**
- * Draws next button
- */
 void drawNextButton(BUTTON* button) {
     int color;
     int textBackground;
@@ -1145,9 +1130,6 @@ void drawNextButton(BUTTON* button) {
     drawText(">", 114 - 2, 12 - 3, color, textBackground);
 }
 
-/**
- * Draws invalid next button
- */
 void drawInvalidNextButton(BUTTON* button) {
     int color;
     int textBackground;
@@ -1165,9 +1147,6 @@ void drawInvalidNextButton(BUTTON* button) {
     drawText(">", 114 - 2, 12 - 3, color, textBackground);
 }
 
-/**
- * Draws delete button
- */
 void drawDeleteButton(BUTTON* button) {
     int color;
     int textBackground;
@@ -1185,9 +1164,6 @@ void drawDeleteButton(BUTTON* button) {
     drawText("X", 88 - 3, 114 - 3, color, textBackground);
 }
 
-/**
- * Draws zero button
- */
 void drawZeroButton(BUTTON* button) {
     int color;
     int textBackground;
@@ -1205,9 +1181,6 @@ void drawZeroButton(BUTTON* button) {
     drawText("0", 63 - 3, 114 - 3, color, textBackground);
 }
 
-/**
- * Draws one button
- */
 void drawOneButton(BUTTON* button) {
     int color;
     int textBackground;
@@ -1225,9 +1198,6 @@ void drawOneButton(BUTTON* button) {
     drawText("1", 38 - 3, 89 - 3, color, textBackground);
 }
 
-/**
- * Draws two button
- */
 void drawTwoButton(BUTTON* button) {
     int color;
     int textBackground;
@@ -1245,9 +1215,6 @@ void drawTwoButton(BUTTON* button) {
     drawText("2", 63 - 3, 89 - 3, color, textBackground);
 }
 
-/**
- * Draws three button
- */
 void drawThreeButton(BUTTON* button) {
     int color;
     int textBackground;
@@ -1265,9 +1232,6 @@ void drawThreeButton(BUTTON* button) {
     drawText("3", 88 - 3, 89 - 3, color, textBackground);
 }
 
-/**
- * Draws four button
- */
 void drawFourButton(BUTTON* button) {
     int color;
     int textBackground;
@@ -1285,9 +1249,6 @@ void drawFourButton(BUTTON* button) {
     drawText("4", 38 - 3, 64 - 3, color, textBackground);
 }
 
-/**
- * Draws five button
- */
 void drawFiveButton(BUTTON* button) {
     int color;
     int textBackground;
@@ -1305,9 +1266,6 @@ void drawFiveButton(BUTTON* button) {
     drawText("5", 63 - 3, 64 - 3, color, textBackground);
 }
 
-/**
- * Draws six button
- */
 void drawSixButton(BUTTON* button) {
     int color;
     int textBackground;
@@ -1325,9 +1283,6 @@ void drawSixButton(BUTTON* button) {
     drawText("6", 88 - 3, 64 - 3, color, textBackground);
 }
 
-/**
- * Draws seven button
- */
 void drawSevenButton(BUTTON* button) {
     int color;
     int textBackground;
@@ -1345,9 +1300,6 @@ void drawSevenButton(BUTTON* button) {
     drawText("7", 38 - 3, 39 - 3, color, textBackground);
 }
 
-/**
- * Draws eight button
- */
 void drawEightButton(BUTTON* button) {
     int color;
     int textBackground;
@@ -1365,9 +1317,6 @@ void drawEightButton(BUTTON* button) {
     drawText("8", 63 - 3, 39 - 3, color, textBackground);
 }
 
-/**
- * Draws nine button
- */
 void drawNineButton(BUTTON* button) {
     int color;
     int textBackground;
@@ -1385,9 +1334,6 @@ void drawNineButton(BUTTON* button) {
     drawText("9", 88 - 3, 39 - 3, color, textBackground);
 }
 
-/**
- * Draws user default skin button
- */
 void drawDefaultSkinButton(USER* userInfo, BUTTON* button) {
     int color;
     int textBackground;
@@ -1420,9 +1366,6 @@ void drawDefaultSkinButton(USER* userInfo, BUTTON* button) {
     drawImg(64 - 5, 127 - 80, 11, 11, PLAYER_IMGS[3]);
 }
 
-/**
- * Draws password
- */
 void drawPassword(char password[5]) {
     uLCD.filled_rectangle(26, 0, 127 - 26, 0 + 25, BLACK);
     int pwLength = 0;
@@ -1432,9 +1375,6 @@ void drawPassword(char password[5]) {
     drawText(password, 63 - (int)round(7 * (double) pwLength / 2), 12 - 3, GREEN, BLACK);
 }
 
-/**
- * Draws invalid password
- */
 void drawInvalidPassword(char password[5]) {
     uLCD.filled_rectangle(26, 0, 127 - 26, 0 + 25, BLACK);
     int pwLength = 0;

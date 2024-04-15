@@ -186,7 +186,7 @@ int registrationUpdate(void) {
         }
     } else if (!inputs->superAttack) {
         buttonSound();
-        // If user double clicks then go to prev song
+        // If user long clicks then go to prev song
         Timer doubleClick;
         doubleClick.start();
         while (doubleClick.elapsed_time().count() < 2000000) {
@@ -202,7 +202,7 @@ int registrationUpdate(void) {
         return 0;
     } else if (!inputs->pauseResume) {
         buttonSound();
-        // If user double clicks then go to next song
+        // If user long clicks then go to next song
         Timer hold;
         hold.start();
         while (hold.elapsed_time().count() < 2000000) {
@@ -439,7 +439,7 @@ int registrationUpdate(void) {
                 return 0;
             } else if (!inputs->normalAttack) {
                 buttonSound();
-                // Need to check whether password is 4 numbers long before going to next page
+                // Check whether password is 4 numbers long before going to next page
                 if (newUser.password[3] == ' ') {
                     drawInvalidNextButton(&nextStepR);
                     drawInvalidPassword(newUser.password);

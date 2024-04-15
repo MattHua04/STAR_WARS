@@ -3,9 +3,7 @@
 
 /**
  * Structure that represents all the inputs to the game.
- * If additional hardware is added, new elements should be added to this struct.
  */
-#include "DigitalOut.h"
 typedef struct {
     // Player controls
     int up, down, left, right, normalAttack, superAttack, pauseResume, quitGame;
@@ -59,4 +57,4 @@ int readPvp(void);
  */
 void syncDevices(void);
 
-#endif // HARDWARE_H
+#endif

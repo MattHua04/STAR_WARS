@@ -193,7 +193,7 @@ int loginUpdate(void) {
         }
     } else if (!inputs->superAttack) {
         buttonSound();
-        // If user double clicks then go to prev song
+        // If user long clicks then go to prev song
         Timer doubleClick;
         doubleClick.start();
         while (doubleClick.elapsed_time().count() < 2000000) {
@@ -210,7 +210,7 @@ int loginUpdate(void) {
         return 0;
     } else if (!inputs->pauseResume) {
         buttonSound();
-        // If user double clicks then go to next song
+        // If user long clicks then go to next song
         Timer hold;
         hold.start();
         while (hold.elapsed_time().count() < 2000000) {
@@ -445,7 +445,7 @@ int loginUpdate(void) {
                 return 0;
             } else if (!inputs->normalAttack) {
                 buttonSound();
-                // Need to check whether password is 4 numbers long and correct
+                // Check whether password is 4 numbers long and correct
                 if (userInfo.password[3] == ' ' || !checkPassword(&userInfo)) {
                     drawInvalidNextButton(&nextStep);
                     drawInvalidPassword(userInfo.password);
@@ -462,7 +462,6 @@ int loginUpdate(void) {
                 userInfo.totalPlayerDeaths = getSavedPlayerDeaths(&userInfo);
                 userInfo.totalPoints = getSavedTotalPoints(&userInfo);
                 userInfo.totalPlayTime = getSavedPlayTime(&userInfo);
-                // Draw all the buttons on the next page
                 while (!readInputs()->normalAttack) loadMusic();
                 return 1;
             }

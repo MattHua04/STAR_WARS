@@ -56,8 +56,7 @@ int checkPassword(USER* user);
  */
 void updateUser(USER* user);
 
-/** Marks a user file as deleted
- * Actual file removal is handled by the RPi syncing local and external data
+/** Deletes user file
  */
 void deleteUser(USER* user);
 

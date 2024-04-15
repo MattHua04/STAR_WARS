@@ -74,7 +74,7 @@ void generateEnemyProjectile(LLNode* projectileOwner) {
         projectile->projectileDirection->pdx = dx;
         projectile->projectileDirection->pdy = dy;
     } else {
-        // Non missile enemy projectiles go down
+        // Non missile enemy projectiles go straight down
         PROJECTILE_DIRECTION* projectileDirection = (PROJECTILE_DIRECTION*)malloc(sizeof(PROJECTILE_DIRECTION));
         projectile->projectileDirection = projectileDirection;
         projectile->projectileDirection->dx = 0;
@@ -155,7 +155,7 @@ void generateOpponentProjectile(LLNode* projectileOwner) {
         projectile->projectileWidth = PROJECTILE_WIDTH;
         projectile->projectileHeight = PROJECTILE_HEIGHT;
     }
-    // Opponent projectile goes down
+    // Opponent projectiles go straight down
     PROJECTILE_DIRECTION* projectileDirection = (PROJECTILE_DIRECTION*)malloc(sizeof(PROJECTILE_DIRECTION));
     projectile->projectileDirection = projectileDirection;
     projectile->projectileDirection->dx = 0;
@@ -214,7 +214,7 @@ void generateBossProjectile(LLNode* projectileOwner) {
             projectile->projectileDirection->pdx = dx;
             projectile->projectileDirection->pdy = dy;
         } else {
-            // Non missile enemy projectiles go down
+            // Non missile enemy projectiles go straight down
             PROJECTILE_DIRECTION* projectileDirection = (PROJECTILE_DIRECTION*)malloc(sizeof(PROJECTILE_DIRECTION));
             projectile->projectileDirection = projectileDirection;
             projectile->projectileDirection->dx = 0;
@@ -256,7 +256,6 @@ void updateEnemyProjectiles(void) {
     }
     LLNode* currentNode = getHead(enemyProjectileDLL);
     while (currentNode) {
-        //eraseEnemyProjectile(currentNode);
         // Check for projectile and player collision
         if (getPlayer()->playerStatus != CHARACTER_STATUS::DEAD && projectileHit(((PROJECTILE*)getData(currentNode))->boundingBox, getPlayer()->boundingBox)) {
             ((BAR*)getData(getPlayer()->healthBar))->numHearts -= ((PROJECTILE*)getData(currentNode))->projectileType;
@@ -292,10 +291,8 @@ void updateEnemyProjectiles(void) {
             currentNode = nextNode;
             continue;
         }
-        /** Update enemyProjectile positions
-         */
+        // Update enemyProjectile positions
         // Make sure projectile is going to be within screen before updating pos
-        // Need to account for projectile size
         if (((PROJECTILE*)getData(currentNode))->x + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dx * ((PROJECTILE*)getData(currentNode))->projectileSpeed + (((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2) <= 127
             && ((PROJECTILE*)getData(currentNode))->x + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dx * ((PROJECTILE*)getData(currentNode))->projectileSpeed - (((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2) >= 0
             && ((PROJECTILE*)getData(currentNode))->y + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dy * ((PROJECTILE*)getData(currentNode))->projectileSpeed + (((PROJECTILE*)getData(currentNode))->projectileHeight - 1) / 2) <= 127
@@ -354,7 +351,6 @@ void updatePlayerProjectiles(void) {
     }
     LLNode* currentNode = getHead(playerProjectileDLL);
     while (currentNode) {
-        //erasePlayerProjectile(currentNode);
         bool projectileRemoved = false;
         // Check for projectile and opponent collision
         if (getOpponent()->playerStatus != CHARACTER_STATUS::DEAD && projectileHit(((PROJECTILE*)getData(currentNode))->boundingBox, getOpponent()->boundingBox)) {
@@ -470,7 +466,6 @@ void updatePlayerProjectiles(void) {
             if (getBoss()->status != CHARACTER_STATUS::DEAD && projectileHit(((PROJECTILE*)getData(currentNode))->boundingBox, getBoss()->boundingBox)) {
                 // Reduce enemy health by projectile damage
                 ((BAR*)getData(getBoss()->healthBar))->numHearts -= ((PROJECTILE*)getData(currentNode))->projectileType;
-                //printf("%d\n", ((BAR*)getData(getBoss()->healthBar))->numHearts);
                 if (((BAR*)getData(getBoss()->healthBar))->numHearts <= 0) {
                     explosionSound();
                     // If enemy destroyed, set display to Destroyed and add health amount to player score
@@ -523,12 +518,10 @@ void updatePlayerProjectiles(void) {
             continue;
         }
 
-        /** Update projectile positions
-         */
+        // Update projectile positions
         if (((PROJECTILE*)getData(currentNode))->projectileType != PROJECTILE_TYPE::LASER) {
             // Update non laser projectiles
             // Make sure projectile is going to be within screen before updating pos
-            // Need to account for projectile size
             if (((PROJECTILE*)getData(currentNode))->x + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dx * ((PROJECTILE*)getData(currentNode))->projectileSpeed + (((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2) <= 127
                 && ((PROJECTILE*)getData(currentNode))->x + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dx * ((PROJECTILE*)getData(currentNode))->projectileSpeed - (((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2) >= 0
                 && ((PROJECTILE*)getData(currentNode))->y + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dy * ((PROJECTILE*)getData(currentNode))->projectileSpeed + (((PROJECTILE*)getData(currentNode))->projectileHeight - 1) / 2) <= 127
@@ -586,7 +579,6 @@ void updateOpponentProjectiles(void) {
     }
     LLNode* currentNode = getHead(opponentProjectileDLL);
     while (currentNode) {
-        //eraseOpponentProjectile(currentNode);
         bool projectileRemoved = false;
         // Check for projectile and player collision
         if (getPlayer()->playerStatus != CHARACTER_STATUS::DEAD && projectileHit(((PROJECTILE*)getData(currentNode))->boundingBox, getPlayer()->boundingBox)) {
@@ -701,7 +693,6 @@ void updateOpponentProjectiles(void) {
             if (getBoss()->status != CHARACTER_STATUS::DEAD && projectileHit(((PROJECTILE*)getData(currentNode))->boundingBox, getBoss()->boundingBox)) {
                 // Reduce enemy health by projectile damage
                 ((BAR*)getData(getBoss()->healthBar))->numHearts -= ((PROJECTILE*)getData(currentNode))->projectileType;
-                //printf("%d\n", ((BAR*)getData(getBoss()->healthBar))->numHearts);
                 if (((BAR*)getData(getBoss()->healthBar))->numHearts <= 0) {
                     explosionSound();
                     // If enemy destroyed, set display to Destroyed and add health amount to player score
@@ -753,12 +744,10 @@ void updateOpponentProjectiles(void) {
             continue;
         }
 
-        /** Update projectile positions
-         */
+        // Update projectile positions
         if (((PROJECTILE*)getData(currentNode))->projectileType != PROJECTILE_TYPE::LASER) {
             // Update non laser projectiles
             // Make sure projectile is going to be within screen before updating pos
-            // Need to account for projectile size
             if (((PROJECTILE*)getData(currentNode))->x + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dx * ((PROJECTILE*)getData(currentNode))->projectileSpeed + (((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2) <= 127
                 && ((PROJECTILE*)getData(currentNode))->x + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dx * ((PROJECTILE*)getData(currentNode))->projectileSpeed - (((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2) >= 0
                 && ((PROJECTILE*)getData(currentNode))->y + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dy * ((PROJECTILE*)getData(currentNode))->projectileSpeed + (((PROJECTILE*)getData(currentNode))->projectileHeight - 1) / 2) <= 127
@@ -816,7 +805,6 @@ void updateBossProjectiles(void) {
     }
     LLNode* currentNode = getHead(bossProjectileDLL);
     while (currentNode) {
-        //eraseBossProjectile(currentNode);
         bool projectileRemoved = false;
         // Check for projectile and player collision
         if (getPlayer()->playerStatus != CHARACTER_STATUS::DEAD && projectileHit(((PROJECTILE*)getData(currentNode))->boundingBox, getPlayer()->boundingBox)) {
@@ -854,8 +842,7 @@ void updateBossProjectiles(void) {
             continue;
         }
 
-        /** Update projectile positions
-         */
+        // Update projectile positions
         // Make sure projectile is going to be within screen before updating pos
         if (((PROJECTILE*)getData(currentNode))->x + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dx * ((PROJECTILE*)getData(currentNode))->projectileSpeed + (((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2) <= 127
             && ((PROJECTILE*)getData(currentNode))->x + (int) round(((PROJECTILE*)getData(currentNode))->projectileDirection->dx * ((PROJECTILE*)getData(currentNode))->projectileSpeed - (((PROJECTILE*)getData(currentNode))->projectileWidth - 1) / 2) >= 0

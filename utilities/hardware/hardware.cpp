@@ -12,7 +12,7 @@
 uLCD_4DGL uLCD(p13, p14, p15); // Would be p9, p10, p11 for provided schematic
 
 // u, d, l, r
-// Using DI and DO for controls to have sustained signals between input reads
+// Using DI and DO for controls to generate sustained signals between input reads needed for pvp input syncing
 DigitalIn readUp(p26);
 DigitalOut writeUp(p26);
 DigitalIn readDown(p29);
@@ -44,7 +44,7 @@ DigitalIn opponentPauseResume(p20); // Would be p28 for provided schematic
 DigitalIn opponentQuitGame(p21); // Would be p29 for provided schematic
 
 DigitalOut notifyInPvpMode(p16); // Also used for syncing devices. Would be p13 for provided schematic
-DigitalIn readInPvpMode(p27); // Would be p30 for provided schematic
+DigitalIn readInPvpMode(p27); // Also used for syncing devices. Would be p30 for provided schematic
 
 SDBlockDevice sd_block(p5, p6, p7, p8);
 FATFileSystem fs("sd", &sd_block);
@@ -83,13 +83,13 @@ int hardware_init(void)
     opponentSuperAttackButton.mode(PullNone);
     opponentPauseResume.mode(PullNone);
     opponentQuitGame.mode(PullNone);
-    // Syncing pins
+    // Device syncing pins
     notifyInPvpMode.write(0);
     readInPvpMode.mode(PullNone);
 
     gameInputs = (GAME_INPUTS*)malloc(sizeof(GAME_INPUTS));
     fs.mount(&sd_block);
-    return ERROR_NONE;
+    return 0;
 }
 
 void deallocateHardware(void)

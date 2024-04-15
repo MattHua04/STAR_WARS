@@ -8,16 +8,12 @@ typedef struct llnode_t {
     struct llnode_t* next;
 }LLNode;
 
-/// The structure to store the information of a doubly linked list
+/// Struct to store the information of a doubly linked list
 typedef struct dlinkedlist_t {
     struct llnode_t* head;
     struct llnode_t* tail;
     int size;
 } DLinkedList;
-
-//===========================
-/* Creating nodes and lists */
-//===========================
 
 /**
  * createLlnode
@@ -40,10 +36,6 @@ LLNode* createLlnode(void* data);
  * @return A pointer to an empty dlinkedlist
  */
 DLinkedList* createDlinkedlist(void);
-
-//============================
-/* Accessing nodes and lists */
-//============================
 
 /**
  * getSize
@@ -105,16 +97,11 @@ LLNode* getPrev(LLNode* node);
  */
 void* getData(LLNode* node);
 
-//============================
-/* Inserting nodes into lists */
-//============================
-
 /**
  * insertAfter
  *
  * Insert data after the prev_node. Update head/tail/size if necessary.
- * Assumes prev_node is not NULL and is in dLinkedList. (Check if it is NULL and if so, print an error
- * message and return.)
+ * Assumes prev_node is not NULL and is in dLinkedList.
  *
  * @param dLinkedList A pointer to the doubly linked list
  * @param prev_node A pointer to a linked list node.
@@ -126,8 +113,7 @@ void insertAfter(DLinkedList* dLinkedList, LLNode* prev_node, void* data);
  * insertBefore
  *
  * Insert data before the next_node. Update head/tail/size if necessary.
- * Assumes prev_node is not NULL and is in dLinkedList. (Check if it is NULL and if so, print an error
- * message and return.)
+ * Assumes prev_node is not NULL and is in dLinkedList.
  * Update the size.
  *
  * @param dLinkedList A pointer to the doubly linked list
@@ -141,8 +127,6 @@ void insertBefore(DLinkedList* dLinkedList, LLNode* next_node, void* data);
  *
  * Create a new LLNode with the given data and insert it at the head of the
  * doubly linked list. Update head/tail/size if necessary.
- * Note: The case where dLinkedList is not empty can be implemented by calling
- * insertBefore with the head of the list as the next_node.
  *
  * @param dLinkedList A pointer to the doubly linked list
  * @param data A void pointer to data the user is adding to the doubly linked list.
@@ -155,18 +139,12 @@ void insertHead(DLinkedList* dLinkedList, void* data);
  *
  * Create a new LLNode with the given data and insert it at the tail of the 
  * doubly linked list. Update head/tail/size if necessary.
- * Note: The case where dLinkedList is not empty can be implemented by calling
- * insertAfter with the tail of the list as the next_node.
  *
  * @param dLinkedList A pointer to the doubly linked list
  * @param data A void pointer to data the user is adding to the doubly linked list.
  * 
  */
 void insertTail(DLinkedList* dLinkedList, void* data);
-
-//===========================
-/* Deleting nodes and lists */
-//===========================
 
 /**
  * deleteNode
@@ -193,17 +171,11 @@ void deleteNode(DLinkedList* dLinkedList, LLNode* Node);
  */
 void destroyList(DLinkedList* dLinkedList);
 
-//==================
-/* Reversing lists */
-//==================
-
 /**
  * reverse
  *
  * Reverse the order of the doubly linked list.
- * Update head/tail if necessary. 
- * This should not create a new list (it should rewire the nodes in dLinkedList).
-
+ * Update head/tail if necessary.
  *
  * @param dLinkedList A pointer to the doubly linked list
  * 

@@ -6,20 +6,16 @@
 #include "globals.hpp"
 #include "graphics.hpp"
 
-//==== [private settings] ====
 #define PROJECTILE_WIDTH 1
 #define PROJECTILE_HEIGHT 5
 #define MISSILE_WIDTH 3
 #define MISSILE_HEIGHT 7
 #define LASER_WIDTH 3
 #define LASER_HEIGHT 120
-#define PROJECTILE_COLOR 0x0000FF //blue
-#define MISSILE_COLOR 0x919191 //grey
-#define LASER_COLOR 0xFF0000 //red
 #define SHORT_RANGE_SPEED 2
 #define LONG_RANGE_SPEED 3
 #define MISSILE_SPEED 1
-#define PVP_SPEED 6
+#define PVP_SPEED 6 // Make things more interesting
 
 // Projectile types and their damage
 typedef enum {
@@ -29,6 +25,7 @@ typedef enum {
     LASER=1,
 } PROJECTILE_TYPE;
 
+// Info about projectile movement
 typedef struct {
     double pdx;
     double pdy;
@@ -36,6 +33,7 @@ typedef struct {
     double dy;
 } PROJECTILE_DIRECTION;
 
+// Projectile struct
 typedef struct {
     int x;
     int y;

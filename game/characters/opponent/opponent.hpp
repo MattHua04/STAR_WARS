@@ -12,7 +12,7 @@
  */
 PLAYER* getOpponent(void);
 
-/** Create a opponent and healthBar
+/** Create an opponent and healthBar
 */
 void opponentInit(void);
 

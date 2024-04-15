@@ -7,7 +7,6 @@
 #include "globals.hpp"
 #include "graphics.hpp"
 
-//==== [private settings] ====
 #define PLAYER_YPOS 11
 #define PLAYER_XPOS 64
 #define PLAYER_SPEED 4
@@ -28,7 +27,7 @@ typedef struct {
     int tick;
     int lastFireTick;
     int fireInterval;
-    int superChargeStatus; // Maxes out at 5
+    int superChargeStatus;
     bool superActive; // True during super duration, prevents normal attacking
     CHARACTER_TYPE type;
     CHARACTER_STATUS playerStatus;
@@ -42,7 +41,7 @@ typedef struct {
     int sessionDeaths;
 } PLAYER;
 
-/** Get the player object from other files
+/** Get the player
  */
 PLAYER* getPlayer(void);
 

@@ -7,7 +7,6 @@
 #include "globals.hpp"
 #include "graphics.hpp"
 
-//==== [private settings] ====
 #define BOSS_WIDTH 19
 #define BOSS_HEIGHT 19
 #define BOSS_SPEED 2
@@ -49,11 +48,11 @@ void bossInit(void);
  */
 void bossUpdate(void);
 
-/** Call generateProjectile three times and pass final boss
+/** Generate three offset long range projectiles
  */
 void bossFireProjectile(LLNode* boss);
 
-/** Call generateProjectile three times and pass final boss
+/** Generate three offset guided missiles
  */
 void bossSpecialAttack(LLNode* boss);
 

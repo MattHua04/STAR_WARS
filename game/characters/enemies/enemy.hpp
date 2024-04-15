@@ -7,7 +7,6 @@
 #include "globals.hpp"
 #include "graphics.hpp"
 
-//==== [private settings] ====
 #define ENEMY_WIDTH 11
 #define ENEMY_HEIGHT 11
 #define SHORT_RANGE_ENEMY_SPEED 2

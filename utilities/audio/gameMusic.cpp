@@ -18,12 +18,20 @@
 
 AnalogOut sound(p18);
 double volume = 0.25;
+
+// 16KB audio buffers, swapped and loaded when needed
 unsigned short *bufferZero = (unsigned short*)0x2007C000;
 unsigned short *bufferOne = (unsigned short*)0x2007E000;
+
+// Audio file info
 WAVHeader header;
 unsigned int filePos = 78;
 unsigned int fileEnd = 0;
+
+// Interupt for playing audio
 Ticker gameSound;
+
+// Audio file positions, -1 means not playing
 int bufferReady = 0;
 int bufferInUse = 0;
 int mCounter = 0;
@@ -35,6 +43,8 @@ int hCounter = -1;
 int bCounter = -1;
 int winCounter = -1;
 int loseCounter = -1;
+
+// Current song file and index
 FILE *songFile;
 unsigned short currentSong = 0;
 

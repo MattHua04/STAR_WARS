@@ -25,8 +25,7 @@
 #define REGISTER_USER 111
 
 int main() {
-    ASSERT_P(hardware_init() == ERROR_NONE, "Hardware init failed!");
-    printf("\033cGame Starting\n");
+    (hardware_init() == 0) ? printf("\033cGame Starting\n") : printf("\033cHardware Init Failed\n");
     uLCD.cls();
     musicInit();
     drawProfileImg();
