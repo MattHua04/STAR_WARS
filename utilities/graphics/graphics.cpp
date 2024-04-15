@@ -113,6 +113,9 @@ void concatText(const char* message, char* textArr, int scale) {
         case 'x': strcpy(character, font[65]); break;
         case 'y': strcpy(character, font[66]); break;
         case 'z': strcpy(character, font[67]); break;
+        case '+': strcpy(character, font[68]); break;
+        case '-': strcpy(character, font[69]); break;
+        case '/': strcpy(character, font[70]); break;
         default:
             // If the requested character doesn't exist then just do a space
             strcpy(character, "00000000000000000000000000000000000000000000000000000000");
@@ -183,6 +186,30 @@ void drawProfileImg(void) {
         }
         uLCD.BLIT(0, i, 128, chunkHeight, chunk);
     }
+}
+
+void drawControls(void) {
+    uLCD.cls();
+    // NavSwitch
+    drawText("NAV", 4, 64 - 15 - 10, WHITE, BLACK);
+    drawBox(7, 64 - 2, 7 + 15, 64 + 3, 'R');
+    drawBox(12, 64 - 7, 12 + 5, 64 + 8, 'R');
+    // Action button
+    drawText("ACT", 39 - 6, 64 - 15 - 10, WHITE, BLACK);
+    uLCD.filled_circle(43, 64, 8, LGREY);
+    // Super / vol down button
+    drawText("SPR", 38 - 6 + 25, 64 - 15 - 10 - 10, WHITE, BLACK);
+    drawText("V-", 43 - 6 + 25, 64 - 15 - 10, WHITE, BLACK);
+    uLCD.filled_circle(43 + 25, 64, 8, LGREY);
+    // Pause / resume / vol up button
+    drawText("P/R", 41 - 6 + 46, 64 - 15 - 10 - 10, WHITE, BLACK);
+    drawText("V+", 45 - 6 + 46, 64 - 15 - 10, WHITE, BLACK);
+    uLCD.filled_circle(43 - 6 + 55, 64, 8, LGREY);
+    // Exit button
+    drawText("EXT", 45 - 6 + 67, 64 - 15 - 10, WHITE, BLACK);
+    uLCD.filled_circle(43 - 6 + 78, 64, 8, LGREY);
+    // Continue message
+    drawText("ACT TO CONTINUE", 10, 64 + 15 + 15, WHITE, BLACK);
 }
 
 void drawGameBackground(bool redshift, double brightness) {

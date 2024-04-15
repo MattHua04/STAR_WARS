@@ -32,12 +32,30 @@ int main() {
     Timer startup;
     startup.start();
     while (startup.elapsed_time().count() < 5000000) loadMusic();
+    drawControls();
+    while (1) {
+        if (!readInputs()->normalAttack) {
+            buttonSound();
+            break;
+        }
+        loadMusic();
+    }
     while (1) {
         loginInit();
         int loginOutput;
         while ((loginOutput = loginUpdate()) == 0) loadMusic();;
         deleteLogin();
-        if (loginOutput == EXIT_GAME) break;
+        if (loginOutput == EXIT_GAME) {
+            drawControls();
+            while (1) {
+                if (!readInputs()->normalAttack) {
+                    buttonSound();
+                    break;
+                }
+                loadMusic();
+            }
+            continue;
+        }
         else if (loginOutput == REGISTER_USER) {
             registrationInit();
             int registrationOutput;

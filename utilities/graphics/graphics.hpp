@@ -42,6 +42,11 @@ void drawText(const char* message, int x, int y, int textColor, int backgroundCo
 void drawProfileImg(void);
 
 /**
+ * Draws game control
+ */
+void drawControls(void);
+
+/**
  * Draws game background. Redshift used for loss screen
  */
 void drawGameBackground(bool redshift, double brightness = 1);
