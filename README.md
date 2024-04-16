@@ -17,6 +17,9 @@ GT ECE 2035 Final Project Spring 2024
   * ~1uF capacitor (doesn't need to be exact)
   * one 10kΩ resistor
   * one 1kΩ resistor
+
+Audio jack breakout schematic:
+
 <img width="400" alt="Audio jack schematic" src="https://github.com/MattHua04/STAR_WARS/assets/138349218/22200a2f-3a9e-4ebd-84f1-5638270499df">
 
 ## Requirements
