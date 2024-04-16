@@ -56,7 +56,7 @@ Notable Features:
 * Custom text rendering
 * PvP mode with two game consoles
 
-uLCD Emulator by [@danielcbailey](https://github.com/danielcbailey): [uLCDEmulator](https://github.com/danielcbailey/Fruit-Warrior-Game/tree/master/tools)
+uLCD Emulator by [@danielcbailey](https://github.com/danielcbailey)
 
 <a href="https://www.youtube.com/watch?v=PTDQMuN8rr4">
    <img src="https://img.youtube.com/vi/PTDQMuN8rr4/0.jpg" alt="STAR WARS Final Demo" width="400">
