@@ -15,6 +15,14 @@ GT ECE 2035 Final Project Spring 2024
 * TRRS 3.5mm Jack Breakout
 * Mini audio jack speaker
 
+## Requirements
+
+SD card files:
+* All WAVE files must be 11kHz sample rate, mono channel, 16-bit
+   * To add, swap, or remove song tracks upload new WAVE files in the required format and change the file names in "utilities/audio/gameMusic.hpp"
+   * If adding or removing song tracks, update loop conditions for "playNextTrack" and "playPrevTrack"
+* Must create "Users" directory to successfully log in, register, and save user data
+
 ## Demo Video
 
 Notable features:
