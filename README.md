@@ -36,7 +36,7 @@ Game background:
 
 PvP mode:
 * Must have a shared ground between the two devices otherwise you'll get undefined behavior
-* Having ~20 wires increases the chance of hardware issues, check everything is securely connected and not shorting something else if the game won't start
+* Having ~20 additional wires increases the chance of hardware issues, check everything is securely connected and not shorting something else if the game won't start
 
 ## Demo Video
 
