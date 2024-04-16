@@ -6,7 +6,7 @@ GT ECE 2035 Final Project Spring 2024
 
 <img src="https://github.com/MattHua04/STAR_WARS/assets/138349218/43a0712a-db64-42c2-b360-b9b959fe2c66" alt="Hardware Setup" width="400">
 
-(x2 for PvP mode + 18 wires for sharing inputs + 1 wire for sharing ground)
+(x2 for PvP mode + 16 wires for sharing inputs + 2 wires for syncing devices + 1 wire for sharing ground)
 * MBED LPC1768
 * 5 way tactile switch
 * uLCD-144-G2
