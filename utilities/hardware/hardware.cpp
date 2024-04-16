@@ -9,6 +9,7 @@
 #include "hardware.hpp"
 #include "game.hpp"
 
+// RX, TX, RES
 uLCD_4DGL uLCD(p13, p14, p15); // Would be p9, p10, p11 for provided schematic
 
 // u, d, l, r
@@ -22,6 +23,7 @@ DigitalOut writeLeft(p28);
 DigitalIn readRight(p30);
 DigitalOut writeRight(p30);
 
+// Set to pullUp so connect to ground
 DigitalIn normalAttack(p22); // Would be p21 for provided schematic
 DigitalOut writeNormalAttack(p22);
 DigitalIn superAttack(p23); // Would be p22 for provided schematic
@@ -38,17 +40,20 @@ DigitalIn readOpDown(p10);
 DigitalIn readOpLeft(p11);
 DigitalIn readOpRight(p12);
 
+// Set to pullUp so connect to ground
 DigitalIn opponentNormalAttack(p17); // Would be p26 for provided schematic
 DigitalIn opponentSuperAttackButton(p19); // Would be p27 for provided schematic
 DigitalIn opponentPauseResume(p20); // Would be p28 for provided schematic
 DigitalIn opponentQuitGame(p21); // Would be p29 for provided schematic
 
+// Not necessary for single player modes
 DigitalOut notifyInPvpMode(p16); // Also used for syncing devices. Would be p13 for provided schematic
 DigitalIn readInPvpMode(p27); // Also used for syncing devices. Would be p30 for provided schematic
 
+// DI, DO, SCK, CS
 SDBlockDevice sd_block(p5, p6, p7, p8);
 FATFileSystem fs("sd", &sd_block);
-AnalogOut DACout(p18);
+AnalogOut DACout(p18); // Rest of speaker schematic provided in README->Hardware
 
 GAME_INPUTS* gameInputs;
 
