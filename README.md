@@ -14,7 +14,7 @@ GT ECE 2035 Final Project Spring 2024
 * microSD Transflash Breakout
 * TRRS 3.5mm Jack Breakout
 * Mini audio jack speaker
-  * ~1uF capacitor (doesn't need to be exact)
+  * ~1uF capacitor (anything close will work)
   * one 10kΩ resistor
   * one 1kΩ resistor
 
