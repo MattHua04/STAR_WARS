@@ -17,11 +17,19 @@ GT ECE 2035 Final Project Spring 2024
 
 ## Requirements
 
+General wiring:
+* Pin numbers for all hardware components are provided in "utilities/hardware/hardware.hpp"
+* This project deviates from the course's provided schematic, however, alternative pin configurations are provided in the comments that will work with a circuit built to the provided schematic
+
 SD card files:
 * All WAVE files must be 11kHz sample rate, mono channel, 16-bit
    * To add, swap, or remove song tracks upload new WAVE files in the required format and change the file names in "utilities/audio/gameMusic.hpp"
    * If adding or removing song tracks, update loop conditions for "playNextTrack" and "playPrevTrack"
-* Must create "Users" directory to successfully log in, register, and save user data
+* Must create a "Users" directory to successfully log in, register, and save user data
+
+PvP mode:
+* Must have a shared ground between the two devices otherwise you'll get undefined behavior
+* Having ~20 wires increases the chance of hardware issues, check everything is securely connected and not shorting something else if the game won't start
 
 ## Demo Video
 
