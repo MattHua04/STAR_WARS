@@ -19,6 +19,7 @@ GT ECE 2035 Final Project Spring 2024
 
 General wiring:
 * Pin numbers for all hardware components are provided in [hardware.hpp](utilities/hardware/hardware.hpp)
+* Any pins marked for the opponent are not necessary for single-player modes
 * This project deviates from the course's provided schematic, however, alternative pin configurations are provided in the comments that will work with a circuit built to the provided schematic
 
 SD card files:
