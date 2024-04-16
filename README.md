@@ -17,6 +17,18 @@ GT ECE 2035 Final Project Spring 2024
 
 ## Demo Video
 
+Notable features:
+* Animated sprites
+* Movement algorithms
+* Guided projectiles
+* Username and password login
+* Persistent user data
+* Concurrent audio
+* Audio mixing
+* Persistent game background
+* Custom text rendering
+* PvP mode with two game consoles
+
 <a href="https://www.youtube.com/watch?v=PTDQMuN8rr4">
    <img src="https://img.youtube.com/vi/PTDQMuN8rr4/0.jpg" alt="STAR WARS Final Demo" width="400">
 </a>
