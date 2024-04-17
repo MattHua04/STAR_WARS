@@ -99,6 +99,7 @@ openFile: tempFile = fopen(fileName, "rb");
             return;
         }
     }
+    filePos = 78;
     songFile = tempFile;
     fread(&header, sizeof(header), 1, songFile);
     fileEnd = header.fileSize;
@@ -121,6 +122,7 @@ openFile: tempFile = fopen(fileName, "rb");
             return;
         }
     }
+    filePos = 78;
     songFile = tempFile;
     fread(&header, sizeof(header), 1, songFile);
     fileEnd = header.fileSize;
