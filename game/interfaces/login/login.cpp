@@ -353,16 +353,16 @@ int loginUpdate(void) {
                 drawBackButton(&backStep);
                 drawNextButton(&nextStep);
                 drawDeleteButton(&deleteNum);
-                drawZeroButton(&zero);
-                drawOneButton(&one);
-                drawTwoButton(&two);
-                drawThreeButton(&three);
-                drawFourButton(&four);
-                drawFiveButton(&five);
-                drawSixButton(&six);
-                drawSevenButton(&seven);
-                drawEightButton(&eight);
                 drawNineButton(&nine);
+                drawEightButton(&eight);
+                drawSevenButton(&seven);
+                drawSixButton(&six);
+                drawFiveButton(&five);
+                drawFourButton(&four);
+                drawThreeButton(&three);
+                drawTwoButton(&two);
+                drawOneButton(&one);
+                drawZeroButton(&zero);
                 while (!readInputs()->normalAttack) loadMusic();
                 return 0;
             }
