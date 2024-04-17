@@ -90,7 +90,7 @@
     {
         "module": "game/interfaces",
         "size": {
-            ".text": 14784,
+            ".text": 14786,
             ".data": 14,
             ".bss": 472,
             ".text-delta": 0,
@@ -211,10 +211,10 @@
     {
         "module": "utilities/audio",
         "size": {
-            ".text": 220794,
+            ".text": 220824,
             ".data": 56,
             ".bss": 112,
-            ".text-delta": 0,
+            ".text-delta": 30,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -256,8 +256,8 @@
         "summary": {
             "static_ram": 8287,
             "static_ram_delta": 0,
-            "total_flash": 478498,
-            "total_flash_delta": 0
+            "total_flash": 478530,
+            "total_flash_delta": 30
         }
     }
 ]
