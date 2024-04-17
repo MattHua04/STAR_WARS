@@ -24,6 +24,10 @@ Audio Jack Breakout Schematic:
 
 ## Requirements
 
+Default Run:
+* To run this project successfully using the default implementation, ensure the wiring and SD card requirements are met
+* Then just drag and drop the [P2-2.bin](BUILD/LPC1768/ARMC6/P2-2.bin) file onto an MBED LPC1768 and power cycle to start running the game
+
 General Wiring:
 * Pin numbers for all hardware components are provided in [hardware.cpp](utilities/hardware/hardware.cpp)
 * Any pins marked for the opponent are not necessary for single-player modes
