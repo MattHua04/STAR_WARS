@@ -1,6 +1,8 @@
-# STAR WARS
+<p align="center"><b style="font-size:0.5em;">GT ECE 2035 Final Project Spring 2024</b></p>
 
-GT ECE 2035 Final Project Spring 2024
+<p align="center">
+ <img src="https://github.com/MattHua04/STAR_WARS/assets/138349218/ffdb77fc-3f9d-4c65-a2ba-a3e6ae015227" alt="Cover_Image" width="400">
+</p>
 
 ## Hardware
 
