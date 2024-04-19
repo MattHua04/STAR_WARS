@@ -1,7 +1,7 @@
-<h2 align="center">GT ECE 2035 Final Project Spring 2024</h2>
+<h1 align="center">GT ECE 2035 Final Project Spring 2024</h1>
 
 <p align="center">
- <img src="https://github.com/MattHua04/STAR_WARS/assets/138349218/ffdb77fc-3f9d-4c65-a2ba-a3e6ae015227" alt="Cover_Image" width="400">
+ <img src="https://github.com/MattHua04/STAR_WARS/assets/138349218/b5cecb35-8001-4fdc-8975-1b57e325f63a" alt="Cover_Image" width="100%">
 </p>
 
 ## Hardware
