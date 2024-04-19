@@ -1055,18 +1055,7 @@ void drawInvalidLoginButton(BUTTON* button) {
         color = MGREY;
         textBackground = DGREY;
     }
-    char message[] = "LOGIN";
-    int i = 0;
-    while (message[i]) {
-        loadMusic();
-        uLCD.text_bold(ON);
-        uLCD.color(color);
-        uLCD.set_font(FONT_8X8);
-        uLCD.locate(6 + i, 12);
-        uLCD.textbackground_color(textBackground);
-        uLCD.printf("%c", message[i]);
-        i++;
-    }
+    drawText("LOGIN", 64 - 17, 98 - 3, color, textBackground);
 }
 
 void drawRegisterButton(BUTTON* button) {
