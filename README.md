@@ -27,10 +27,12 @@
 ## Requirements
 
 **Default Run:**
-* <ins>The doublyLinkedList.cpp file for this project is not included for academic honor policy reasons so you'll have to implement it yourself</ins>
-    * The [header file](utilities/doublyLinkedList/doublyLinkedList.hpp) is still included however, so it can serve as a guideline for implementing the doublyLinkedList
 * To run this project successfully using the default implementation, ensure the wiring and SD card requirements are met
 * Then just drag and drop the [P2-2.bin](BUILD/LPC1768/ARMC6/P2-2.bin) file onto an MBED LPC1768 and power cycle to start running the game
+
+**Custom Run:**
+* <ins>The doublyLinkedList.cpp file for this project is not included for academic honor policy reasons so to build this project again you'll have to implement it yourself</ins>
+    * The [header file](utilities/doublyLinkedList/doublyLinkedList.hpp) is still included however, so it can serve as a guideline for implementing the doublyLinkedList
 
 **General Wiring:**
 * Pin numbers for all hardware components are provided in [hardware.cpp](utilities/hardware/hardware.cpp)
