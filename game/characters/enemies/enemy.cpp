@@ -193,7 +193,7 @@ void enemyUpdatePos(LLNode* enemy) {
                 && nudge + ((ENEMY*)getData(enemy))->x - ((ENEMY*)getData(enemy))->speed * (getPlayer()->x - ((ENEMY*)getData(enemy))->x) / abs(getPlayer()->x - ((ENEMY*)getData(enemy))->x) >= 0  + (((ENEMY*)getData(enemy))->width - 1) / 2) {
                 
                 // Update enemyDisplay based on calculated movement direction
-                if (nudge + (getPlayer()->x - ((ENEMY*)getData(enemy))->x) / abs(getPlayer()->x - ((ENEMY*)getData(enemy))->x) < 0) {
+                if (nudge + (getPlayer()->x - ((ENEMY*)getData(enemy))->x) / abs(getPlayer()->x - ((ENEMY*)getData(enemy))->x) > 0) {
                     if (((ENEMY*)getData(enemy))->enemyDisplay >= 4 && ((ENEMY*)getData(enemy))->damagedTick < 5) {
                         ((ENEMY*)getData(enemy))->enemyDisplay = CHARACTER_DISPLAY::LEFTDAMAGED;
                         ((ENEMY*)getData(enemy))->damagedTick++;
@@ -201,7 +201,7 @@ void enemyUpdatePos(LLNode* enemy) {
                         ((ENEMY*)getData(enemy))->enemyDisplay = CHARACTER_DISPLAY::LEFT;
                         ((ENEMY*)getData(enemy))->damagedTick = 0;
                     }
-                } else if (nudge + (getPlayer()->x - ((ENEMY*)getData(enemy))->x) / abs(getPlayer()->x - ((ENEMY*)getData(enemy))->x) > 0) {
+                } else if (nudge + (getPlayer()->x - ((ENEMY*)getData(enemy))->x) / abs(getPlayer()->x - ((ENEMY*)getData(enemy))->x) < 0) {
                     if (((ENEMY*)getData(enemy))->enemyDisplay >= 4 && ((ENEMY*)getData(enemy))->damagedTick < 5) {
                         ((ENEMY*)getData(enemy))->enemyDisplay = CHARACTER_DISPLAY::RIGHTDAMAGED;
                         ((ENEMY*)getData(enemy))->damagedTick++;
