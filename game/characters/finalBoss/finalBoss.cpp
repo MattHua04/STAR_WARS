@@ -86,7 +86,7 @@ void bossUpdate(void) {
         drawBoss(bossNode);
         return;
     }
-    if (getPlayer()->x != ((BOSS*)getData(bossNode))->x && (abs(getPlayer()->x - ((BOSS*)getData(bossNode))->x) > 20  || ((BOSS*)getData(bossNode))->tick % ((BOSS*)getData(bossNode))->fireInterval >= ((BOSS*)getData(bossNode))->fireInterval - 10)) {
+    if (getPlayer()->x != ((BOSS*)getData(bossNode))->x && (abs(getPlayer()->x - ((BOSS*)getData(bossNode))->x) > 20  || ((BOSS*)getData(bossNode))->tick % ((BOSS*)getData(bossNode))->fireInterval >= ((BOSS*)getData(bossNode))->fireInterval - 11)) {
         if (((BOSS*)getData(bossNode))->boundingBox->bottomRight.x + ((BOSS*)getData(bossNode))->speed * (getPlayer()->x - ((BOSS*)getData(bossNode))->x) / abs(getPlayer()->x - ((BOSS*)getData(bossNode))->x) <= 127 
             && ((BOSS*)getData(bossNode))->boundingBox->topLeft.x + ((BOSS*)getData(bossNode))->speed * (getPlayer()->x - ((BOSS*)getData(bossNode))->x) / abs(getPlayer()->x - ((BOSS*)getData(bossNode))->x) >= 0) {
             
