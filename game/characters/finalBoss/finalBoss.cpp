@@ -137,7 +137,7 @@ void bossUpdate(void) {
             && nudge + ((BOSS*)getData(bossNode))->boundingBox->topLeft.x - ((BOSS*)getData(bossNode))->speed * (getPlayer()->x - ((BOSS*)getData(bossNode))->x) / abs(getPlayer()->x - ((BOSS*)getData(bossNode))->x) >= 0) {
             
             // Update bossDisplay based on calculated movement direction
-            if (nudge +(getPlayer()->x - ((BOSS*)getData(bossNode))->x) / abs(getPlayer()->x - ((BOSS*)getData(bossNode))->x) > 0) {
+            if (nudge +(getPlayer()->x - ((BOSS*)getData(bossNode))->x) / abs(getPlayer()->x - ((BOSS*)getData(bossNode))->x) < 0) {
                 if (((BOSS*)getData(bossNode))->bossDisplay >= 4 && ((BOSS*)getData(bossNode))->damagedTick < 5) {
                     ((BOSS*)getData(bossNode))->bossDisplay = CHARACTER_DISPLAY::RIGHTDAMAGED;
                     ((BOSS*)getData(bossNode))->damagedTick++;
@@ -145,7 +145,7 @@ void bossUpdate(void) {
                     ((BOSS*)getData(bossNode))->bossDisplay = CHARACTER_DISPLAY::RIGHT;
                     ((BOSS*)getData(bossNode))->damagedTick = 0;
                 }
-            } else if (nudge + (getPlayer()->x - ((BOSS*)getData(bossNode))->x) / abs(getPlayer()->x - ((BOSS*)getData(bossNode))->x) < 0) {
+            } else if (nudge + (getPlayer()->x - ((BOSS*)getData(bossNode))->x) / abs(getPlayer()->x - ((BOSS*)getData(bossNode))->x) > 0) {
                 if (((BOSS*)getData(bossNode))->bossDisplay >= 4 && ((BOSS*)getData(bossNode))->damagedTick < 5) {
                     ((BOSS*)getData(bossNode))->bossDisplay = CHARACTER_DISPLAY::LEFTDAMAGED;
                     ((BOSS*)getData(bossNode))->damagedTick++;
