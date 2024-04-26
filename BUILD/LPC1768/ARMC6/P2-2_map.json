@@ -90,10 +90,10 @@
     {
         "module": "game/interfaces",
         "size": {
-            ".text": 14786,
+            ".text": 14774,
             ".data": 14,
             ".bss": 472,
-            ".text-delta": 0,
+            ".text-delta": -12,
             ".data-delta": 0,
             ".bss-delta": 0
         }
@@ -256,8 +256,8 @@
         "summary": {
             "static_ram": 8287,
             "static_ram_delta": 0,
-            "total_flash": 478198,
-            "total_flash_delta": 0
+            "total_flash": 478186,
+            "total_flash_delta": -12
         }
     }
 ]
