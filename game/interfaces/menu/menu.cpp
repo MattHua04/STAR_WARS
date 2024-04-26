@@ -126,7 +126,7 @@ int menuUpdate(void) {
         while (hold.elapsed_time().count() < 2000000) {
             loadMusic();
             if (readInputs()->pauseResume) {
-                (*getVolume() < 1) ? *getVolume() += 0.05 : *getVolume() = 0;
+                (*getVolume() < 1) ? *getVolume() += 0.05 : *getVolume() = 1;
                 wait_us(25000);
                 return 0;
             }
