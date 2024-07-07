@@ -43,7 +43,7 @@ int main() {
     while (1) {
         loginInit();
         int loginOutput;
-        while ((loginOutput = loginUpdate()) == 0) loadMusic();;
+        while ((loginOutput = loginUpdate()) == 0) loadMusic();
         deleteLogin();
         if (loginOutput == EXIT_GAME) {
             drawControls();
@@ -68,7 +68,7 @@ int main() {
             // Only enter game menu once logged in
             menuInit();
             int menuOutput;
-            while ((menuOutput = menuUpdate()) == 0) loadMusic();;
+            while ((menuOutput = menuUpdate()) == 0) loadMusic();
             if (menuOutput == EXIT_GAME) break; // Essentially returns to login page
             uLCD.cls();
             playerInit();
