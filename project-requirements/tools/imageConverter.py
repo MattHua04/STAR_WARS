@@ -1,3 +1,6 @@
+"""
+Images must be 128 x 128: https://www.img2go.com/resize-image
+"""
 from PIL import Image
 
 def png_to_c_array(image_path):
